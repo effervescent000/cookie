@@ -1,5 +1,5 @@
 import type { IOptions } from "~/interfaces";
-import PokemonInput from "./pokemon-input";
+import PokemonInput from "./pokemon-card";
 
 const TeamSelect = ({ pokemonList }: { pokemonList: IOptions[] }) => {
   return (

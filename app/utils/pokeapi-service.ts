@@ -27,6 +27,11 @@ class PokeAPIService {
     pokemon.sort(sortObjectByValue);
     return pokemon;
   }
+
+  async getPokemonByName(name: string) {
+    const response = await this.makeGetRequest(`pokemon/${name}`);
+    return response;
+  }
 }
 
 export default PokeAPIService;
