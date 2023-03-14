@@ -1,5 +1,3 @@
-import type { PokeAPIResponse } from "~/interfaces";
-
 class PokeAPIService {
   rootUrl: string;
 
@@ -10,16 +8,20 @@ class PokeAPIService {
   async makeGetRequest(endpoint: string) {
     try {
       const response = await fetch(`${this.rootUrl}/${endpoint}`);
-      const json: PokeAPIResponse = await response.json();
-      return json.results;
+      const json = await response.json();
+      return json;
     } catch (error) {
       console.log(error);
     }
   }
 
-  async getRegions() {
-    const response = await this.makeGetRequest("region");
-    return response?.map((region) => region.name);
+  async getPokemonByRegion(region: string) {
+    const response = await this.makeGetRequest(`pokedex/${region}`);
+    const pokemon = response.pokemon_entries.map(
+      (p: any) => p.pokemon_species.name
+    );
+    pokemon.sort();
+    return pokemon;
   }
 }
 
