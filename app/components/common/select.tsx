@@ -20,6 +20,7 @@ const Select = ({
         placeholder={placeholder}
         onChange={(e) => callback(e.target.value)}
         value={selection}
+        className="m-1 w-48 rounded-md border border-light-blue bg-gray p-1"
       >
         {[{ name: "---", value: "" }, ...options].map(({ value, name }) => (
           <option key={value} value={value}>
