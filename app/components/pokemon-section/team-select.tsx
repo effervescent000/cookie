@@ -1,6 +1,7 @@
+import type { IOptions } from "~/interfaces";
 import PokemonInput from "./pokemon-input";
 
-const TeamSelect = ({ pokemonList }: { pokemonList: string[] }) => {
+const TeamSelect = ({ pokemonList }: { pokemonList: IOptions[] }) => {
   return (
     <div>
       {[...Array(6)].map((_, i) => (

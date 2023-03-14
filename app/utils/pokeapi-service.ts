@@ -1,3 +1,6 @@
+import { IOptions } from "~/interfaces";
+import { properCase, sortObjectByValue } from "./text-utils";
+
 class PokeAPIService {
   rootUrl: string;
 
@@ -17,10 +20,11 @@ class PokeAPIService {
 
   async getPokemonByRegion(region: string) {
     const response = await this.makeGetRequest(`pokedex/${region}`);
-    const pokemon = response.pokemon_entries.map(
-      (p: any) => p.pokemon_species.name
-    );
-    pokemon.sort();
+    const pokemon = response.pokemon_entries.map((p: any) => {
+      const pokeName = p.pokemon_species.name;
+      return { name: properCase(pokeName), value: pokeName };
+    });
+    pokemon.sort(sortObjectByValue);
     return pokemon;
   }
 }
