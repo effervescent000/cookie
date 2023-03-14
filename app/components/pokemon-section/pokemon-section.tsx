@@ -1,7 +1,20 @@
+import { useEffect, useState } from "react";
+import PokeAPIService from "~/utils/pokeapi-service";
+
 import TeamSelect from "./team-select";
 
-const PokemonSection = () => {
-  return <TeamSelect />;
+const PokemonSection = ({ selectedRegion }: { selectedRegion: string }) => {
+  const [allPokemon, setAllPokemon] = useState([]);
+
+  useEffect(() => {
+    const fetchPokemon = async () => {
+      const P = new PokeAPIService();
+      setAllPokemon(await P.getPokemonByRegion(selectedRegion));
+    };
+    fetchPokemon();
+  }, [selectedRegion]);
+
+  return <TeamSelect pokemonList={allPokemon} />;
 };
 
 export default PokemonSection;

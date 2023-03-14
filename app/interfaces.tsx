@@ -4,6 +4,6 @@ export interface IOptions {
 }
 
 export interface PokeAPIResponse {
-  count: number;
-  results: any[];
+  count?: number;
+  results?: any[];
 }
