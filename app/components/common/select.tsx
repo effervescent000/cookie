@@ -5,11 +5,13 @@ const Select = ({
   placeholder,
   label,
   callback = () => {},
+  selection,
 }: {
   options: IOptions[];
   placeholder?: string;
   label?: string;
   callback?: (arg0: string) => void;
+  selection?: string;
 }) => {
   return (
     <div>
@@ -17,6 +19,7 @@ const Select = ({
       <select
         placeholder={placeholder}
         onChange={(e) => callback(e.target.value)}
+        value={selection}
       >
         {[{ name: "---", value: "" }, ...options].map(({ value, name }) => (
           <option key={value} value={value}>
