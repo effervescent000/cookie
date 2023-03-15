@@ -27,6 +27,16 @@ class PokeAPIService {
     return pokemon;
   }
 
+  async getAllPokemon() {
+    const response = await this.makeGetRequest("pokemon?limit=1300");
+    const pokemon = response.results.map(({ name }) => ({
+      name: properCase(name),
+      value: name,
+    }));
+    pokemon.sort(sortObjectByValue);
+    return pokemon;
+  }
+
   async getPokemonByName(name: string) {
     const response = await this.makeGetRequest(`pokemon/${name}`);
     return response;
