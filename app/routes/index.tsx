@@ -39,7 +39,7 @@ export default function Index() {
     <PokemonContext.Provider
       value={{ gen, team, bench, idCounter, mergeIntoTeam, mergeIntoBench }}
     >
-      <div>
+      <div className="flex flex-col gap-5">
         <GenPicker gen={gen} setGen={setGen} />
         <PokemonSection selectedRegion={selectedRegion} />
         <FilterSection
