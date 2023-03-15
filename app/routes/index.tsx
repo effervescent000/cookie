@@ -1,7 +1,7 @@
 import { useState } from "react";
 // import { useOptionalUser } from "~/utils";
 
-import type { IPokemon } from "~/interfaces";
+import type { IPokemonFull } from "~/interfaces";
 
 import { PokemonContext } from "~/pokemon-context";
 
@@ -14,12 +14,12 @@ export default function Index() {
   const [idCounter, setIdCounter] = useState(0);
   const [gen, setGen] = useState(8);
   const [selectedRegion, setSelectedRegion] = useState("galar");
-  const [team, setTeam] = useState<IPokemon[]>([]);
-  const [bench, setBench] = useState<IPokemon[]>([]);
+  const [team, setTeam] = useState<IPokemonFull[]>([]);
+  const [bench, setBench] = useState<IPokemonFull[]>([]);
 
   const incrementId = () => setIdCounter(idCounter + 1);
 
-  const mergeIntoTeam = (target: IPokemon) => {
+  const mergeIntoTeam = (target: IPokemonFull) => {
     const found = team.find(({ id: pokeId }) => pokeId === target.id);
     if (!found) {
       setTeam([...team, target]);
@@ -27,7 +27,7 @@ export default function Index() {
     }
   };
 
-  const mergeIntoBench = (target: IPokemon) => {
+  const mergeIntoBench = (target: IPokemonFull) => {
     const found = bench.find(({ id: pokeId }) => pokeId === target.id);
     if (!found) {
       setBench([...bench, target]);
@@ -39,7 +39,7 @@ export default function Index() {
     <PokemonContext.Provider
       value={{ gen, team, bench, idCounter, mergeIntoTeam, mergeIntoBench }}
     >
-      <div>
+      <div className="flex flex-col gap-5">
         <GenPicker gen={gen} setGen={setGen} />
         <PokemonSection selectedRegion={selectedRegion} />
         <FilterSection

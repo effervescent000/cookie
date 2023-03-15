@@ -30,7 +30,9 @@ const PokemonInput = ({ pokemonOptions }: { pokemonOptions: IOptions[] }) => {
           callback={selectTarget}
           selection={selectedPokemon}
         />
+        {/* sprite goes here */}
       </div>
+      <div>{/* moves live in this div */}</div>
     </div>
   );
 };

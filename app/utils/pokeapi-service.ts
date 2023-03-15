@@ -1,4 +1,3 @@
-import { IOptions } from "~/interfaces";
 import { properCase, sortObjectByValue } from "./text-utils";
 
 class PokeAPIService {
