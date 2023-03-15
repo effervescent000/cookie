@@ -1,8 +1,10 @@
 import { useContext, useState, useEffect, useMemo } from "react";
+import _ from "lodash";
 
 import type { IOptions } from "~/interfaces";
 
 import { useVersion } from "~/utils/hooks/useVersion";
+import { properCase } from "~/utils/text-utils";
 
 import PokeAPIService from "~/utils/pokeapi-service";
 import { PokemonContext } from "~/pokemon-context";
@@ -28,12 +30,13 @@ const PokemonInput = ({ pokemonOptions }: { pokemonOptions: IOptions[] }) => {
     );
     if (!foundPokemon) return [];
     const moves = foundPokemon.moves;
+    if (!moves) return [];
     const filteredMoves = moves
       .map(({ move: { name }, version_group_details }) => {
         const match = version_group_details.find(
           (detail) => detail.version_group.name === version
         );
-        if (match) return name;
+        if (match) return { name: properCase(name), value: name };
         return undefined;
       })
       .filter((move) => !!move);
@@ -54,7 +57,7 @@ const PokemonInput = ({ pokemonOptions }: { pokemonOptions: IOptions[] }) => {
   };
 
   return (
-    <div className="d-flex">
+    <div className="flex">
       <div>
         <Select
           options={pokemonOptions}
@@ -64,7 +67,11 @@ const PokemonInput = ({ pokemonOptions }: { pokemonOptions: IOptions[] }) => {
         />
         {/* sprite goes here */}
       </div>
-      <div>{/* moves live in this div */}</div>
+      <div>
+        {_.range(4).map((i) => (
+          <Select key={`${selectedPokemon.id}-${i}`} options={moveList} />
+        ))}
+      </div>
     </div>
   );
 };
