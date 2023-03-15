@@ -1,5 +1,3 @@
-import type { Dispatch, SetStateAction } from "react";
-
 const GenListing = ({
   label,
   value,
@@ -8,7 +6,7 @@ const GenListing = ({
 }: {
   label: string;
   value: number;
-  setGen: Dispatch<SetStateAction<number>>;
+  setGen: (arg0: number) => void;
   selectedGen: number;
 }) => {
   return (

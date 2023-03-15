@@ -1,14 +1,11 @@
-import type { Dispatch, SetStateAction } from "react";
+import { useContext } from "react";
+import { PokemonContext } from "~/pokemon-context";
 
 import GenListing from "./gen";
 
-const GenPicker = ({
-  setGen,
-  gen: selectedGen,
-}: {
-  setGen: Dispatch<SetStateAction<number>>;
-  gen: number;
-}) => {
+const GenPicker = () => {
+  const { gen: selectedGen, setGen } = useContext(PokemonContext);
+
   const genList = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
   return (
     <div className="flex gap-3">
