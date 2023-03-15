@@ -9,7 +9,7 @@ const GenPicker = ({
   setGen: Dispatch<SetStateAction<number>>;
   gen: number;
 }) => {
-  const genList = ["RB", "GS", "RS", "DP", "BW", "XY", "SM", "SS", "SV"];
+  const genList = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
   return (
     <div className="flex gap-3">
       {genList.map((opt, i) => (
