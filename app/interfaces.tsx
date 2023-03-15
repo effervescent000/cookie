@@ -34,7 +34,7 @@ interface IStat {
   stat: IName;
 }
 
-export interface IPokemon {
+export interface IPokemonFull {
   abilities: IAbility[];
   id: number;
   moves: IMove;
@@ -42,4 +42,9 @@ export interface IPokemon {
   order: number;
   stats: IStat[];
   types: { slot: number; type: IName }[];
+}
+
+export interface IPokeSkeleton {
+  name: string;
+  moves: { [key: number]: string };
 }

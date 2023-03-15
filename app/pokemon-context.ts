@@ -1,13 +1,13 @@
 import { createContext } from "react";
 
-import type { IPokemon } from "./interfaces";
+import type { IPokemonFull } from "./interfaces";
 
 export const PokemonContext = createContext<{
   gen: number;
-  team: IPokemon[];
-  mergeIntoTeam: (arg0: IPokemon) => void;
-  bench: IPokemon[];
-  mergeIntoBench: (arg0: IPokemon) => void;
+  team: IPokemonFull[];
+  mergeIntoTeam: (arg0: IPokemonFull) => void;
+  bench: IPokemonFull[];
+  mergeIntoBench: (arg0: IPokemonFull) => void;
   idCounter: number;
 }>({
   gen: 0,
