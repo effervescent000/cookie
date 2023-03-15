@@ -9,7 +9,7 @@ const PokemonSection = ({ selectedRegion }: { selectedRegion: string }) => {
   useEffect(() => {
     const fetchPokemon = async () => {
       const P = new PokeAPIService();
-      setAllPokemon(await P.getPokemonByRegion(selectedRegion));
+      setAllPokemon(await P.getAllPokemon());
     };
     fetchPokemon();
   }, [selectedRegion]);
