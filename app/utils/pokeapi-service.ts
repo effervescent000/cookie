@@ -1,5 +1,7 @@
 import { properCase, sortObjectByValue } from "./text-utils";
 
+const cacheName = "pokecache";
+
 class PokeAPIService {
   rootUrl: string;
 
@@ -9,7 +11,15 @@ class PokeAPIService {
 
   async makeGetRequest(endpoint: string) {
     try {
-      const response = await fetch(`${this.rootUrl}/${endpoint}`);
+      const url = `${this.rootUrl}/${endpoint}`;
+      const cache = await caches.open(cacheName);
+      const matchedResponse = await cache.match(url);
+      if (matchedResponse) {
+        return await matchedResponse.json();
+      }
+      await cache.add(url);
+      const response = await cache.match(url);
+      // const response = await fetch(`${this.rootUrl}/${endpoint}`);
       const json = await response.json();
       return json;
     } catch (error) {
