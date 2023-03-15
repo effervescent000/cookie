@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
-import { REGIONS } from "~/constants/constants";
+import { REGIONS } from "~/constants/versions-constants";
 import { properCase } from "~/utils/text-utils";
 import Select from "../common/select";
 
