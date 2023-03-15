@@ -1,15 +1,14 @@
-import type { Dispatch, SetStateAction } from "react";
+import { useContext } from "react";
+
 import { REGIONS } from "~/constants/versions-constants";
+import { PokemonContext } from "~/pokemon-context";
 import { properCase } from "~/utils/text-utils";
+
 import Select from "../common/select";
 
-const FilterSection = ({
-  selectedRegion,
-  setSelectedRegion,
-}: {
-  selectedRegion: string;
-  setSelectedRegion: Dispatch<SetStateAction<string>>;
-}) => {
+const FilterSection = () => {
+  const { region: selectedRegion, setRegion: setSelectedRegion } =
+    useContext(PokemonContext);
   return (
     <div>
       <Select
