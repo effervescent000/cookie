@@ -1,5 +1,5 @@
 import FilterSection from "~/components/filter-section/filter-section";
-import PokemonSection from "~/components/pokemon-section/pokemon-card-wrapper";
+import PokemonSection from "~/components/pokemon-section/pokemon-frame-wrapper";
 import GenPicker from "~/components/gen-picker/gen-picker-wrapper";
 
 export default function Index() {
