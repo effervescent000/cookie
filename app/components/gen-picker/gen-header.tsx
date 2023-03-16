@@ -1,18 +1,18 @@
 const GenHeader = ({
-  gen,
-  selectedGen,
-  setGen,
+  version,
+  selectedVersion,
+  setVersion,
 }: {
-  gen: string;
-  selectedGen: string;
-  setGen: (arg0: string) => void;
+  version: string;
+  selectedVersion: string;
+  setVersion: (arg0: string) => void;
 }) => {
   return (
     <span
-      className={`${gen === selectedGen && "underline"}`}
-      onClick={() => setGen(gen)}
+      className={`${version === selectedVersion && "underline"}`}
+      onClick={() => setVersion(version)}
     >
-      {gen}
+      {version}
     </span>
   );
 };
