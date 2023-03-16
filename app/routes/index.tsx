@@ -1,4 +1,4 @@
-import FilterSection from "~/components/filter-section/filter-section";
+import FilterSection from "~/components/filter-section/filter-and-results-wrapper";
 import PokemonSection from "~/components/pokemon-section/pokemon-frame-wrapper";
 import GenPicker from "~/components/gen-picker/gen-picker-wrapper";
 
