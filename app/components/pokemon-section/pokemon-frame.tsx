@@ -1,4 +1,4 @@
-import type { IOptions, IPokemonFull, IPokeSkeleton } from "~/interfaces";
+import type { IPokemonFull } from "~/interfaces";
 import PokemonCard from "./pokemon-card";
 
 const PokemonFrame = ({ pokemon }: { pokemon: IPokemonFull[] }) => {
