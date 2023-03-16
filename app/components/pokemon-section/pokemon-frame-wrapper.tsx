@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { PokemonContext } from "~/pokemon-context";
 
 import PokeAPIService from "~/utils/pokeapi-service";
 
-import TeamSelect from "./team-select";
+import PokemonFrame from "./pokemon-frame";
 
 const PokemonSection = () => {
   const [allPokemon, setAllPokemon] = useState([]);
+  const { team, bench } = useContext(PokemonContext);
 
   useEffect(() => {
     const fetchPokemon = async () => {
@@ -15,7 +17,12 @@ const PokemonSection = () => {
     fetchPokemon();
   }, []);
 
-  return <TeamSelect pokemonList={allPokemon} />;
+  return (
+    <div>
+      <PokemonFrame pokemon={team} />
+      <PokemonFrame pokemon={bench} />
+    </div>
+  );
 };
 
 export default PokemonSection;
