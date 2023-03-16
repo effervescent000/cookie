@@ -1,13 +1,11 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 
-import { PokemonContext } from "~/pokemon-context";
 import PokeAPIService from "~/utils/pokeapi-service";
 
 import TeamSelect from "./team-select";
 
 const PokemonSection = () => {
   const [allPokemon, setAllPokemon] = useState([]);
-  const { region: selectedRegion } = useContext(PokemonContext);
 
   useEffect(() => {
     const fetchPokemon = async () => {
@@ -15,7 +13,7 @@ const PokemonSection = () => {
       setAllPokemon(await P.getAllPokemon());
     };
     fetchPokemon();
-  }, [selectedRegion]);
+  }, []);
 
   return <TeamSelect pokemonList={allPokemon} />;
 };
