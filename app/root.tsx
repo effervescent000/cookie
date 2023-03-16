@@ -34,8 +34,9 @@ export const meta: MetaFunction = () => ({
 
 export default function App() {
   const [idCounter, setIdCounter] = useState(0);
-  const [gen, setGen] = useState(8);
+  const [gen, setGen] = useState("VIII");
   const [selectedRegion, setSelectedRegion] = useState("galar");
+  const [versionGroup, setVersionGroup] = useState("");
   const [team, setTeam] = useState<IPokemonFull[]>([]);
   const [bench, setBench] = useState<IPokemonFull[]>([]);
 
@@ -69,6 +70,8 @@ export default function App() {
         mergeIntoTeam,
         mergeIntoBench,
         setRegion: setSelectedRegion,
+        versionGroup,
+        setVersionGroup,
       }}
     >
       <html lang="en" className="h-full">

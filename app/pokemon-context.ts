@@ -3,8 +3,10 @@ import { createContext } from "react";
 import type { IPokemonFull } from "./interfaces";
 
 export const PokemonContext = createContext<{
-  gen: number;
-  setGen: (arg0: number) => void;
+  gen: string;
+  setGen: (arg0: string) => void;
+  versionGroup: string;
+  setVersionGroup: (arg0: string) => void;
   region: string;
   setRegion: (arg0: string) => void;
   team: IPokemonFull[];
@@ -13,7 +15,7 @@ export const PokemonContext = createContext<{
   mergeIntoBench: (arg0: IPokemonFull) => void;
   idCounter: number;
 }>({
-  gen: 0,
+  gen: "",
   setGen: (target) => {},
   region: "",
   setRegion: (target) => {},
@@ -22,4 +24,6 @@ export const PokemonContext = createContext<{
   bench: [],
   mergeIntoBench: (target) => {},
   idCounter: 0,
+  versionGroup: "",
+  setVersionGroup: (target) => {},
 });

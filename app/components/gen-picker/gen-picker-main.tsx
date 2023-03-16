@@ -1,20 +1,18 @@
 import { useContext } from "react";
+import { VERSIONS } from "~/constants/versions-constants";
 import { PokemonContext } from "~/pokemon-context";
-
-import GenListing from "./gen";
+import GenHeader from "./gen-header";
 
 const GenPicker = () => {
   const { gen: selectedGen, setGen } = useContext(PokemonContext);
 
-  const genList = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
   return (
     <div className="flex gap-3">
-      {genList.map((opt, i) => (
-        <GenListing
-          key={opt}
-          label={opt}
+      {VERSIONS.map((vrs) => (
+        <GenHeader
+          key={vrs.name}
+          gen={vrs.name}
           selectedGen={selectedGen}
-          value={i + 1}
           setGen={setGen}
         />
       ))}
