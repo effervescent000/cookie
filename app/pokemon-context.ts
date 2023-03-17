@@ -14,6 +14,8 @@ export const PokemonContext = createContext<{
   bench: IPokemonFull[];
   mergeIntoBench: (arg0: IPokemonFull) => void;
   idCounter: number;
+  removeFromTeam: (arg0: IPokemonFull) => void;
+  removeFromBench: (arg0: IPokemonFull) => void;
 }>({
   gen: "",
   setGen: (target) => {},
@@ -26,4 +28,6 @@ export const PokemonContext = createContext<{
   idCounter: 0,
   versionGroup: "",
   setVersionGroup: (target) => {},
+  removeFromBench: (target) => {},
+  removeFromTeam: (target) => {},
 });

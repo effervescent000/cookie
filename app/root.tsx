@@ -82,6 +82,8 @@ export default function App() {
         setRegion: setSelectedRegion,
         versionGroup,
         setVersionGroup,
+        removeFromBench,
+        removeFromTeam,
       }}
     >
       <html lang="en" className="h-full">
