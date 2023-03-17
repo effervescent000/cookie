@@ -1,4 +1,5 @@
-import { properCase, sortObjectByValue } from "./text-utils";
+import { IPokemonMini } from "~/interfaces";
+import { properCase, sortObject, sortObjectByValue } from "./text-utils";
 
 const cacheName = "pokecache";
 
@@ -44,12 +45,24 @@ class PokeAPIService {
   async getAllPokemon() {
     const response = await this.makeGetRequest("pokemon?limit=1300");
 
-    const pokemon = response.results.map(({ name }: { name: string }) => ({
-      name: properCase(name),
-      value: name,
-    }));
-    pokemon.sort(sortObjectByValue);
-    return pokemon;
+    const pokemonRaw = response.results.filter(
+      (poke: IPokemonMini) =>
+        !poke.name.match(/-mega/) && !poke.name.match(/-gmax/)
+    );
+    if ("caches" in window) {
+      const cache = await caches.open(cacheName);
+      const pokemon = Promise.all(
+        pokemonRaw.map(async (miniPoke: IPokemonMini) => {
+          const foundPoke = await cache.match(
+            `${this.rootUrl}/pokemon/${miniPoke.name}`
+          );
+          return foundPoke?.json() || miniPoke;
+        })
+      );
+      const sortedPokes = (await pokemon).sort(sortObject);
+      return sortedPokes;
+    }
+    return pokemonRaw.sort(sortObject);
   }
 
   async getPokemonByName(name: string) {
