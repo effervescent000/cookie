@@ -6,8 +6,8 @@ export default function Index() {
   return (
     <div className="flex flex-col gap-5">
       <GenPicker />
-      <FilterSection />
       <PokemonSection />
+      <FilterSection />
     </div>
   );
 }

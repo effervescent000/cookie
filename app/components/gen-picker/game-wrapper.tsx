@@ -14,6 +14,7 @@ const GameWrapper = () => {
           <GenHeader
             key={child.key}
             version={child.name}
+            versionKey={child.key}
             setVersion={setVersionGroup}
             selectedVersion={versionGroup}
           />

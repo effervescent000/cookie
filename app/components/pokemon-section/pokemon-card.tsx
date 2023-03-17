@@ -1,19 +1,19 @@
-import { useMemo } from "react";
+import { useMemo, useContext } from "react";
 import _ from "lodash";
 
 import type { IPokemonFull } from "~/interfaces";
 
-import { useVersion } from "~/utils/hooks/useVersion";
 import { properCase } from "~/utils/text-utils";
 
 import Select from "../common/select";
+import { PokemonContext } from "~/pokemon-context";
 
 const PokemonInput = ({
   targetPoke: { name: targetName, id: targetId, moves: targetMoves },
 }: {
   targetPoke: IPokemonFull;
 }) => {
-  const { version } = useVersion();
+  const { versionGroup } = useContext(PokemonContext);
 
   const moveList = useMemo(() => {
     const moves = targetMoves;
@@ -21,15 +21,14 @@ const PokemonInput = ({
     const filteredMoves = moves
       .map(({ move: { name }, version_group_details }) => {
         const match = version_group_details.find(
-          (detail) => detail.version_group.name === version
+          (detail) => detail.version_group.name === versionGroup
         );
         if (match) return { name: properCase(name), value: name };
         return undefined;
       })
       .filter((move) => !!move);
     return filteredMoves;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [targetName, version, targetId]);
+  }, [targetMoves, versionGroup]);
 
   return (
     <div className="flex">
