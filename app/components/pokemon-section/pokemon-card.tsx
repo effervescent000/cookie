@@ -33,7 +33,12 @@ const PokemonInput = ({
 
   return (
     <div className="flex">
-      <div>{/* sprite goes here */}</div>
+      <div>
+        <div>
+          <span>{properCase(targetName)}</span>
+        </div>
+        {/* sprite goes here */}
+      </div>
       <div>
         {_.range(4).map((i) => (
           <Select key={`${targetId}-${i}`} options={moveList} />
