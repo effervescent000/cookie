@@ -13,6 +13,7 @@ const GenHeaderWrapper = () => {
           version={vrs.name}
           selectedVersion={selectedGen}
           setVersion={setGen}
+          versionKey={vrs.name}
         />
       ))}
     </div>

@@ -3,7 +3,7 @@ import _ from "lodash";
 
 import type { IPokemonFull } from "~/interfaces";
 
-import { properCase } from "~/utils/text-utils";
+import { properCase, sortObjectByValue } from "~/utils/text-utils";
 
 import Select from "../common/select";
 import { PokemonContext } from "~/pokemon-context";
@@ -27,6 +27,7 @@ const PokemonInput = ({
         return undefined;
       })
       .filter((move) => !!move);
+    filteredMoves.sort(sortObjectByValue);
     return filteredMoves;
   }, [targetMoves, versionGroup]);
 

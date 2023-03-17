@@ -23,7 +23,11 @@ const PokemonMiniCard = ({
     <div className="flex w-40 justify-between">
       <div>{pokeName}</div>
       <div>
-        <FontAwesomeIcon icon={faCheck} onClick={selectPokemon} />
+        <FontAwesomeIcon
+          icon={faCheck}
+          onClick={selectPokemon}
+          className="cursor-pointer"
+        />
       </div>
     </div>
   );
