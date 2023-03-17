@@ -49,3 +49,8 @@ export interface IPokeSkeleton {
   id: number;
   moves: { 0: string; 1: string; 2: string; 3: string };
 }
+
+export interface IPokemonMini {
+  name: string;
+  url: string;
+}
