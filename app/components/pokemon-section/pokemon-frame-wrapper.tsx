@@ -7,7 +7,8 @@ import PokemonFrame from "./pokemon-frame";
 
 const PokemonSection = () => {
   const [allPokemon, setAllPokemon] = useState([]);
-  const { team, bench } = useContext(PokemonContext);
+  const { team, bench, mergeIntoBench, mergeIntoTeam } =
+    useContext(PokemonContext);
 
   useEffect(() => {
     const fetchPokemon = async () => {
@@ -19,8 +20,8 @@ const PokemonSection = () => {
 
   return (
     <div>
-      <PokemonFrame pokemon={team} title="Team" />
-      <PokemonFrame pokemon={bench} title="Bench" />
+      <PokemonFrame pokemon={team} title="Team" merge={mergeIntoTeam} />
+      <PokemonFrame pokemon={bench} title="Bench" merge={mergeIntoBench} />
     </div>
   );
 };

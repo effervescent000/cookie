@@ -10,8 +10,10 @@ import { PokemonContext } from "~/pokemon-context";
 
 const PokemonInput = ({
   targetPoke: { name: targetName, id: targetId, moves: targetMoves },
+  merge,
 }: {
   targetPoke: IPokemonFull;
+  merge: (arg0: IPokemonFull) => void;
 }) => {
   const { versionGroup } = useContext(PokemonContext);
 
