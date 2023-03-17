@@ -8,7 +8,7 @@ const ROOT_URL = "https://pokeapi.co/api/v2";
 const mergePokesIntoResourceList = async (newPokes: IPokemonMini[]) => {
   if ("caches" in window) {
     const cache = await caches.open(cacheName);
-    const pokemon = Promise.all(
+    const pokemon = await Promise.all(
       newPokes.map(async (miniPoke: IPokemonMini) => {
         const foundPoke = await cache.match(
           `${ROOT_URL}/pokemon/${miniPoke.name}`
@@ -16,9 +16,12 @@ const mergePokesIntoResourceList = async (newPokes: IPokemonMini[]) => {
         return foundPoke?.json() || miniPoke;
       })
     );
-    return await pokemon;
+    pokemon.sort(sortObject);
+    return pokemon;
   }
-  return newPokes;
+  const pokemon = [...newPokes];
+  pokemon.sort(sortObject);
+  return pokemon;
 };
 
 class PokeAPIService {
@@ -62,12 +65,21 @@ class PokeAPIService {
         !poke.name.match(/-mega/) && !poke.name.match(/-gmax/)
     );
     const pokemon = await mergePokesIntoResourceList(pokemonRaw);
-    pokemon.sort(sortObject);
+    return pokemon;
   }
 
   async getPokemonByName(name: string) {
     const response = await this.makeGetRequest(`pokemon/${name.toLowerCase()}`);
     return response;
+  }
+
+  async getPokemonByType(type: string) {
+    const response = await this.makeGetRequest(`type/${type.toLowerCase()}`);
+    const result = response.pokemon.map(
+      ({ pokemon }: { pokemon: IPokemonMini }) => pokemon
+    );
+    const pokemon = await mergePokesIntoResourceList(result);
+    return pokemon;
   }
 }
 
