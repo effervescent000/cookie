@@ -1,14 +1,14 @@
-import type { IPokemonFull, IPokemonMini } from "~/interfaces";
+import type { IFilters, IPokemonFull, IPokemonMini } from "~/interfaces";
 
 import PokemonMiniCard from "./pokemon-mini-card";
 
 const ResultsWrapper = ({
   output,
+  filters,
 }: {
   output: Array<IPokemonFull | IPokemonMini>;
+  filters: IFilters;
 }) => {
-  if (!output) return <div>Loading...</div>;
-
   return (
     <div>
       {output.map((poke) => (

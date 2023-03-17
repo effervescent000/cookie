@@ -2,6 +2,7 @@ import { TYPES } from "~/constants/types-constants";
 import type { IFilters } from "~/interfaces";
 import { properCase } from "~/utils/text-utils";
 import Select from "../common/select";
+import TextInput from "../common/text-input";
 
 const FilterWrapper = ({
   filters,
@@ -11,7 +12,11 @@ const FilterWrapper = ({
   mergeFilters: (target: { [key: string]: any }) => void;
 }) => {
   return (
-    <div>
+    <div className="flex">
+      <TextInput
+        label="Name"
+        callback={(value) => mergeFilters({ name: value })}
+      />
       <Select
         label="Type 1"
         callback={(value) => mergeFilters({ type1: value })}

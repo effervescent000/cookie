@@ -27,7 +27,7 @@ const FilterSection = () => {
   return (
     <div>
       <FilterWrapper filters={filters} mergeFilters={mergeFilters} />
-      <ResultsWrapper output={allPokemon} />
+      <ResultsWrapper output={allPokemon} filters={filters} />
     </div>
   );
 };
