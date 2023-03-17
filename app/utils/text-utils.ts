@@ -10,3 +10,9 @@ export const sortObjectByValue = (a: IOptions, b: IOptions) => {
   if (a.value > b.value) return 1;
   return 0;
 };
+
+export const sortObject = (a: any, b: any, key: string = "name") => {
+  if (a[key] < b[key]) return -1;
+  if (a[key] > b[key]) return 1;
+  return 0;
+};
