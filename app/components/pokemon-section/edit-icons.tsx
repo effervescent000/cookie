@@ -1,5 +1,9 @@
 import { useContext } from "react";
-import { faCircleUp, faCircleDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleUp,
+  faCircleDown,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 
 import type { IPokemonFull } from "~/interfaces";
 
@@ -13,14 +17,21 @@ const EditIcons = ({
   currentLocation: string;
   pokemon: IPokemonFull;
 }) => {
-  const { mergeIntoBench, mergeIntoTeam } = useContext(PokemonContext);
+  const { mergeIntoBench, mergeIntoTeam, removeFromBench, removeFromTeam } =
+    useContext(PokemonContext);
 
   return (
     <div className="flex justify-between">
       {currentLocation === "bench" ? (
-        <Icon icon={faCircleUp} onClick={() => mergeIntoTeam(pokemon)} />
+        <>
+          <Icon icon={faCircleUp} onClick={() => mergeIntoTeam(pokemon)} />
+          <Icon icon={faTrash} onClick={() => removeFromBench(pokemon)} />
+        </>
       ) : (
-        <Icon icon={faCircleDown} onClick={() => mergeIntoBench(pokemon)} />
+        <>
+          <Icon icon={faCircleDown} onClick={() => mergeIntoBench(pokemon)} />
+          <Icon icon={faTrash} onClick={() => removeFromTeam(pokemon)} />
+        </>
       )}
     </div>
   );
