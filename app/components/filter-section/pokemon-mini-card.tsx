@@ -24,7 +24,7 @@ const PokemonMiniCard = ({
   };
 
   return (
-    <div className="flex w-40 justify-between">
+    <div className="flex w-full justify-between">
       <div>{properCase(poke.name)}</div>
       <div>
         <Icon icon={faCheck} onClick={selectPokemon} />

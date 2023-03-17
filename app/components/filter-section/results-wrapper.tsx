@@ -33,7 +33,7 @@ const ResultsWrapper = ({
   }, [filters, output]);
 
   return (
-    <div>
+    <div className="grid grid-cols-8 gap-x-10">
       {filteredOutput.map((poke) => (
         <PokemonMiniCard key={poke.name} poke={poke} />
       ))}
