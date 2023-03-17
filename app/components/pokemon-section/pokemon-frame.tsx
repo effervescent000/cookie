@@ -1,21 +1,20 @@
 import type { IPokemonFull } from "~/interfaces";
+import { properCase } from "~/utils/text-utils";
 import PokemonCard from "./pokemon-card";
 
 const PokemonFrame = ({
   pokemon,
-  title,
-  merge,
+  location,
 }: {
   pokemon: IPokemonFull[];
-  title: string;
-  merge: (arg0: IPokemonFull) => void;
+  location: string;
 }) => {
   return (
     <div>
-      <div>{title}</div>
+      <div>{properCase(location)}</div>
       <div className="min-h-40 border border-light-blue">
         {pokemon.map((poke, i) => (
-          <PokemonCard key={i} targetPoke={poke} merge={merge} />
+          <PokemonCard key={i} targetPoke={poke} currentLocation={location} />
         ))}
       </div>
     </div>

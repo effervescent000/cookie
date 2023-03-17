@@ -7,15 +7,17 @@ import { properCase, sortObjectByValue } from "~/utils/text-utils";
 
 import Select from "../common/select";
 import { PokemonContext } from "~/pokemon-context";
+import EditIcons from "./edit-icons";
 
 const PokemonInput = ({
-  targetPoke: { name: targetName, id: targetId, moves: targetMoves },
-  merge,
+  targetPoke,
+  currentLocation,
 }: {
   targetPoke: IPokemonFull;
-  merge: (arg0: IPokemonFull) => void;
+  currentLocation: string;
 }) => {
   const { versionGroup } = useContext(PokemonContext);
+  const { name: targetName, id: targetId, moves: targetMoves } = targetPoke;
 
   const moveList = useMemo(() => {
     const moves = targetMoves;
@@ -39,7 +41,10 @@ const PokemonInput = ({
         <div>
           <span>{properCase(targetName)}</span>
         </div>
-        {/* sprite goes here */}
+        <div>
+          {/* sprite goes here */}
+          <EditIcons currentLocation={currentLocation} pokemon={targetPoke} />
+        </div>
       </div>
       <div>
         {_.range(4).map((i) => (
