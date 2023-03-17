@@ -1,8 +1,9 @@
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext } from "react";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+
 import { PokemonContext } from "~/pokemon-context";
 import PokeAPIService from "~/utils/pokeapi-service";
+import Icon from "../common/icon";
 
 const PokemonMiniCard = ({
   full = false,
@@ -23,11 +24,7 @@ const PokemonMiniCard = ({
     <div className="flex w-40 justify-between">
       <div>{pokeName}</div>
       <div>
-        <FontAwesomeIcon
-          icon={faCheck}
-          onClick={selectPokemon}
-          className="cursor-pointer"
-        />
+        <Icon icon={faCheck} onClick={selectPokemon} />
       </div>
     </div>
   );

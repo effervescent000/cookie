@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUp, faCircleDown } from "@fortawesome/free-solid-svg-icons";
 
 import type { IPokemonFull } from "~/interfaces";
