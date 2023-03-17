@@ -53,7 +53,7 @@ class PokeAPIService {
   }
 
   async getPokemonByName(name: string) {
-    const response = await this.makeGetRequest(`pokemon/${name}`);
+    const response = await this.makeGetRequest(`pokemon/${name.toLowerCase()}`);
     return response;
   }
 }

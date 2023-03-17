@@ -46,6 +46,7 @@ export default function App() {
     const found = team.find(({ id: pokeId }) => pokeId === target.id);
     if (!found) {
       setTeam([...team, target]);
+      removeFromBench(target);
       incrementId();
     }
   };
@@ -54,8 +55,17 @@ export default function App() {
     const found = bench.find(({ id: pokeId }) => pokeId === target.id);
     if (!found) {
       setBench([...bench, target]);
+      removeFromTeam(target);
       incrementId();
     }
+  };
+
+  const removeFromBench = (target: IPokemonFull) => {
+    setBench(bench.filter(({ id: pokeId }) => pokeId !== target.id));
+  };
+
+  const removeFromTeam = (target: IPokemonFull) => {
+    setTeam(team.filter(({ id: pokeId }) => pokeId !== target.id));
   };
 
   return (
@@ -72,6 +82,8 @@ export default function App() {
         setRegion: setSelectedRegion,
         versionGroup,
         setVersionGroup,
+        removeFromBench,
+        removeFromTeam,
       }}
     >
       <html lang="en" className="h-full">

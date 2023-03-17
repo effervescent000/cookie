@@ -1,19 +1,23 @@
-import { useMemo } from "react";
+import { useMemo, useContext } from "react";
 import _ from "lodash";
 
 import type { IPokemonFull } from "~/interfaces";
 
-import { useVersion } from "~/utils/hooks/useVersion";
-import { properCase } from "~/utils/text-utils";
+import { properCase, sortObjectByValue } from "~/utils/text-utils";
 
 import Select from "../common/select";
+import { PokemonContext } from "~/pokemon-context";
+import EditIcons from "./edit-icons";
 
 const PokemonInput = ({
-  targetPoke: { name: targetName, id: targetId, moves: targetMoves },
+  targetPoke,
+  currentLocation,
 }: {
   targetPoke: IPokemonFull;
+  currentLocation: string;
 }) => {
-  const { version } = useVersion();
+  const { versionGroup } = useContext(PokemonContext);
+  const { name: targetName, id: targetId, moves: targetMoves } = targetPoke;
 
   const moveList = useMemo(() => {
     const moves = targetMoves;
@@ -21,19 +25,27 @@ const PokemonInput = ({
     const filteredMoves = moves
       .map(({ move: { name }, version_group_details }) => {
         const match = version_group_details.find(
-          (detail) => detail.version_group.name === version
+          (detail) => detail.version_group.name === versionGroup
         );
         if (match) return { name: properCase(name), value: name };
         return undefined;
       })
       .filter((move) => !!move);
+    filteredMoves.sort(sortObjectByValue);
     return filteredMoves;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [targetName, version, targetId]);
+  }, [targetMoves, versionGroup]);
 
   return (
     <div className="flex">
-      <div>{/* sprite goes here */}</div>
+      <div>
+        <div>
+          <span>{properCase(targetName)}</span>
+        </div>
+        <div>
+          {/* sprite goes here */}
+          <EditIcons currentLocation={currentLocation} pokemon={targetPoke} />
+        </div>
+      </div>
       <div>
         {_.range(4).map((i) => (
           <Select key={`${targetId}-${i}`} options={moveList} />

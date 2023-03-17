@@ -9,6 +9,11 @@ module.exports = {
       "light-blue": "#598392",
       "dark-blue": "#124559",
     },
+    extend: {
+      minHeight: {
+        40: "10rem",
+      },
+    },
   },
   plugins: [],
 };

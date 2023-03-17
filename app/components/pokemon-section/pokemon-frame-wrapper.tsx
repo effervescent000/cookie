@@ -19,8 +19,8 @@ const PokemonSection = () => {
 
   return (
     <div>
-      <PokemonFrame pokemon={team} />
-      <PokemonFrame pokemon={bench} />
+      <PokemonFrame pokemon={team} location="team" />
+      <PokemonFrame pokemon={bench} location="bench" />
     </div>
   );
 };
