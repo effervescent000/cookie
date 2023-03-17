@@ -1,18 +1,35 @@
-import { IPokemonMini } from "~/interfaces";
+import type { IPokemonFull, IPokemonMini } from "~/interfaces";
+
 import { properCase, sortObject, sortObjectByValue } from "./text-utils";
 
 const cacheName = "pokecache";
+const ROOT_URL = "https://pokeapi.co/api/v2";
+
+const mergePokesIntoResourceList = async (
+  newPokes: IPokemonMini[]
+): Promise<(IPokemonMini | IPokemonFull)[]> => {
+  if ("caches" in window) {
+    const cache = await caches.open(cacheName);
+    const pokemon = await Promise.all(
+      newPokes.map(async (miniPoke: IPokemonMini) => {
+        const foundPoke = await cache.match(
+          `${ROOT_URL}/pokemon/${miniPoke.name}`
+        );
+        return foundPoke?.json() || miniPoke;
+      })
+    );
+    pokemon.sort(sortObject);
+    return pokemon;
+  }
+  const pokemon = [...newPokes];
+  pokemon.sort(sortObject);
+  return pokemon;
+};
 
 class PokeAPIService {
-  rootUrl: string;
-
-  constructor() {
-    this.rootUrl = "https://pokeapi.co/api/v2";
-  }
-
   async makeGetRequest(endpoint: string) {
     try {
-      const url = `${this.rootUrl}/${endpoint}`;
+      const url = `${ROOT_URL}/${endpoint}`;
       if ("caches" in window) {
         const cache = await caches.open(cacheName);
         const matchedResponse = await cache.match(url);
@@ -24,7 +41,7 @@ class PokeAPIService {
         const json = await response.json();
         return json;
       }
-      const response = await fetch(`${this.rootUrl}/${endpoint}`);
+      const response = await fetch(`${ROOT_URL}/${endpoint}`);
       const json = await response.json();
       return json;
     } catch (error) {
@@ -49,25 +66,22 @@ class PokeAPIService {
       (poke: IPokemonMini) =>
         !poke.name.match(/-mega/) && !poke.name.match(/-gmax/)
     );
-    if ("caches" in window) {
-      const cache = await caches.open(cacheName);
-      const pokemon = Promise.all(
-        pokemonRaw.map(async (miniPoke: IPokemonMini) => {
-          const foundPoke = await cache.match(
-            `${this.rootUrl}/pokemon/${miniPoke.name}`
-          );
-          return foundPoke?.json() || miniPoke;
-        })
-      );
-      const sortedPokes = (await pokemon).sort(sortObject);
-      return sortedPokes;
-    }
-    return pokemonRaw.sort(sortObject);
+    const pokemon = await mergePokesIntoResourceList(pokemonRaw);
+    return pokemon;
   }
 
   async getPokemonByName(name: string) {
     const response = await this.makeGetRequest(`pokemon/${name.toLowerCase()}`);
     return response;
+  }
+
+  async getPokemonByType(type: string) {
+    const response = await this.makeGetRequest(`type/${type.toLowerCase()}`);
+    const result = response.pokemon.map(
+      ({ pokemon }: { pokemon: IPokemonMini }) => pokemon
+    );
+    const pokemon = await mergePokesIntoResourceList(result);
+    return pokemon;
   }
 }
 

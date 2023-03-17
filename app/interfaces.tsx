@@ -54,3 +54,9 @@ export interface IPokemonMini {
   name: string;
   url: string;
 }
+
+export interface IFilters {
+  name: string;
+  type1: string;
+  type2: string;
+}
