@@ -1,11 +1,13 @@
-import type { IPokemonMini } from "~/interfaces";
+import type { IPokemonFull, IPokemonMini } from "~/interfaces";
 
 import { properCase, sortObject, sortObjectByValue } from "./text-utils";
 
 const cacheName = "pokecache";
 const ROOT_URL = "https://pokeapi.co/api/v2";
 
-const mergePokesIntoResourceList = async (newPokes: IPokemonMini[]) => {
+const mergePokesIntoResourceList = async (
+  newPokes: IPokemonMini[]
+): Promise<(IPokemonMini | IPokemonFull)[]> => {
   if ("caches" in window) {
     const cache = await caches.open(cacheName);
     const pokemon = await Promise.all(
