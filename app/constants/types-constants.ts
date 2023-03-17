@@ -1,4 +1,6 @@
-export const TYPES = [
+import type { IType } from "~/interfaces";
+
+export const TYPES: IType[] = [
   {
     key: "normal",
     color: "#C6C6A7",
