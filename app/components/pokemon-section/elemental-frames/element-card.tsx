@@ -10,8 +10,11 @@ const ElementCard = ({
   value: number;
 }) => {
   return (
-    <div className="w-full">
-      <div style={{ background: type.bgColor }} className="w-full text-white">
+    <div className="flex w-full flex-col items-center">
+      <div
+        style={{ background: type.bgColor }}
+        className="w-full rounded-md p-0.5 text-center text-white"
+      >
         {label}
       </div>
       <div>{value}</div>
