@@ -1,6 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 
-import { DEFENSIVE, TYPES, VULNERABILITY } from "~/constants/types-constants";
+import {
+  DEFENSIVE_KEY,
+  DEFENSIVE_VALUES,
+  TYPES,
+  DAMAGE_RELATION_VALUES,
+} from "~/constants/types-constants";
 import { PokemonContext } from "~/pokemon-context";
 import PokeAPIService from "~/utils/pokeapi-service";
 
@@ -19,7 +24,7 @@ const ElementalFrame = ({
   const [values, setValues] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
-    if (tableType === DEFENSIVE) {
+    if (tableType === DEFENSIVE_KEY) {
       const P = new PokeAPIService();
       const newValues: { [key: string]: number } = {};
 
@@ -31,11 +36,13 @@ const ElementalFrame = ({
             const typeResponse = await P.getType(typeName);
             Object.entries(typeResponse.damage_relations).forEach(
               ([damage_level, relatedTypes]) => {
-                relatedTypes.forEach((relatedType) => {
-                  thisPokeValues[relatedType.name] =
-                    (thisPokeValues[relatedType.name] || 0) +
-                    VULNERABILITY[damage_level];
-                });
+                if (damage_level.includes("_from")) {
+                  relatedTypes.forEach((relatedType) => {
+                    thisPokeValues[relatedType.name] =
+                      (thisPokeValues[relatedType.name] || 0) +
+                      DAMAGE_RELATION_VALUES[damage_level];
+                  });
+                }
               }
             );
           }
