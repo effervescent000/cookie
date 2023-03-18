@@ -12,9 +12,9 @@ const ElementalFrame = ({
   tableType: string;
 }) => {
   return (
-    <div>
+    <div className="w-max">
       <div>{title}</div>
-      <div className="grid grid-cols-6">
+      <div className="grid grid-cols-6 gap-x-2">
         {TYPES.map((type) => (
           <ElementCard
             key={type.key}

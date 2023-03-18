@@ -8,8 +8,8 @@ const PokemonSection = () => {
   const { team, bench } = useContext(PokemonContext);
 
   return (
-    <div className="flex">
-      <div>
+    <div className="flex justify-between gap-10">
+      <div className="w-full">
         <PokemonFrame pokemon={team} location="team" />
         <PokemonFrame pokemon={bench} location="bench" />
       </div>
