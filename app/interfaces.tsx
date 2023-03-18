@@ -60,3 +60,10 @@ export interface IFilters {
   type1: string;
   type2: string;
 }
+
+export interface IType {
+  key: string;
+  color?: string;
+  bgColor?: string;
+  abbr?: string;
+}
