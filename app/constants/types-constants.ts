@@ -24,3 +24,15 @@ export const TYPES: IType[] = [
   { key: "dark", bgColor: "#49392F" },
   { key: "fairy", bgColor: "#9B6470" },
 ];
+
+export const OFFENSIVE_KEY = "offensive";
+export const DEFENSIVE_KEY = "defensive";
+
+export const DAMAGE_RELATION_VALUES: { [key: string]: number } = {
+  double_damage_from: -1,
+  double_damage_to: 1,
+  half_damage_from: 1,
+  half_damage_to: -0.5,
+  no_damage_from: 1.5,
+  no_damage_to: -1.5,
+};

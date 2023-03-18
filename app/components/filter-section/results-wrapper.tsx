@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import _ from "lodash";
 
-import type { IFilters, IPokemonFull, IPokemonMini } from "~/interfaces";
+import type { IFilters, IPokemonFull, IResourceListItem } from "~/interfaces";
 import { isFullPokemon } from "~/utils/type-guards";
 
 import PokemonMiniCard from "./pokemon-mini-card";
@@ -10,7 +10,7 @@ const ResultsWrapper = ({
   output,
   filters,
 }: {
-  output: Array<IPokemonFull | IPokemonMini>;
+  output: Array<IPokemonFull | IResourceListItem>;
   filters: IFilters;
 }) => {
   const filteredOutput = useMemo(() => {

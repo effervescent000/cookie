@@ -50,7 +50,7 @@ export interface IPokeSkeleton {
   moves: { 0: string; 1: string; 2: string; 3: string };
 }
 
-export interface IPokemonMini {
+export interface IResourceListItem {
   name: string;
   url: string;
 }
@@ -66,4 +66,15 @@ export interface IType {
   color?: string;
   bgColor?: string;
   abbr?: string;
+}
+
+export interface ITypeResponse {
+  damage_relations: {
+    double_damage_from: IResourceListItem[];
+    double_damage_to: IResourceListItem[];
+    half_damage_from: IResourceListItem[];
+    half_damage_to: IResourceListItem[];
+    no_damage_from: IResourceListItem[];
+    no_damage_to: IResourceListItem[];
+  };
 }
