@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
 // import { json } from "@remix-run/node";
 import {
@@ -34,18 +34,30 @@ export const meta: MetaFunction = () => ({
 
 export default function App() {
   const [idCounter, setIdCounter] = useState(0);
-  const [gen, setGen] = useState("VIII");
+  const [gen, setGen] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("galar");
   const [versionGroup, setVersionGroup] = useState("");
   const [team, setTeam] = useState<IPokemonFull[]>([]);
   const [bench, setBench] = useState<IPokemonFull[]>([]);
+
+  const saveGen = (targetGen: string) => {
+    setGen(targetGen);
+    localStorage.setItem("gen", targetGen);
+  };
+
+  const saveVersionGroup = (targetVersionGroup: string) => {
+    setVersionGroup(targetVersionGroup);
+    localStorage.setItem("game", targetVersionGroup);
+  };
 
   const incrementId = () => setIdCounter(idCounter + 1);
 
   const mergeIntoTeam = (target: IPokemonFull) => {
     const found = team.find(({ id: pokeId }) => pokeId === target.id);
     if (!found) {
-      setTeam([...team, target]);
+      const newTeam = [...team, target];
+      setTeam(newTeam);
+      saveTeamToLocal(newTeam);
       removeFromBench(target);
       incrementId();
     }
@@ -54,25 +66,52 @@ export default function App() {
   const mergeIntoBench = (target: IPokemonFull) => {
     const found = bench.find(({ id: pokeId }) => pokeId === target.id);
     if (!found) {
-      setBench([...bench, target]);
+      const newBench = [...bench, target];
+      setBench(newBench);
+      saveBenchToLocal(newBench);
       removeFromTeam(target);
       incrementId();
     }
   };
 
+  const saveTeamToLocal = (newTeam: IPokemonFull[]) => {
+    localStorage.setItem("team", JSON.stringify(newTeam));
+  };
+
+  const saveBenchToLocal = (newBench: IPokemonFull[]) => {
+    localStorage.setItem("bench", JSON.stringify(newBench));
+  };
+
   const removeFromBench = (target: IPokemonFull) => {
-    setBench(bench.filter(({ id: pokeId }) => pokeId !== target.id));
+    const newBench = bench.filter(({ id: pokeId }) => pokeId !== target.id);
+    setBench(newBench);
+    saveBenchToLocal(newBench);
   };
 
   const removeFromTeam = (target: IPokemonFull) => {
-    setTeam(team.filter(({ id: pokeId }) => pokeId !== target.id));
+    const newTeam = team.filter(({ id: pokeId }) => pokeId !== target.id);
+    setTeam(newTeam);
+    saveTeamToLocal(newTeam);
   };
+
+  useEffect(() => {
+    setGen(localStorage.getItem("gen") || "VIII");
+    setVersionGroup(localStorage.getItem("game") || "sword-shield");
+    const foundTeam = localStorage.getItem("team");
+    if (foundTeam) {
+      setTeam(JSON.parse(foundTeam));
+    }
+    const foundBench = localStorage.getItem("bench");
+    if (foundBench) {
+      setBench(JSON.parse(foundBench));
+    }
+  }, []);
 
   return (
     <PokemonContext.Provider
       value={{
         gen,
-        setGen,
+        setGen: saveGen,
         region: selectedRegion,
         team,
         bench,
@@ -81,7 +120,7 @@ export default function App() {
         mergeIntoBench,
         setRegion: setSelectedRegion,
         versionGroup,
-        setVersionGroup,
+        setVersionGroup: saveVersionGroup,
         removeFromBench,
         removeFromTeam,
       }}
