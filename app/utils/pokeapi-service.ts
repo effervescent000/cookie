@@ -1,4 +1,8 @@
-import type { IPokemonFull, IPokemonMini } from "~/interfaces";
+import type {
+  IPokemonFull,
+  IResourceListItem,
+  ITypeResponse,
+} from "~/interfaces";
 
 import { properCase, sortObject, sortObjectByValue } from "./text-utils";
 
@@ -6,12 +10,12 @@ const cacheName = "pokecache";
 const ROOT_URL = "https://pokeapi.co/api/v2";
 
 const mergePokesIntoResourceList = async (
-  newPokes: IPokemonMini[]
-): Promise<(IPokemonMini | IPokemonFull)[]> => {
+  newPokes: IResourceListItem[]
+): Promise<(IResourceListItem | IPokemonFull)[]> => {
   if ("caches" in window) {
     const cache = await caches.open(cacheName);
     const pokemon = await Promise.all(
-      newPokes.map(async (miniPoke: IPokemonMini) => {
+      newPokes.map(async (miniPoke: IResourceListItem) => {
         const foundPoke = await cache.match(
           `${ROOT_URL}/pokemon/${miniPoke.name}`
         );
@@ -63,7 +67,7 @@ class PokeAPIService {
     const response = await this.makeGetRequest("pokemon?limit=1300");
 
     const pokemonRaw = response.results.filter(
-      (poke: IPokemonMini) =>
+      (poke: IResourceListItem) =>
         !poke.name.match(/-mega/) && !poke.name.match(/-gmax/)
     );
     const pokemon = await mergePokesIntoResourceList(pokemonRaw);
@@ -78,10 +82,15 @@ class PokeAPIService {
   async getPokemonByType(type: string) {
     const response = await this.makeGetRequest(`type/${type.toLowerCase()}`);
     const result = response.pokemon.map(
-      ({ pokemon }: { pokemon: IPokemonMini }) => pokemon
+      ({ pokemon }: { pokemon: IResourceListItem }) => pokemon
     );
     const pokemon = await mergePokesIntoResourceList(result);
     return pokemon;
+  }
+
+  async getType(type: string): Promise<ITypeResponse> {
+    const response = await this.makeGetRequest(`type/${type.toLowerCase()}`);
+    return response;
   }
 }
 

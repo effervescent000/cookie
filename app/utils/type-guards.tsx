@@ -1,5 +1,5 @@
-import type { IPokemonFull, IPokemonMini } from "~/interfaces";
+import type { IPokemonFull, IResourceListItem } from "~/interfaces";
 
 export const isFullPokemon = (
-  poke: IPokemonFull | IPokemonMini
-): poke is IPokemonFull => (poke as IPokemonMini).url === undefined;
+  poke: IPokemonFull | IResourceListItem
+): poke is IPokemonFull => (poke as IResourceListItem).url === undefined;

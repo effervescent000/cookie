@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import type { IPokemonFull, IPokemonMini } from "~/interfaces";
+import type { IPokemonFull, IResourceListItem } from "~/interfaces";
 
 import PokeAPIService from "~/utils/pokeapi-service";
 
@@ -9,7 +9,7 @@ import ResultsWrapper from "./results-wrapper";
 
 const FilterSection = () => {
   const [allPokemon, setAllPokemon] = useState<
-    Array<IPokemonFull | IPokemonMini>
+    Array<IPokemonFull | IResourceListItem>
   >([]);
   const [filters, setFilters] = useState({ name: "", type1: "", type2: "" });
 

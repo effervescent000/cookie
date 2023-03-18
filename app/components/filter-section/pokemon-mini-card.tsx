@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
-import type { IPokemonFull, IPokemonMini } from "~/interfaces";
+import type { IPokemonFull, IResourceListItem } from "~/interfaces";
 
 import { PokemonContext } from "~/pokemon-context";
 import PokeAPIService from "~/utils/pokeapi-service";
@@ -13,7 +13,7 @@ const PokemonMiniCard = ({
   poke,
 }: {
   full?: boolean;
-  poke: IPokemonFull | IPokemonMini;
+  poke: IPokemonFull | IResourceListItem;
 }) => {
   const { mergeIntoBench } = useContext(PokemonContext);
 
