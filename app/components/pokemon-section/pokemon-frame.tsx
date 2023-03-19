@@ -1,4 +1,4 @@
-import type { IPokemonFull } from "~/interfaces";
+import type { IPokemonFull, IPokeSkeleton } from "~/interfaces";
 import { properCase } from "~/utils/text-utils";
 import PokemonCard from "./pokemon-card";
 
@@ -6,7 +6,7 @@ const PokemonFrame = ({
   pokemon,
   location,
 }: {
-  pokemon: IPokemonFull[];
+  pokemon: IPokeSkeleton[];
   location: string;
 }) => {
   return (

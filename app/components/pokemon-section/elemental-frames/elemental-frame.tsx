@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 
 import {
   DEFENSIVE_KEY,
-  DEFENSIVE_VALUES,
   TYPES,
   DAMAGE_RELATION_VALUES,
 } from "~/constants/types-constants";
@@ -29,7 +28,10 @@ const ElementalFrame = ({
       const newValues: { [key: string]: number } = {};
 
       const makeValues = async () => {
-        for (const pokemon of team) {
+        const pokemonToQuery = await P.getPokemonByName(
+          team.map(({ name }) => name)
+        );
+        for await (const pokemon of pokemonToQuery) {
           const thisPokeValues: { [key: string]: number } = {};
           for (const typeObj of pokemon.types) {
             const typeName = typeObj.type.name;

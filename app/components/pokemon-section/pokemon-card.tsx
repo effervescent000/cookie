@@ -1,26 +1,37 @@
-import { useMemo, useContext } from "react";
+import { useMemo, useContext, useState, useEffect } from "react";
 import _ from "lodash";
 
-import type { IPokemonFull } from "~/interfaces";
+import type { IPokemonFull, IPokeSkeleton } from "~/interfaces";
 
 import { properCase, sortObjectByValue } from "~/utils/text-utils";
 
 import Select from "../common/select";
 import { PokemonContext } from "~/pokemon-context";
 import EditIcons from "./edit-icons";
+import PokeAPIService from "~/utils/pokeapi-service";
 
 const PokemonInput = ({
   targetPoke,
   currentLocation,
 }: {
-  targetPoke: IPokemonFull;
+  targetPoke: IPokeSkeleton;
   currentLocation: string;
 }) => {
   const { versionGroup } = useContext(PokemonContext);
-  const { name: targetName, id: targetId, moves: targetMoves } = targetPoke;
+  const [fullPoke, setFullPoke] = useState<IPokemonFull>({});
+
+  useEffect(() => {
+    const getFullPoke = async () => {
+      const P = new PokeAPIService();
+      const result = await P.getPokemonByName([targetPoke.name]);
+      setFullPoke(result[0]);
+    };
+
+    getFullPoke();
+  }, [targetPoke.name]);
 
   const moveList = useMemo(() => {
-    const moves = targetMoves;
+    const { moves } = fullPoke;
     if (!moves) return [];
     const filteredMoves = moves
       .map(({ move: { name }, version_group_details }) => {
@@ -33,13 +44,13 @@ const PokemonInput = ({
       .filter((move) => !!move);
     filteredMoves.sort(sortObjectByValue);
     return filteredMoves;
-  }, [targetMoves, versionGroup]);
+  }, [fullPoke, versionGroup]);
 
   return (
     <div className="flex">
       <div>
         <div>
-          <span>{properCase(targetName)}</span>
+          <span>{properCase(targetPoke.name)}</span>
         </div>
         <div>
           {/* sprite goes here */}
@@ -48,7 +59,7 @@ const PokemonInput = ({
       </div>
       <div>
         {_.range(4).map((i) => (
-          <Select key={`${targetId}-${i}`} options={moveList} />
+          <Select key={`${targetPoke.id}-${i}`} options={moveList} />
         ))}
       </div>
     </div>

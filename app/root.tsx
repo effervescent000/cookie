@@ -14,7 +14,7 @@ import tailwindStylesheetUrl from "./styles/tailwind.css";
 // import { getUser } from "./session.server";
 
 import { PokemonContext } from "~/pokemon-context";
-import type { IPokemonFull } from "./interfaces";
+import type { IPokemonFull, IPokeSkeleton } from "./interfaces";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
@@ -37,8 +37,8 @@ export default function App() {
   const [gen, setGen] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("galar");
   const [versionGroup, setVersionGroup] = useState("");
-  const [team, setTeam] = useState<IPokemonFull[]>([]);
-  const [bench, setBench] = useState<IPokemonFull[]>([]);
+  const [team, setTeam] = useState<IPokeSkeleton[]>([]);
+  const [bench, setBench] = useState<IPokeSkeleton[]>([]);
 
   const saveGen = (targetGen: string) => {
     setGen(targetGen);
@@ -52,7 +52,7 @@ export default function App() {
 
   const incrementId = () => setIdCounter(idCounter + 1);
 
-  const mergeIntoTeam = (target: IPokemonFull) => {
+  const mergeIntoTeam = (target: IPokeSkeleton) => {
     const found = team.find(({ id: pokeId }) => pokeId === target.id);
     if (!found) {
       const newTeam = [...team, target];
@@ -63,7 +63,7 @@ export default function App() {
     }
   };
 
-  const mergeIntoBench = (target: IPokemonFull) => {
+  const mergeIntoBench = (target: IPokeSkeleton) => {
     const found = bench.find(({ id: pokeId }) => pokeId === target.id);
     if (!found) {
       const newBench = [...bench, target];
@@ -74,21 +74,21 @@ export default function App() {
     }
   };
 
-  const saveTeamToLocal = (newTeam: IPokemonFull[]) => {
+  const saveTeamToLocal = (newTeam: IPokeSkeleton[]) => {
     localStorage.setItem("team", JSON.stringify(newTeam));
   };
 
-  const saveBenchToLocal = (newBench: IPokemonFull[]) => {
+  const saveBenchToLocal = (newBench: IPokeSkeleton[]) => {
     localStorage.setItem("bench", JSON.stringify(newBench));
   };
 
-  const removeFromBench = (target: IPokemonFull) => {
+  const removeFromBench = (target: IPokeSkeleton) => {
     const newBench = bench.filter(({ id: pokeId }) => pokeId !== target.id);
     setBench(newBench);
     saveBenchToLocal(newBench);
   };
 
-  const removeFromTeam = (target: IPokemonFull) => {
+  const removeFromTeam = (target: IPokeSkeleton) => {
     const newTeam = team.filter(({ id: pokeId }) => pokeId !== target.id);
     setTeam(newTeam);
     saveTeamToLocal(newTeam);

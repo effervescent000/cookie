@@ -74,9 +74,16 @@ class PokeAPIService {
     return pokemon;
   }
 
-  async getPokemonByName(name: string) {
-    const response = await this.makeGetRequest(`pokemon/${name.toLowerCase()}`);
-    return response;
+  async getPokemonByName(names: string[]): Promise<IPokemonFull[]> {
+    const results = await Promise.all(
+      names.map(async (name) => {
+        const response = await this.makeGetRequest(
+          `pokemon/${name.toLowerCase()}`
+        );
+        return response;
+      })
+    );
+    return results;
   }
 
   async getPokemonByType(type: string) {
