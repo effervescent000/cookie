@@ -78,3 +78,8 @@ export interface ITypeResponse {
     no_damage_to: IResourceListItem[];
   };
 }
+
+export interface IMoveResponse {
+  name: string;
+  type: IResourceListItem;
+}

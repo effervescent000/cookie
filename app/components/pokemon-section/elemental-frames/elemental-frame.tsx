@@ -23,10 +23,9 @@ const ElementalFrame = ({
   const [values, setValues] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
+    const P = new PokeAPIService();
+    const newValues: { [key: string]: number } = {};
     if (tableType === DEFENSIVE_KEY) {
-      const P = new PokeAPIService();
-      const newValues: { [key: string]: number } = {};
-
       const makeValues = async () => {
         const pokemonToQuery = await P.getPokemonByName(
           team.map(({ name }) => name)
@@ -43,6 +42,44 @@ const ElementalFrame = ({
                     thisPokeValues[relatedType.name] =
                       (thisPokeValues[relatedType.name] || 0) +
                       DAMAGE_RELATION_VALUES[damage_level];
+                  });
+                }
+              }
+            );
+          }
+          Object.entries(thisPokeValues).forEach(([key, value]) => {
+            newValues[key] = (newValues[key] || 0) + value;
+          });
+        }
+        setValues(newValues);
+      };
+
+      makeValues();
+    } else {
+      const makeValues = async () => {
+        for (const pokemon of team) {
+          const thisPokeValues: { [key: string]: number } = {};
+          const selectedMoves = await Promise.all(
+            Object.values(pokemon.moves)
+              .filter((move) => !!move)
+              .map(async (move) => {
+                return await P.getMove(move);
+              })
+          );
+          for (const move of selectedMoves) {
+            const moveTypeResponse = await P.getType(move.type.name);
+            Object.entries(moveTypeResponse.damage_relations).forEach(
+              ([damage_level, relatedTypes]) => {
+                if (damage_level.includes("_to")) {
+                  relatedTypes.forEach((relatedType) => {
+                    if (
+                      thisPokeValues[relatedType.name] === undefined ||
+                      thisPokeValues[relatedType.name] <
+                        DAMAGE_RELATION_VALUES[damage_level]
+                    ) {
+                      thisPokeValues[relatedType.name] =
+                        DAMAGE_RELATION_VALUES[damage_level];
+                    }
                   });
                 }
               }

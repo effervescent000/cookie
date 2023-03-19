@@ -1,4 +1,5 @@
 import type {
+  IMoveResponse,
   IPokemonFull,
   IResourceListItem,
   ITypeResponse,
@@ -97,6 +98,11 @@ class PokeAPIService {
 
   async getType(type: string): Promise<ITypeResponse> {
     const response = await this.makeGetRequest(`type/${type.toLowerCase()}`);
+    return response;
+  }
+
+  async getMove(move: string): Promise<IMoveResponse> {
+    const response = await this.makeGetRequest(`move/${move}`);
     return response;
   }
 }

@@ -53,25 +53,25 @@ export default function App() {
   const incrementId = () => setIdCounter(idCounter + 1);
 
   const mergeIntoTeam = (target: IPokeSkeleton) => {
-    const found = team.find(({ id: pokeId }) => pokeId === target.id);
-    if (!found) {
-      const newTeam = [...team, target];
-      setTeam(newTeam);
-      saveTeamToLocal(newTeam);
-      removeFromBench(target);
-      incrementId();
-    }
+    const filteredTeam = team.filter(
+      ({ id: existingId }) => existingId !== target.id
+    );
+    const newTeam = [...filteredTeam, target];
+    setTeam(newTeam);
+    saveTeamToLocal(newTeam);
+    removeFromBench(target);
+    incrementId();
   };
 
   const mergeIntoBench = (target: IPokeSkeleton) => {
-    const found = bench.find(({ id: pokeId }) => pokeId === target.id);
-    if (!found) {
-      const newBench = [...bench, target];
-      setBench(newBench);
-      saveBenchToLocal(newBench);
-      removeFromTeam(target);
-      incrementId();
-    }
+    const filteredBench = bench.filter(
+      ({ id: existingId }) => existingId !== target.id
+    );
+    const newBench = [...filteredBench, target];
+    setBench(newBench);
+    saveBenchToLocal(newBench);
+    removeFromTeam(target);
+    incrementId();
   };
 
   const saveTeamToLocal = (newTeam: IPokeSkeleton[]) => {
