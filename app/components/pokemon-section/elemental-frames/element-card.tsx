@@ -17,7 +17,13 @@ const ElementCard = ({
       >
         {label}
       </div>
-      <div>{value}</div>
+      <div
+        className={`${
+          (value < 0 && "text-red") || (value > 0 && "text-green")
+        }`}
+      >
+        {value}
+      </div>
     </div>
   );
 };
