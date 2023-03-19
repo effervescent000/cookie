@@ -5,7 +5,7 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 
-import type { IPokemonFull } from "~/interfaces";
+import type { IPokeSkeleton } from "~/interfaces";
 
 import { PokemonContext } from "~/pokemon-context";
 import Icon from "../common/icon";
@@ -15,7 +15,7 @@ const EditIcons = ({
   pokemon,
 }: {
   currentLocation: string;
-  pokemon: IPokemonFull;
+  pokemon: IPokeSkeleton;
 }) => {
   const { mergeIntoBench, mergeIntoTeam, removeFromBench, removeFromTeam } =
     useContext(PokemonContext);

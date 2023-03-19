@@ -15,12 +15,14 @@ const PokemonMiniCard = ({
   full?: boolean;
   poke: IPokemonFull | IResourceListItem;
 }) => {
-  const { mergeIntoBench } = useContext(PokemonContext);
+  const { mergeIntoBench, idCounter } = useContext(PokemonContext);
 
   const selectPokemon = async () => {
-    const P = new PokeAPIService();
-    const fullPoke = await P.getPokemonByName(poke.name);
-    mergeIntoBench(fullPoke);
+    mergeIntoBench({
+      name: poke.name,
+      moves: { 0: "", 1: "", 2: "", 3: "" },
+      id: idCounter,
+    });
   };
 
   return (
