@@ -8,6 +8,8 @@ module.exports = {
       gray: "#C4D4C5",
       "light-blue": "#598392",
       "dark-blue": "#124559",
+      red: "#990F02",
+      green: "#3CB043",
     },
     extend: {
       minHeight: {
