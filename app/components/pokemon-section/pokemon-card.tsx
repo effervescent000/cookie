@@ -17,7 +17,8 @@ const PokemonInput = ({
   targetPoke: IPokeSkeleton;
   currentLocation: string;
 }) => {
-  const { versionGroup } = useContext(PokemonContext);
+  const { versionGroup, mergeIntoBench, mergeIntoTeam } =
+    useContext(PokemonContext);
   const [fullPoke, setFullPoke] = useState<IPokemonFull>({});
 
   useEffect(() => {
@@ -46,6 +47,15 @@ const PokemonInput = ({
     return filteredMoves;
   }, [fullPoke, versionGroup]);
 
+  const mergeMove = (value: string, moveIndex: number) => {
+    if (currentLocation === "team") {
+      mergeIntoTeam({
+        ...targetPoke,
+        moves: { ...targetPoke.moves, [moveIndex]: value },
+      });
+    }
+  };
+
   return (
     <div className="flex">
       <div>
@@ -59,7 +69,12 @@ const PokemonInput = ({
       </div>
       <div>
         {_.range(4).map((i) => (
-          <Select key={`${targetPoke.id}-${i}`} options={moveList} />
+          <Select
+            key={`${targetPoke.id}-${i}`}
+            options={moveList}
+            callback={(value) => mergeMove(value, i)}
+            selection={targetPoke.moves[i]}
+          />
         ))}
       </div>
     </div>
