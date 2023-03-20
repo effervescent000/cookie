@@ -7,10 +7,13 @@ import PokeAPIService from "~/utils/pokeapi-service";
 import FilterWrapper from "./filters-wrapper";
 import ResultsWrapper from "./results-wrapper";
 
-const FilterSection = () => {
-  const [allPokemon, setAllPokemon] = useState<
-    Array<IPokemonFull | IResourceListItem>
-  >([]);
+const FilterSection = ({
+  allPokemon,
+  setAllPokemon,
+}: {
+  allPokemon: (IPokemonFull | IResourceListItem)[];
+  setAllPokemon: (pokemon: (IPokemonFull | IResourceListItem)[]) => void;
+}) => {
   const [filters, setFilters] = useState({ name: "", type1: "", type2: "" });
 
   const mergeFilters = (newFilter: { [key: string]: string }) =>
@@ -22,7 +25,7 @@ const FilterSection = () => {
       setAllPokemon(await P.getAllPokemon());
     };
     fetchPokemon();
-  }, []);
+  }, [setAllPokemon]);
 
   return (
     <div>

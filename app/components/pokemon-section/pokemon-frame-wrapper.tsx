@@ -1,10 +1,17 @@
 import { useEffect, useState, useContext } from "react";
+import type { IPokemonFull, IResourceListItem } from "~/interfaces";
+
 import { PokemonContext } from "~/pokemon-context";
+import CoverageWrapper from "../pokedex-coverage/coverage-wrapper";
 import ElementalFramesWrapper from "./elemental-frames/elemental-frames-wrapper";
 
 import PokemonFrame from "./pokemon-frame";
 
-const PokemonSection = () => {
+const PokemonSection = ({
+  allPokemon,
+}: {
+  allPokemon: (IPokemonFull | IResourceListItem)[];
+}) => {
   const { team, bench } = useContext(PokemonContext);
 
   return (
@@ -13,6 +20,7 @@ const PokemonSection = () => {
         <PokemonFrame pokemon={team} location="team" />
         <PokemonFrame pokemon={bench} location="bench" />
       </div>
+      <CoverageWrapper allPokemon={allPokemon} />
       <ElementalFramesWrapper />
     </div>
   );
