@@ -40,6 +40,10 @@ export interface IPokemonFull {
   moves: IMove[];
   name: string;
   order: number;
+  sprites: {
+    front_default: string;
+    front_female: string | null;
+  };
   stats: IStat[];
   types: { slot: number; type: IName }[];
 }
