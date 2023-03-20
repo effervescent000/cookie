@@ -31,6 +31,9 @@ const PokemonMiniCard = ({
   const [loading, setLoading] = useState(false);
 
   const selectPokemon = async () => {
+    if (!isFullPokemon(poke)) {
+      await queryAndAddPokemon(poke.name);
+    }
     mergeIntoBench({
       name: poke.name,
       moves: { 0: "", 1: "", 2: "", 3: "" },
