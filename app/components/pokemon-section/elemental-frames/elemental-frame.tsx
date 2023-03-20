@@ -107,6 +107,7 @@ const ElementalFrame = ({
             label={properCase(type.key)}
             type={type}
             value={values[type.key] || {}}
+            tooltipKey={`${tableType}-${type.key}`}
           />
         ))}
       </div>
