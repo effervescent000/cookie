@@ -69,7 +69,7 @@ const CoverageWrapper = ({
           )}%`}</div>
           <div>
             {coverageData.uncoveredPokemon.map((poke) => (
-              <PokemonMiniCard key={poke.id} poke={poke} hideMergeIcon />
+              <PokemonMiniCard key={poke.id} poke={poke} hideIcons />
             ))}
           </div>
         </>

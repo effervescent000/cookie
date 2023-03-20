@@ -3,11 +3,11 @@ import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 const Icon = ({
   icon,
-  onClick,
+  onClick = () => {},
   classes,
 }: {
   icon: IconProp;
-  onClick: () => void;
+  onClick?: () => void;
   classes?: string;
 }) => {
   return (

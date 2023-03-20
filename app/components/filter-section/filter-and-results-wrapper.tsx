@@ -10,9 +10,11 @@ import ResultsWrapper from "./results-wrapper";
 const FilterSection = ({
   allPokemon,
   setAllPokemon,
+  merge,
 }: {
   allPokemon: (IPokemonFull | IResourceListItem)[];
   setAllPokemon: (pokemon: (IPokemonFull | IResourceListItem)[]) => void;
+  merge: (target: IPokemonFull) => void;
 }) => {
   const [filters, setFilters] = useState({ name: "", type1: "", type2: "" });
 
@@ -30,7 +32,7 @@ const FilterSection = ({
   return (
     <div>
       <FilterWrapper filters={filters} mergeFilters={mergeFilters} />
-      <ResultsWrapper output={allPokemon} filters={filters} />
+      <ResultsWrapper output={allPokemon} filters={filters} merge={merge} />
     </div>
   );
 };

@@ -1,23 +1,34 @@
-import { useContext } from "react";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { useContext, useState } from "react";
+import {
+  faCircleUp,
+  faDownload,
+  faSpinner,
+} from "@fortawesome/free-solid-svg-icons";
 
 import type { IPokemonFull, IResourceListItem } from "~/interfaces";
+import type PokeAPIService from "~/utils/pokeapi-service";
 
 import { PokemonContext } from "~/pokemon-context";
-import PokeAPIService from "~/utils/pokeapi-service";
-import Icon from "../common/icon";
 import { properCase } from "~/utils/text-utils";
+import { isFullPokemon } from "~/utils/type-guards";
+
+import Icon from "../common/icon";
 
 const PokemonMiniCard = ({
   full = false,
   poke,
-  hideMergeIcon,
+  api,
+  hideIcons,
+  merge,
 }: {
   full?: boolean;
   poke: IPokemonFull | IResourceListItem;
-  hideMergeIcon?: boolean;
+  hideIcons?: boolean;
+  api: PokeAPIService;
+  merge: (target: IPokemonFull) => void;
 }) => {
   const { mergeIntoBench, idCounter } = useContext(PokemonContext);
+  const [loading, setLoading] = useState(false);
 
   const selectPokemon = async () => {
     mergeIntoBench({
@@ -27,12 +38,26 @@ const PokemonMiniCard = ({
     });
   };
 
+  const queryAndAddPokemon = async (target: string) => {
+    setLoading(true);
+    const fullPokemon = await api.getPokemonByName([target]);
+    merge(fullPokemon[0]);
+    setLoading(false);
+  };
+
   return (
     <div className="flex w-full justify-between">
       <div>{properCase(poke.name)}</div>
-      {!hideMergeIcon && (
-        <div>
-          <Icon icon={faCheck} onClick={selectPokemon} />
+      {!hideIcons && (
+        <div className="grid grid-cols-2 gap-1">
+          <Icon icon={faCircleUp} onClick={selectPokemon} />
+          {loading && <Icon icon={faSpinner} classes="animate-spin" />}
+          {!loading && !isFullPokemon(poke) && (
+            <Icon
+              icon={faDownload}
+              onClick={() => queryAndAddPokemon(poke.name)}
+            />
+          )}
         </div>
       )}
     </div>

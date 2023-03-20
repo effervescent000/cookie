@@ -10,11 +10,27 @@ export default function Index() {
   const [allPokemon, setAllPokemon] = useState<
     Array<IPokemonFull | IResourceListItem>
   >([]);
+
+  const mergeIntoAllPokemon = (target: IPokemonFull) => {
+    const foundIndex = allPokemon.findIndex(
+      (pokemon) => pokemon.name === target.name
+    );
+    if (foundIndex !== -1) {
+      const newList = [...allPokemon];
+      newList[foundIndex] = target;
+      setAllPokemon(newList);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-5">
       <GenPicker />
       <PokemonSection allPokemon={allPokemon} />
-      <FilterSection allPokemon={allPokemon} setAllPokemon={setAllPokemon} />
+      <FilterSection
+        allPokemon={allPokemon}
+        setAllPokemon={setAllPokemon}
+        merge={mergeIntoAllPokemon}
+      />
     </div>
   );
 }

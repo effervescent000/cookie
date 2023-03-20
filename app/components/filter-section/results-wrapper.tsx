@@ -1,18 +1,23 @@
-import { useEffect, useState, useMemo } from "react";
+import { useMemo } from "react";
 import _ from "lodash";
 
 import type { IFilters, IPokemonFull, IResourceListItem } from "~/interfaces";
 import { isFullPokemon } from "~/utils/type-guards";
 
 import PokemonMiniCard from "./pokemon-mini-card";
+import PokeAPIService from "~/utils/pokeapi-service";
 
 const ResultsWrapper = ({
   output,
   filters,
+  merge,
 }: {
   output: Array<IPokemonFull | IResourceListItem>;
   filters: IFilters;
+  merge: (target: IPokemonFull) => void;
 }) => {
+  const P = new PokeAPIService();
+
   const filteredOutput = useMemo(() => {
     const filteredByName = filters.name
       ? output.filter((poke) => poke.name.includes(filters.name))
@@ -35,7 +40,7 @@ const ResultsWrapper = ({
   return (
     <div className="grid grid-cols-8 gap-x-10">
       {filteredOutput.map((poke) => (
-        <PokemonMiniCard key={poke.name} poke={poke} />
+        <PokemonMiniCard key={poke.name} poke={poke} api={P} merge={merge} />
       ))}
     </div>
   );
