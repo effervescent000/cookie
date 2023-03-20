@@ -20,7 +20,7 @@ const PokemonInput = ({
 }) => {
   const { versionGroup, mergeIntoBench, mergeIntoTeam } =
     useContext(PokemonContext);
-  const [fullPoke, setFullPoke] = useState<IPokemonFull>({});
+  const [fullPoke, setFullPoke] = useState<IPokemonFull>({} as IPokemonFull);
 
   useEffect(() => {
     const getFullPoke = async () => {
@@ -43,7 +43,7 @@ const PokemonInput = ({
         if (match) return { name: properCase(name), value: name };
         return undefined;
       })
-      .filter((move) => !!move);
+      .filter((move) => !!move) as { name: string; value: string }[];
     filteredMoves.sort(sortObjectByValue);
     return filteredMoves;
   }, [fullPoke, versionGroup]);

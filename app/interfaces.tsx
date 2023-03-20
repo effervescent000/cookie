@@ -51,7 +51,7 @@ export interface IPokemonFull {
 export interface IPokeSkeleton {
   name: string;
   id: number;
-  moves: { 0: string; 1: string; 2: string; 3: string };
+  moves: { [key: number]: string };
 }
 
 export interface IResourceListItem {
