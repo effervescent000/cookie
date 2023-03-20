@@ -6,6 +6,7 @@ import {
   DAMAGE_RELATION_VALUES,
 } from "~/constants/types-constants";
 import { PokemonContext } from "~/pokemon-context";
+import { makeDefensiveValues } from "~/utils/helpers";
 import PokeAPIService from "~/utils/pokeapi-service";
 
 import { properCase } from "~/utils/text-utils";
@@ -31,22 +32,7 @@ const ElementalFrame = ({
           team.map(({ name }) => name)
         );
         for await (const pokemon of pokemonToQuery) {
-          const thisPokeValues: { [key: string]: number } = {};
-          for (const typeObj of pokemon.types) {
-            const typeName = typeObj.type.name;
-            const typeResponse = await P.getType(typeName);
-            Object.entries(typeResponse.damage_relations).forEach(
-              ([damage_level, relatedTypes]) => {
-                if (damage_level.includes("_from")) {
-                  relatedTypes.forEach((relatedType) => {
-                    thisPokeValues[relatedType.name] =
-                      (thisPokeValues[relatedType.name] || 0) +
-                      DAMAGE_RELATION_VALUES[damage_level];
-                  });
-                }
-              }
-            );
-          }
+          const thisPokeValues = await makeDefensiveValues(pokemon, P);
           Object.entries(thisPokeValues).forEach(([key, value]) => {
             newValues[key] = (newValues[key] || 0) + value;
           });
