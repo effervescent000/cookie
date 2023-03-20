@@ -3,10 +3,12 @@ import _ from "lodash";
 
 import type { IPokemonFull, IResourceListItem } from "~/interfaces";
 
-import { PokemonContext } from "~/pokemon-context";
+import { isFullPokemon } from "~/utils/type-guards";
 import { makeDefensiveValues } from "~/utils/helpers";
 import PokeAPIService from "~/utils/pokeapi-service";
-import { isFullPokemon } from "~/utils/type-guards";
+import { PokemonContext } from "~/pokemon-context";
+
+import PokemonMiniCard from "../filter-section/pokemon-mini-card";
 
 const CoverageWrapper = ({
   allPokemon,
@@ -33,7 +35,6 @@ const CoverageWrapper = ({
     const makeCoverageData = async () => {
       let moveTypes: string[] = [];
       for (const poke of team) {
-        // const fullPoke = await P.getPokemonByName([poke.name]);
         for (const move of Object.values(poke.moves).filter((move) => !!move)) {
           const fullMove = await P.getMove(move);
           moveTypes.push(fullMove.type.name);
@@ -59,13 +60,19 @@ const CoverageWrapper = ({
   }, [team, readyPokemon]);
 
   return (
-    <div className="w-20 border border-light-blue">
+    <div className="w-40 border border-light-blue">
       {loading ? (
         <div>Loading...</div>
       ) : (
         <>
-          <div>{`${(coverageData.count / readyPokemon.length) * 100}%`}</div>
-          <div>{coverageData.uncoveredPokemon.map(({ name }) => name)}</div>
+          <div>{`${Math.round(
+            (coverageData.count / readyPokemon.length) * 100
+          )}%`}</div>
+          <div>
+            {coverageData.uncoveredPokemon.map((poke) => (
+              <PokemonMiniCard key={poke.id} poke={poke} hideMergeIcon />
+            ))}
+          </div>
         </>
       )}
     </div>

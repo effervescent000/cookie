@@ -11,9 +11,11 @@ import { properCase } from "~/utils/text-utils";
 const PokemonMiniCard = ({
   full = false,
   poke,
+  hideMergeIcon,
 }: {
   full?: boolean;
   poke: IPokemonFull | IResourceListItem;
+  hideMergeIcon?: boolean;
 }) => {
   const { mergeIntoBench, idCounter } = useContext(PokemonContext);
 
@@ -28,9 +30,11 @@ const PokemonMiniCard = ({
   return (
     <div className="flex w-full justify-between">
       <div>{properCase(poke.name)}</div>
-      <div>
-        <Icon icon={faCheck} onClick={selectPokemon} />
-      </div>
+      {!hideMergeIcon && (
+        <div>
+          <Icon icon={faCheck} onClick={selectPokemon} />
+        </div>
+      )}
     </div>
   );
 };
