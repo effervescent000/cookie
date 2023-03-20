@@ -1,18 +1,18 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import {
-  faCheck,
   faCircleUp,
   faDownload,
+  faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 
 import type { IPokemonFull, IResourceListItem } from "~/interfaces";
+import type PokeAPIService from "~/utils/pokeapi-service";
 
 import { PokemonContext } from "~/pokemon-context";
 import { properCase } from "~/utils/text-utils";
+import { isFullPokemon } from "~/utils/type-guards";
 
 import Icon from "../common/icon";
-import PokeAPIService from "~/utils/pokeapi-service";
-import { isFullPokemon } from "~/utils/type-guards";
 
 const PokemonMiniCard = ({
   full = false,
@@ -28,6 +28,7 @@ const PokemonMiniCard = ({
   merge: (target: IPokemonFull) => void;
 }) => {
   const { mergeIntoBench, idCounter } = useContext(PokemonContext);
+  const [loading, setLoading] = useState(false);
 
   const selectPokemon = async () => {
     mergeIntoBench({
@@ -38,8 +39,10 @@ const PokemonMiniCard = ({
   };
 
   const queryAndAddPokemon = async (target: string) => {
+    setLoading(true);
     const fullPokemon = await api.getPokemonByName([target]);
     merge(fullPokemon[0]);
+    setLoading(false);
   };
 
   return (
@@ -48,7 +51,8 @@ const PokemonMiniCard = ({
       {!hideIcons && (
         <div className="grid grid-cols-2 gap-1">
           <Icon icon={faCircleUp} onClick={selectPokemon} />
-          {!isFullPokemon(poke) && (
+          {loading && <Icon icon={faSpinner} classes="animate-spin" />}
+          {!loading && !isFullPokemon(poke) && (
             <Icon
               icon={faDownload}
               onClick={() => queryAndAddPokemon(poke.name)}
