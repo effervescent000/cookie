@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
-// import { json } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -12,7 +11,6 @@ import {
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 import reactTooltipStylesheetUrl from "react-tooltip/dist/react-tooltip.css";
-// import { getUser } from "./session.server";
 
 import { PokemonContext } from "~/pokemon-context";
 import type { IPokeSkeleton } from "./interfaces";
@@ -29,12 +27,6 @@ export const meta: MetaFunction = () => ({
   title: "Remix Notes",
   viewport: "width=device-width,initial-scale=1",
 });
-
-// export async function loader({ request }: LoaderArgs) {
-//   return json({
-//     user: await getUser(request),
-//   });
-// }
 
 export default function App() {
   const [idCounter, setIdCounter] = useState(0);
@@ -57,23 +49,35 @@ export default function App() {
   const incrementId = () => setIdCounter(idCounter + 1);
 
   const mergeIntoTeam = (target: IPokeSkeleton) => {
-    const filteredTeam = team.filter(
-      ({ id: existingId }) => existingId !== target.id
+    let newList;
+    const foundIndex = team.findIndex(
+      ({ id: existingId }) => existingId === target.id
     );
-    const newTeam = [...filteredTeam, target];
-    setTeam(newTeam);
-    saveTeamToLocal(newTeam);
+    if (foundIndex !== -1) {
+      newList = [...team];
+      newList[foundIndex] = target;
+    } else {
+      newList = [...team, target];
+    }
+    setTeam(newList);
+    saveTeamToLocal(newList);
     removeFromBench(target);
     incrementId();
   };
 
   const mergeIntoBench = (target: IPokeSkeleton) => {
-    const filteredBench = bench.filter(
-      ({ id: existingId }) => existingId !== target.id
+    let newList;
+    const foundIndex = bench.findIndex(
+      ({ id: existingId }) => existingId === target.id
     );
-    const newBench = [...filteredBench, target];
-    setBench(newBench);
-    saveBenchToLocal(newBench);
+    if (foundIndex !== -1) {
+      newList = [...bench];
+      newList[foundIndex] = target;
+    } else {
+      newList = [...bench, target];
+    }
+    setBench(newList);
+    saveBenchToLocal(newList);
     removeFromTeam(target);
     incrementId();
   };
