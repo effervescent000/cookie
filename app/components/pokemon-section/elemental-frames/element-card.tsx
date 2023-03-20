@@ -1,4 +1,4 @@
-import type { IType } from "~/interfaces";
+import type { IIndividualValues, IType } from "~/interfaces";
 
 const ElementCard = ({
   label,
@@ -7,7 +7,7 @@ const ElementCard = ({
 }: {
   label: string;
   type: IType;
-  value: number;
+  value: IIndividualValues;
 }) => {
   return (
     <div className="flex w-full flex-col items-center">
@@ -19,10 +19,11 @@ const ElementCard = ({
       </div>
       <div
         className={`${
-          (value < 0 && "text-red") || (value > 0 && "text-green")
+          (value.finalValue < 0 && "text-red") ||
+          (value.finalValue > 0 && "text-green")
         }`}
       >
-        {value}
+        {value.finalValue}
       </div>
     </div>
   );
