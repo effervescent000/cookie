@@ -9,6 +9,7 @@ import Select from "../common/select";
 import { PokemonContext } from "~/pokemon-context";
 import EditIcons from "./edit-icons";
 import PokeAPIService from "~/utils/pokeapi-service";
+import SpriteFrame from "../common/sprite-frame";
 
 const PokemonInput = ({
   targetPoke,
@@ -53,8 +54,17 @@ const PokemonInput = ({
         ...targetPoke,
         moves: { ...targetPoke.moves, [moveIndex]: value },
       });
+    } else {
+      mergeIntoBench({
+        ...targetPoke,
+        moves: { ...targetPoke.moves, [moveIndex]: value },
+      });
     }
   };
+
+  if (!fullPoke.id) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex">
@@ -62,8 +72,13 @@ const PokemonInput = ({
         <div>
           <span>{properCase(targetPoke.name)}</span>
         </div>
-        <div>
-          {/* sprite goes here */}
+        <div className="w-[192px]">
+          <SpriteFrame
+            sprites={[
+              fullPoke.sprites.front_default,
+              fullPoke.sprites.front_female,
+            ]}
+          />
           <EditIcons currentLocation={currentLocation} pokemon={targetPoke} />
         </div>
       </div>
