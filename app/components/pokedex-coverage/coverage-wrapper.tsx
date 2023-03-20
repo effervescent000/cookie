@@ -41,7 +41,6 @@ const CoverageWrapper = ({
         }
       }
       moveTypes = _.uniq(moveTypes);
-      console.log(moveTypes);
       checkPoke: for (const targetPoke of readyPokemon) {
         const thisPokeValues = await makeDefensiveValues(targetPoke, P);
         for (const moveType of moveTypes) {

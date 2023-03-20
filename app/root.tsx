@@ -11,13 +11,17 @@ import {
 } from "@remix-run/react";
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
+import reactTooltipStylesheetUrl from "react-tooltip/dist/react-tooltip.css";
 // import { getUser } from "./session.server";
 
 import { PokemonContext } from "~/pokemon-context";
-import type { IPokemonFull, IPokeSkeleton } from "./interfaces";
+import type { IPokeSkeleton } from "./interfaces";
 
 export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
+  return [
+    { rel: "stylesheet", href: tailwindStylesheetUrl },
+    { rel: "stylesheet", href: reactTooltipStylesheetUrl },
+  ];
 };
 
 export const meta: MetaFunction = () => ({

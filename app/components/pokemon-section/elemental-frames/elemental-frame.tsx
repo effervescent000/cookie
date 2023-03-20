@@ -6,12 +6,13 @@ import {
   DAMAGE_RELATION_VALUES,
 } from "~/constants/types-constants";
 import { PokemonContext } from "~/pokemon-context";
-import { makeDefensiveValues } from "~/utils/helpers";
-import PokeAPIService from "~/utils/pokeapi-service";
 
+import PokeAPIService from "~/utils/pokeapi-service";
+import { makeDefensiveValues } from "~/utils/helpers";
 import { properCase } from "~/utils/text-utils";
 
 import ElementCard from "./element-card";
+import { IValues } from "~/interfaces";
 
 const ElementalFrame = ({
   title,
@@ -21,20 +22,27 @@ const ElementalFrame = ({
   tableType: string;
 }) => {
   const { team } = useContext(PokemonContext);
-  const [values, setValues] = useState<{ [key: string]: number }>({});
+  const [values, setValues] = useState<IValues>({});
 
   useEffect(() => {
     const P = new PokeAPIService();
-    const newValues: { [key: string]: number } = {};
+    const newValues: IValues = {};
     if (tableType === DEFENSIVE_KEY) {
       const makeValues = async () => {
-        const pokemonToQuery = await P.getPokemonByName(
+        const fullPokes = await P.getPokemonByName(
           team.map(({ name }) => name)
         );
-        for await (const pokemon of pokemonToQuery) {
+        for (const pokemon of fullPokes) {
           const thisPokeValues = await makeDefensiveValues(pokemon, P);
           Object.entries(thisPokeValues).forEach(([key, value]) => {
-            newValues[key] = (newValues[key] || 0) + value;
+            newValues[key] = {
+              finalValue:
+                (newValues[key] ? newValues[key].finalValue : 0) + value,
+              details: [
+                ...(newValues[key] ? newValues[key].details : []),
+                [pokemon.name, value],
+              ],
+            };
           });
         }
         setValues(newValues);
@@ -72,7 +80,14 @@ const ElementalFrame = ({
             );
           }
           Object.entries(thisPokeValues).forEach(([key, value]) => {
-            newValues[key] = (newValues[key] || 0) + value;
+            newValues[key] = {
+              finalValue:
+                (newValues[key] ? newValues[key].finalValue : 0) + value,
+              details: [
+                ...(newValues[key] ? newValues[key].details : []),
+                [pokemon.name, value],
+              ],
+            };
           });
         }
         setValues(newValues);
@@ -91,7 +106,8 @@ const ElementalFrame = ({
             key={type.key}
             label={properCase(type.key)}
             type={type}
-            value={values[type.key] || 0}
+            value={values[type.key] || {}}
+            tooltipKey={`${tableType}-${type.key}`}
           />
         ))}
       </div>

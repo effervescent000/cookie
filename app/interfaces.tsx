@@ -87,3 +87,12 @@ export interface IMoveResponse {
   name: string;
   type: IResourceListItem;
 }
+
+export interface IValues {
+  [key: string]: IIndividualValues;
+}
+
+export interface IIndividualValues {
+  finalValue: number;
+  details: [string, number][];
+}
