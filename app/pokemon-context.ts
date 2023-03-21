@@ -16,6 +16,8 @@ export const PokemonContext = createContext<{
   idCounter: number;
   removeFromTeam: (arg0: IPokeSkeleton) => void;
   removeFromBench: (arg0: IPokeSkeleton) => void;
+  focusedPokemon: IPokemonFull | undefined;
+  setFocusedPokemon: (arg0: IPokemonFull | undefined) => void;
 }>({
   gen: "",
   setGen: (target) => {},
@@ -30,4 +32,6 @@ export const PokemonContext = createContext<{
   setVersionGroup: (target) => {},
   removeFromBench: (target) => {},
   removeFromTeam: (target) => {},
+  focusedPokemon: undefined,
+  setFocusedPokemon: (target) => {},
 });
