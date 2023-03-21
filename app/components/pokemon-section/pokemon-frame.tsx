@@ -14,7 +14,7 @@ const PokemonFrame = ({
   return (
     <div>
       <div>{properCase(location)}</div>
-      <div className="grid min-h-40 grid-cols-3 border border-light-blue">
+      <div className="grid min-h-40 grid-cols-2 border border-light-blue">
         {pokemon.map((poke, i) => (
           <PokemonCard key={i} targetPoke={poke} currentLocation={location} />
         ))}
