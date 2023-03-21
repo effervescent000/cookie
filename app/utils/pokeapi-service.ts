@@ -1,4 +1,5 @@
 import type {
+  IEvolutionResponse,
   IMoveResponse,
   IPokemonFull,
   IResourceListItem,
@@ -36,7 +37,9 @@ const mergePokesIntoResourceList = async (
 class PokeAPIService {
   async makeGetRequest(endpoint: string) {
     try {
-      const url = `${ROOT_URL}/${endpoint}`;
+      const url = endpoint.includes("https")
+        ? endpoint
+        : `${ROOT_URL}/${endpoint}`;
       if ("caches" in window) {
         const cache = await caches.open(cacheName);
         const matchedResponse = await cache.match(url);
@@ -117,6 +120,11 @@ class PokeAPIService {
 
   async getSpecies(species: string): Promise<ISpeciesResponse> {
     const response = await this.makeGetRequest(`pokemon-species/${species}`);
+    return response;
+  }
+
+  async getEvolutionDetails(url: string): Promise<IEvolutionResponse> {
+    const response = await this.makeGetRequest(url);
     return response;
   }
 }

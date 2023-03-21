@@ -103,3 +103,17 @@ export interface ISpeciesResponse {
   }[];
   varieties: { is_default: boolean; pokemon: IResourceListItem }[];
 }
+
+export interface IEvolutionDetails {
+  min_level: number | null;
+  trigger: IResourceListItem;
+}
+
+export interface IEvolutionChainLink {
+  evolution_details: IEvolutionDetails;
+  evolves_to: IEvolutionChainLink[];
+}
+
+export interface IEvolutionResponse {
+  chain: IEvolutionChainLink;
+}
