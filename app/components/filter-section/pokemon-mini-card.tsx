@@ -19,13 +19,13 @@ const PokemonMiniCard = ({
   poke,
   api,
   hideIcons,
-  merge,
+  merge = () => {},
 }: {
   full?: boolean;
   poke: IPokemonFull | IResourceListItem;
   hideIcons?: boolean;
-  api: PokeAPIService;
-  merge: (target: IPokemonFull) => void;
+  api?: PokeAPIService;
+  merge?: (target: IPokemonFull) => void;
 }) => {
   const { mergeIntoBench, idCounter } = useContext(PokemonContext);
   const [loading, setLoading] = useState(false);
@@ -42,10 +42,12 @@ const PokemonMiniCard = ({
   };
 
   const queryAndAddPokemon = async (target: string) => {
-    setLoading(true);
-    const fullPokemon = await api.getPokemonByName([target]);
-    merge(fullPokemon[0]);
-    setLoading(false);
+    if (api) {
+      setLoading(true);
+      const fullPokemon = await api.getPokemonByName([target]);
+      merge(fullPokemon[0]);
+      setLoading(false);
+    }
   };
 
   return (

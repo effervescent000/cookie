@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useContext } from "react";
 import type { IPokemonFull, IResourceListItem } from "~/interfaces";
 
 import { PokemonContext } from "~/pokemon-context";
