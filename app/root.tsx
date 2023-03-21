@@ -46,7 +46,11 @@ export default function App() {
     localStorage.setItem("game", targetVersionGroup);
   };
 
-  const incrementId = () => setIdCounter(idCounter + 1);
+  const incrementId = () => {
+    const newId = idCounter + 1;
+    localStorage.setItem("id", `${newId}`);
+    setIdCounter(newId);
+  };
 
   const mergeIntoTeam = (target: IPokeSkeleton) => {
     let newList;
@@ -105,6 +109,7 @@ export default function App() {
   useEffect(() => {
     setGen(localStorage.getItem("gen") || "VIII");
     setVersionGroup(localStorage.getItem("game") || "sword-shield");
+    setIdCounter(+(localStorage.getItem("id") || 0));
     const foundTeam = localStorage.getItem("team");
     if (foundTeam) {
       setTeam(JSON.parse(foundTeam));
