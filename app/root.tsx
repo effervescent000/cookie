@@ -12,8 +12,8 @@ import {
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 import reactTooltipStylesheetUrl from "react-tooltip/dist/react-tooltip.css";
 
+import type { IPokemonFull, IPokeSkeleton } from "./interfaces";
 import { PokemonContext } from "~/pokemon-context";
-import type { IPokeSkeleton } from "./interfaces";
 
 export const links: LinksFunction = () => {
   return [
@@ -35,6 +35,9 @@ export default function App() {
   const [versionGroup, setVersionGroup] = useState("");
   const [team, setTeam] = useState<IPokeSkeleton[]>([]);
   const [bench, setBench] = useState<IPokeSkeleton[]>([]);
+  const [focusedPokemon, setFocusedPokemon] = useState<
+    IPokemonFull | undefined
+  >(undefined);
 
   const saveGen = (targetGen: string) => {
     setGen(targetGen);
@@ -136,6 +139,8 @@ export default function App() {
         setVersionGroup: saveVersionGroup,
         removeFromBench,
         removeFromTeam,
+        focusedPokemon,
+        setFocusedPokemon,
       }}
     >
       <html lang="en" className="h-full">
