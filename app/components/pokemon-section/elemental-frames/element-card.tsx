@@ -1,15 +1,14 @@
 import { Tooltip } from "react-tooltip";
+import TypeLabel from "~/components/common/type-label";
 
 import type { IIndividualValues, IType } from "~/interfaces";
 import { properCase } from "~/utils/text-utils";
 
 const ElementCard = ({
-  label,
   type,
   value,
   tooltipKey,
 }: {
-  label: string;
   type: IType;
   value: IIndividualValues;
   tooltipKey: string;
@@ -19,12 +18,7 @@ const ElementCard = ({
       className="flex w-full flex-col items-center"
       data-tooltip-id={tooltipKey}
     >
-      <div
-        style={{ background: type.bgColor }}
-        className="w-full rounded-md p-0.5 text-center text-white"
-      >
-        {label}
-      </div>
+      <TypeLabel type={type} />
       <div
         className={`${
           (value.finalValue < 0 && "text-red") ||
