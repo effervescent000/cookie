@@ -1,15 +1,22 @@
 import { useContext, useState, useEffect } from "react";
 
-import type { IType } from "~/interfaces";
+import type {
+  IEvolutionChainLink,
+  IEvolutionResponse,
+  IType,
+} from "~/interfaces";
 import { PokemonContext } from "~/pokemon-context";
 import { TYPES } from "~/constants/types-constants";
 import { properCase } from "~/utils/text-utils";
-
-import TypeLabel from "~/components/common/type-label";
 import PokeAPIService from "~/utils/pokeapi-service";
 
+import TypeLabel from "~/components/common/type-label";
+import EvolutionCard from "./evolution-card";
+
 const FocusedCard = () => {
-  const [evolutionInfo, setEvolutionInfo] = useState({});
+  const [evolutionInfo, setEvolutionInfo] = useState<
+    IEvolutionResponse | undefined
+  >(undefined);
   const { focusedPokemon: pokemon } = useContext(PokemonContext);
 
   useEffect(() => {
@@ -20,6 +27,7 @@ const FocusedCard = () => {
         const evolutionResult = await P.getEvolutionDetails(
           speciesResult.evolution_chain.url
         );
+
         setEvolutionInfo(evolutionResult);
       }
     };
@@ -42,6 +50,7 @@ const FocusedCard = () => {
           ))}
         </div>
       </div>
+      {evolutionInfo && <EvolutionCard link={evolutionInfo.chain} />}
     </div>
   );
 };

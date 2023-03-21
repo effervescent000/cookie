@@ -110,8 +110,9 @@ export interface IEvolutionDetails {
 }
 
 export interface IEvolutionChainLink {
-  evolution_details: IEvolutionDetails;
+  evolution_details: IEvolutionDetails[];
   evolves_to: IEvolutionChainLink[];
+  species: IResourceListItem;
 }
 
 export interface IEvolutionResponse {
