@@ -79,7 +79,11 @@ const PokemonInput = ({
               fullPoke.sprites.front_female,
             ]}
           />
-          <EditIcons currentLocation={currentLocation} pokemon={targetPoke} />
+          <EditIcons
+            currentLocation={currentLocation}
+            pokemon={targetPoke}
+            fullPoke={fullPoke}
+          />
         </div>
       </div>
       <div>
