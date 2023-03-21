@@ -1,10 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 
-import type {
-  IEvolutionChainLink,
-  IEvolutionResponse,
-  IType,
-} from "~/interfaces";
+import type { IEvolutionResponse, IType } from "~/interfaces";
+
 import { PokemonContext } from "~/pokemon-context";
 import { TYPES } from "~/constants/types-constants";
 import { properCase } from "~/utils/text-utils";
