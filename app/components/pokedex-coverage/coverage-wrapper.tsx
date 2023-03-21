@@ -59,7 +59,7 @@ const CoverageWrapper = ({
   }, [team, readyPokemon]);
 
   return (
-    <div className="w-40 border border-light-blue">
+    <div className="max-h-96 w-40 overflow-auto border border-light-blue">
       {loading ? (
         <div>Loading...</div>
       ) : (
