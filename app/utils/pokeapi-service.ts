@@ -2,7 +2,9 @@ import type {
   IMoveResponse,
   IPokemonFull,
   IResourceListItem,
+  ISpeciesResponse,
   ITypeResponse,
+  IVersionGroupResponse,
 } from "~/interfaces";
 
 import { properCase, sortObject, sortObjectByValue } from "./text-utils";
@@ -43,8 +45,10 @@ class PokeAPIService {
         }
         await cache.add(url);
         const response = await cache.match(url);
-        const json = await response.json();
-        return json;
+        if (response) {
+          const json = await response.json();
+          return json;
+        }
       }
       const response = await fetch(`${ROOT_URL}/${endpoint}`);
       const json = await response.json();
@@ -103,6 +107,16 @@ class PokeAPIService {
 
   async getMove(move: string): Promise<IMoveResponse> {
     const response = await this.makeGetRequest(`move/${move}`);
+    return response;
+  }
+
+  async getVersionGroup(versionGroup: string): Promise<IVersionGroupResponse> {
+    const response = await this.makeGetRequest(`version-group/${versionGroup}`);
+    return response;
+  }
+
+  async getSpecies(species: string): Promise<ISpeciesResponse> {
+    const response = await this.makeGetRequest(`pokemon-species/${species}`);
     return response;
   }
 }

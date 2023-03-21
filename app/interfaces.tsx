@@ -3,16 +3,6 @@ export interface IOptions {
   value: string;
 }
 
-export interface PokeAPIResponse {
-  count?: number;
-  results?: any[];
-}
-
-interface IName {
-  name: string;
-  url: string;
-}
-
 interface IAbility {
   ability: {
     name: string;
@@ -20,18 +10,18 @@ interface IAbility {
 }
 
 interface IMove {
-  move: IName;
+  move: IResourceListItem;
   version_group_details: {
     level_learned_at: number;
-    move_learn_method: IName;
-    version_group: IName;
+    move_learn_method: IResourceListItem;
+    version_group: IResourceListItem;
   }[];
 }
 
 interface IStat {
   base_stat: number;
   effort: number;
-  stat: IName;
+  stat: IResourceListItem;
 }
 
 export interface IPokemonFull {
@@ -40,12 +30,13 @@ export interface IPokemonFull {
   moves: IMove[];
   name: string;
   order: number;
+  species: IResourceListItem;
   sprites: {
     front_default: string;
     front_female: string | null;
   };
   stats: IStat[];
-  types: { slot: number; type: IName }[];
+  types: { slot: number; type: IResourceListItem }[];
 }
 
 export interface IPokeSkeleton {
@@ -95,4 +86,20 @@ export interface IValues {
 export interface IIndividualValues {
   finalValue: number;
   details: [string, number][];
+}
+
+export interface IVersionGroupResponse {
+  versions: IResourceListItem[];
+}
+
+export interface ISpeciesResponse {
+  capture_rate: number;
+  evolution_chain: { url: string };
+  evolves_from_species: IResourceListItem;
+  flavor_text_entries: { flavor_text: string; version: IResourceListItem }[];
+  pokedex_numbers: {
+    entry_number: number;
+    pokedex: IResourceListItem;
+  }[];
+  varieties: { is_default: boolean; pokemon: IResourceListItem }[];
 }
