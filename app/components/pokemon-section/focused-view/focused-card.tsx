@@ -1,20 +1,29 @@
-import TypeLabel from "~/components/common/type-label";
-import { TYPES } from "~/constants/types-constants";
-import type { IPokemonFull, IType } from "~/interfaces";
+import { useContext } from "react";
 
+import type { IType } from "~/interfaces";
+import { PokemonContext } from "~/pokemon-context";
+import { TYPES } from "~/constants/types-constants";
 import { properCase } from "~/utils/text-utils";
 
-const FocusedCard = ({ pokemon }: { pokemon: IPokemonFull }) => {
+import TypeLabel from "~/components/common/type-label";
+
+const FocusedCard = () => {
+  const { focusedPokemon: pokemon } = useContext(PokemonContext);
+
+  if (!pokemon) return <></>;
+
   return (
-    <div>
-      <div>{properCase(pokemon.species.name)}</div>
+    <div className="border border-light-blue">
       <div className="flex">
-        {pokemon.types.map(({ type: { name } }) => (
-          <TypeLabel
-            key={name}
-            type={TYPES.find(({ key }) => key === name) as IType}
-          />
-        ))}
+        <div>{properCase(pokemon.species.name)}</div>
+        <div className="flex">
+          {pokemon.types.map(({ type: { name } }) => (
+            <TypeLabel
+              key={name}
+              type={TYPES.find(({ key }) => key === name) as IType}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
