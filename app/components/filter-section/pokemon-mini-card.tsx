@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import {
   faCircleUp,
   faDownload,
+  faExpand,
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -27,7 +28,8 @@ const PokemonMiniCard = ({
   api?: PokeAPIService;
   merge?: (target: IPokemonFull) => void;
 }) => {
-  const { mergeIntoBench, idCounter } = useContext(PokemonContext);
+  const { mergeIntoBench, idCounter, setFocusedPokemon } =
+    useContext(PokemonContext);
   const [loading, setLoading] = useState(false);
 
   const selectPokemon = async () => {
@@ -47,24 +49,40 @@ const PokemonMiniCard = ({
       const fullPokemon = await api.getPokemonByName([target]);
       merge(fullPokemon[0]);
       setLoading(false);
+      return fullPokemon[0];
+    } else {
+      console.log("No API service found!");
+    }
+  };
+
+  const focusPokemon = async () => {
+    if (!isFullPokemon(poke)) {
+      const result = await queryAndAddPokemon(poke.name);
+      setFocusedPokemon(result);
+    } else {
+      setFocusedPokemon(poke as IPokemonFull);
     }
   };
 
   return (
     <div className="flex w-full justify-between">
       <div>{properCase(poke.name)}</div>
-      {!hideIcons && (
-        <div className="grid grid-cols-2 gap-1">
-          <Icon icon={faCircleUp} onClick={selectPokemon} />
-          {loading && <Icon icon={faSpinner} classes="animate-spin" />}
-          {!loading && !isFullPokemon(poke) && (
-            <Icon
-              icon={faDownload}
-              onClick={() => queryAndAddPokemon(poke.name)}
-            />
-          )}
-        </div>
-      )}
+
+      <div className="grid grid-cols-3 gap-1">
+        <Icon icon={faExpand} onClick={focusPokemon} />
+        {!hideIcons && (
+          <>
+            <Icon icon={faCircleUp} onClick={selectPokemon} />
+            {loading && <Icon icon={faSpinner} classes="animate-spin" />}
+            {!loading && !isFullPokemon(poke) && (
+              <Icon
+                icon={faDownload}
+                onClick={() => queryAndAddPokemon(poke.name)}
+              />
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };

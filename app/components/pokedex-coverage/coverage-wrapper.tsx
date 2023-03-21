@@ -21,6 +21,7 @@ const CoverageWrapper = ({
     uncoveredPokemon: IPokemonFull[];
   }>({ count: 0, uncoveredPokemon: [] });
   const [loading, setLoading] = useState(true);
+  const P = new PokeAPIService();
 
   const readyPokemon = useMemo(
     () => allPokemon.filter((poke) => isFullPokemon(poke)),
@@ -69,7 +70,7 @@ const CoverageWrapper = ({
           )}%`}</div>
           <div>
             {coverageData.uncoveredPokemon.map((poke) => (
-              <PokemonMiniCard key={poke.id} poke={poke} hideIcons />
+              <PokemonMiniCard key={poke.id} poke={poke} hideIcons api={P} />
             ))}
           </div>
         </>
