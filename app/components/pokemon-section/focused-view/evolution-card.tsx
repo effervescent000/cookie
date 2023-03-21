@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import _ from "lodash";
 
 import type { IEvolutionChainLink } from "~/interfaces";
 
@@ -12,36 +13,59 @@ const EvolutionCard = ({
   link: IEvolutionChainLink;
   recursionLevel?: number;
 }) => {
-  const [conditions, setConditions] = useState<(number | string)[]>([]);
+  const [conditions, setConditions] = useState<string[]>([]);
 
   useEffect(() => {
-    const conditions = link.evolution_details.map((detail) =>
-      Object.entries(detail)
-        .filter(([key, value]) => !!value)
-        .map(([key, value]) => ({ [key]: value }))
-        .reduce((acc, cur) => ({ ...acc, ...cur }), {})
-    );
-    const matchedConditions = conditions.map((c) => {
-      const possibleMatches = TRIGGER_MATCH[c.trigger.name];
-      const match = possibleMatches.find((pm: string) =>
-        Object.keys(c).includes(pm)
+    if (link) {
+      // const foundConditions = link.evolution_details.map((detail) =>
+      //   Object.entries(detail)
+      //     .filter(([key, value]) => !!value)
+      //     .map(([key, value]) => ({ [key]: value }))
+      //     .reduce((acc, cur) => ({ ...acc, ...cur }), {})
+      // );
+      // // console.log("foundConditions", foundConditions);
+      // const matchedConditions = foundConditions.map((c) => {
+      //   const possibleMatches = TRIGGER_MATCH[c.trigger.name];
+      //   // console.log("pm", possibleMatches);
+      //   // console.log("keys", Object.keys(c));
+      //   const match = possibleMatches.find((pm) =>
+      //     Object.keys(c).includes(pm.split(".")[0])
+      //   );
+      //   if (match) {
+      //     return _.get(c, match);
+      //   }
+      //   return undefined;
+      // });
+      // // console.log("matchedConditions", matchedConditions);
+      // setConditions(matchedConditions);
+
+      const foundConditions = link.evolution_details.map((detail) =>
+        Object.entries(detail)
+          .filter(([_key, value]) => !!value)
+          .map(([key, value]) => ({ [key]: value }))
+          .reduce((acc, cur) => ({ ...acc, ...cur }), {})
       );
-      if (match) {
-        return c[match];
-      }
-      return undefined;
-    });
-    console.log(matchedConditions);
-    setConditions(matchedConditions);
+      console.log("foundConditions", foundConditions);
+      const matchedConditions = foundConditions.map((c) => {
+        const match = TRIGGER_MATCH[c.trigger.name];
+
+        if (match) {
+          const value = match.find(([key, _value]) => !!_.get(c, key));
+          if (value) {
+            return value[1](_.get(c, value[0]));
+          }
+        }
+        return undefined;
+      });
+      setConditions(matchedConditions.filter((c) => !!c) as string[]);
+    }
   }, [link]);
 
   return (
     <div style={{ marginLeft: `${10 * recursionLevel}px` }}>
       <div>
         {properCase(link.species.name)} @{" "}
-        {conditions.length
-          ? conditions.map((c, i) => <span key={i}>{c}</span>)
-          : "0"}
+        {conditions.length ? <span>{conditions.join(", ")}</span> : "0"}
       </div>
       {link.evolves_to.map((subLink) => (
         <EvolutionCard
