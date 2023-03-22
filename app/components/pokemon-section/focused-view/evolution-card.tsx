@@ -26,7 +26,6 @@ const EvolutionCard = ({
           .map(([key, value]) => ({ [key]: value }))
           .reduce((acc, cur) => ({ ...acc, ...cur }), {})
       );
-      console.log("foundConditions", foundConditions);
       const matchedConditions = foundConditions.map((c) => {
         const match = TRIGGER_MATCH[c.trigger.name];
 

@@ -25,6 +25,11 @@ export const TYPES: IType[] = [
   { key: "fairy", bgColor: "#9B6470" },
 ];
 
+export const TYPE_LOOKUP: { [key: string]: IType } = TYPES.reduce(
+  (acc, cur) => ({ ...acc, [cur.key]: cur }),
+  {}
+);
+
 export const OFFENSIVE_KEY = "offensive";
 export const DEFENSIVE_KEY = "defensive";
 

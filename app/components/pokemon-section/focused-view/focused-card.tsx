@@ -10,6 +10,7 @@ import PokeAPIService from "~/utils/pokeapi-service";
 import TypeLabel from "~/components/common/type-label";
 import EvolutionCard from "./evolution-card";
 import StatBlock from "./stats-block";
+import TypeWeaknessWrapper from "./type-weakness-wrapper";
 
 const FocusedCard = () => {
   const [evolutionInfo, setEvolutionInfo] = useState<
@@ -36,7 +37,7 @@ const FocusedCard = () => {
   if (!pokemon) return <></>;
 
   return (
-    <div className="border border-light-blue">
+    <div className="max-w-sm border border-light-blue">
       <div className="flex">
         <div>{properCase(pokemon.species.name)}</div>
         <div className="flex">
@@ -50,6 +51,7 @@ const FocusedCard = () => {
       </div>
       {evolutionInfo && <EvolutionCard link={evolutionInfo.chain} />}
       <StatBlock pokemon={pokemon} />
+      <TypeWeaknessWrapper pokemon={pokemon} />
     </div>
   );
 };
