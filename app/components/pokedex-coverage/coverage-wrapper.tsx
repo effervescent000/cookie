@@ -4,7 +4,7 @@ import _ from "lodash";
 import type { IPokemonFull, IResourceListItem } from "~/interfaces";
 
 import { isFullPokemon } from "~/utils/type-guards";
-import { makeDefensiveValues } from "~/utils/helpers";
+import { makeDefensiveValues, scoreDefValues } from "~/utils/helpers";
 import PokeAPIService from "~/utils/pokeapi-service";
 import { PokemonContext } from "~/pokemon-context";
 
@@ -43,7 +43,10 @@ const CoverageWrapper = ({
       }
       moveTypes = _.uniq(moveTypes);
       checkPoke: for (const targetPoke of readyPokemon) {
-        const thisPokeValues = await makeDefensiveValues(targetPoke, P);
+        const thisPokeValues = scoreDefValues(
+          await makeDefensiveValues(targetPoke, P)
+        );
+        console.log(thisPokeValues);
         for (const moveType of moveTypes) {
           if (thisPokeValues[moveType] < 0) {
             count++;
