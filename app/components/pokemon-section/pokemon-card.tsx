@@ -73,12 +73,7 @@ const PokemonInput = ({
           <span>{properCase(targetPoke.name)}</span>
         </div>
         <div className="w-[192px]">
-          <SpriteFrame
-            sprites={[
-              fullPoke.sprites.front_default,
-              fullPoke.sprites.front_female,
-            ]}
-          />
+          <SpriteFrame pokemon={fullPoke} />
           <EditIcons
             currentLocation={currentLocation}
             pokemon={targetPoke}
