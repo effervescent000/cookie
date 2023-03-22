@@ -15,7 +15,7 @@ export const makeDefensiveValues = async (
         if (damage_level.includes("_from")) {
           relatedTypes.forEach((relatedType) => {
             thisPokeValues[relatedType.name] =
-              (thisPokeValues[relatedType.name] || 0) +
+              (thisPokeValues[relatedType.name] || 1) *
               DAMAGE_RELATION_VALUES[damage_level];
           });
         }
@@ -23,6 +23,40 @@ export const makeDefensiveValues = async (
     );
   }
   return thisPokeValues;
+};
+
+export const scoreDefValues = (values: {
+  [key: string]: number;
+}): { [key: string]: number } => {
+  const scores: { [key: number]: number } = {
+    0: 2,
+    0.25: 1.5,
+    0.5: 1,
+    1: 0,
+    2: -1,
+    4: -2,
+  };
+  return Object.entries(values).reduce(
+    (acc, [key, value]) => ({ ...acc, [key]: scores[value] }),
+    {}
+  );
+};
+
+export const scoreOffValues = (values: {
+  [key: string]: number;
+}): { [key: string]: number } => {
+  const scores: { [key: number]: number } = {
+    0: 0,
+    0.25: 0,
+    0.5: 0,
+    1: 0.5,
+    2: 1,
+    4: 2,
+  };
+  return Object.entries(values).reduce(
+    (acc, [key, value]) => ({ ...acc, [key]: scores[value] }),
+    {}
+  );
 };
 
 export const makeTotalsStats = (pokemon: IPokemonFull) =>

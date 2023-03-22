@@ -10,7 +10,12 @@ import {
 import { PokemonContext } from "~/pokemon-context";
 
 import PokeAPIService from "~/utils/pokeapi-service";
-import { diminishReturns, makeDefensiveValues } from "~/utils/helpers";
+import {
+  diminishReturns,
+  makeDefensiveValues,
+  scoreDefValues,
+  scoreOffValues,
+} from "~/utils/helpers";
 
 import ElementCard from "./element-card";
 
@@ -33,7 +38,9 @@ const ElementalFrame = ({
           team.map(({ name }) => name)
         );
         for (const pokemon of fullPokes) {
-          const thisPokeValues = await makeDefensiveValues(pokemon, P);
+          const thisPokeValues = scoreDefValues(
+            await makeDefensiveValues(pokemon, P)
+          );
           Object.entries(thisPokeValues).forEach(([key, value]) => {
             newValues[key] = {
               finalValue:
@@ -79,16 +86,18 @@ const ElementalFrame = ({
               }
             );
           }
-          Object.entries(thisPokeValues).forEach(([key, value]) => {
-            newValues[key] = {
-              finalValue:
-                (newValues[key] ? newValues[key].finalValue : 0) + value,
-              details: [
-                ...(newValues[key] ? newValues[key].details : []),
-                [pokemon.name, value],
-              ],
-            };
-          });
+          Object.entries(scoreOffValues(thisPokeValues)).forEach(
+            ([key, value]) => {
+              newValues[key] = {
+                finalValue:
+                  (newValues[key] ? newValues[key].finalValue : 0) + value,
+                details: [
+                  ...(newValues[key] ? newValues[key].details : []),
+                  [pokemon.name, value],
+                ],
+              };
+            }
+          );
         }
         setValues(newValues);
       };

@@ -18,7 +18,7 @@ const ElementCard = ({
       className="flex w-full flex-col items-center"
       data-tooltip-id={tooltipKey}
     >
-      <TypeLabel type={type} />
+      <TypeLabel type={type} full />
       <div
         className={`${
           (value.finalValue < 0 && "text-red") ||
