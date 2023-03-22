@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import type { IPokemonFull } from "~/interfaces";
 
 import { makeDefensiveValues } from "~/utils/helpers";
