@@ -24,3 +24,6 @@ export const makeDefensiveValues = async (
   }
   return thisPokeValues;
 };
+
+export const makeTotalsStats = (pokemon: IPokemonFull) =>
+  pokemon.stats.reduce((total, acc) => total + acc.base_stat, 0);

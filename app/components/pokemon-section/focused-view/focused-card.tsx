@@ -9,6 +9,7 @@ import PokeAPIService from "~/utils/pokeapi-service";
 
 import TypeLabel from "~/components/common/type-label";
 import EvolutionCard from "./evolution-card";
+import StatBlock from "./stats-block";
 
 const FocusedCard = () => {
   const [evolutionInfo, setEvolutionInfo] = useState<
@@ -48,6 +49,7 @@ const FocusedCard = () => {
         </div>
       </div>
       {evolutionInfo && <EvolutionCard link={evolutionInfo.chain} />}
+      <StatBlock pokemon={pokemon} />
     </div>
   );
 };
