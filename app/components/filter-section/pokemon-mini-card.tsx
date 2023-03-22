@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import {
   faCircleUp,
   faDownload,
@@ -14,6 +14,7 @@ import { properCase } from "~/utils/text-utils";
 import { isFullPokemon } from "~/utils/type-guards";
 
 import Icon from "../common/icon";
+import SpriteFrame from "../common/sprite-frame";
 
 const PokemonMiniCard = ({
   full = false,
@@ -31,6 +32,12 @@ const PokemonMiniCard = ({
   const { mergeIntoBench, idCounter, setFocusedPokemon } =
     useContext(PokemonContext);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (full && !isFullPokemon(poke)) {
+      queryAndAddPokemon(poke.name);
+    }
+  }, [full, poke]);
 
   const selectPokemon = async () => {
     if (!isFullPokemon(poke)) {
@@ -63,6 +70,25 @@ const PokemonMiniCard = ({
       setFocusedPokemon(poke as IPokemonFull);
     }
   };
+
+  if (full)
+    return (
+      <div>
+        <div className="flex justify-center gap-5">
+          <div>{properCase(poke.name)}</div>
+
+          <div className="grid grid-cols-3 gap-1">
+            <Icon icon={faExpand} onClick={focusPokemon} />
+            {!hideIcons && (
+              <>
+                <Icon icon={faCircleUp} onClick={selectPokemon} />
+              </>
+            )}
+          </div>
+        </div>
+        <SpriteFrame pokemon={poke} />
+      </div>
+    );
 
   return (
     <div className="flex w-full justify-between">

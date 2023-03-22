@@ -38,9 +38,19 @@ const ResultsWrapper = ({
   }, [filters, output]);
 
   return (
-    <div className="grid grid-cols-8 gap-x-10">
+    <div
+      className={`grid gap-x-10 ${
+        filteredOutput.length > 20 ? "grid-cols-8" : "grid-cols-5"
+      }`}
+    >
       {filteredOutput.map((poke) => (
-        <PokemonMiniCard key={poke.name} poke={poke} api={P} merge={merge} />
+        <PokemonMiniCard
+          key={poke.name}
+          poke={poke}
+          api={P}
+          merge={merge}
+          full={filteredOutput.length <= 20}
+        />
       ))}
     </div>
   );
