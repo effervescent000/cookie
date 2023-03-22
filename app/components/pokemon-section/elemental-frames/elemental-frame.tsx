@@ -1,5 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 
+import type { IValues } from "~/interfaces";
+
 import {
   DEFENSIVE_KEY,
   TYPES,
@@ -12,7 +14,6 @@ import { makeDefensiveValues } from "~/utils/helpers";
 import { properCase } from "~/utils/text-utils";
 
 import ElementCard from "./element-card";
-import { IValues } from "~/interfaces";
 
 const ElementalFrame = ({
   title,
@@ -99,12 +100,20 @@ const ElementalFrame = ({
 
   return (
     <div className="w-max">
-      <div>{title}</div>
+      <div className="flex justify-between text-lg">
+        <span>{title}</span>
+        <span>
+          {values &&
+            Object.values(values).reduce(
+              (total, cur) => total + cur.finalValue,
+              0
+            )}
+        </span>
+      </div>
       <div className="grid grid-cols-6 gap-x-2">
         {TYPES.map((type) => (
           <ElementCard
             key={type.key}
-            label={properCase(type.key)}
             type={type}
             value={values[type.key] || {}}
             tooltipKey={`${tableType}-${type.key}`}
