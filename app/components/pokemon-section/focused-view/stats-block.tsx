@@ -11,7 +11,8 @@ const StatBlock = ({ pokemon }: { pokemon: IPokemonFull }) => {
             key={stat.stat.name}
             label={stat.stat.name}
             amount={stat.base_stat}
-            maxAmount={150}
+            maxAmount={200}
+            greenThreshold={130}
           />
         ))}
       </div>

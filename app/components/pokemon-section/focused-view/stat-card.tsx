@@ -1,3 +1,5 @@
+import { properCase } from "~/utils/text-utils";
+
 const calculateMiddleColor = ({
   color1 = "990F02",
   color2 = "3CB043",
@@ -28,23 +30,25 @@ const StatCard = ({
   label,
   amount,
   maxAmount,
+  greenThreshold,
 }: {
   label: string;
   amount: number;
   maxAmount: number;
+  greenThreshold: number;
 }) => {
   const maxWidth = 250;
   return (
-    <div className="grid grid-cols-[1fr_2fr]">
+    <div className="grid grid-cols-[2fr_3fr]">
       <div className="flex justify-between">
-        <span>{label}</span>
+        <span>{properCase(label)}</span>
         <span>{amount}</span>
       </div>
       <div
         style={{
           width: `${(amount / maxAmount) * maxWidth}px`,
           backgroundColor: `#${calculateMiddleColor({
-            ratio: amount / maxAmount,
+            ratio: amount / greenThreshold,
           })}`,
         }}
       />
