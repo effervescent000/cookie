@@ -27,3 +27,11 @@ export const makeDefensiveValues = async (
 
 export const makeTotalsStats = (pokemon: IPokemonFull) =>
   pokemon.stats.reduce((total, acc) => total + acc.base_stat, 0);
+
+export const diminishReturns = (num: number): number => {
+  const cap = 10;
+  if (num > 3) {
+    return (cap * num) / (num + 7);
+  }
+  return num;
+};
