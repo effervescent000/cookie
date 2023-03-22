@@ -4,7 +4,7 @@ const SpriteFrame = ({ sprites }: { sprites: (string | null)[] }) => {
       {sprites
         .filter((sprite) => !!sprite)
         .map((sprite) => (
-          <img key={sprite} src={sprite} />
+          <img key={sprite} src={sprite || undefined} alt="Sprite" />
         ))}
     </div>
   );

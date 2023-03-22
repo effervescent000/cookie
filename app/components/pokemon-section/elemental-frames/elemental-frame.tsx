@@ -10,8 +10,7 @@ import {
 import { PokemonContext } from "~/pokemon-context";
 
 import PokeAPIService from "~/utils/pokeapi-service";
-import { makeDefensiveValues } from "~/utils/helpers";
-import { properCase } from "~/utils/text-utils";
+import { diminishReturns, makeDefensiveValues } from "~/utils/helpers";
 
 import ElementCard from "./element-card";
 
@@ -104,9 +103,11 @@ const ElementalFrame = ({
         <span>{title}</span>
         <span>
           {values &&
-            Object.values(values).reduce(
-              (total, cur) => total + cur.finalValue,
-              0
+            Math.round(
+              Object.values(values).reduce(
+                (total, cur) => total + diminishReturns(cur.finalValue),
+                0
+              )
             )}
         </span>
       </div>
