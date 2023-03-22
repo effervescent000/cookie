@@ -46,7 +46,6 @@ const CoverageWrapper = ({
         const thisPokeValues = scoreDefValues(
           await makeDefensiveValues(targetPoke, P)
         );
-        console.log(thisPokeValues);
         for (const moveType of moveTypes) {
           if (thisPokeValues[moveType] < 0) {
             count++;
