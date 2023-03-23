@@ -1,5 +1,11 @@
-import { DAMAGE_RELATION_VALUES } from "~/constants/types-constants";
+import _ from "lodash";
+
 import type { IMoveResponse, IPokemonFull } from "~/interfaces";
+
+import {
+  DAMAGE_RELATION_VALUES,
+  TYPE_LOOKUP,
+} from "~/constants/types-constants";
 import PokeAPIService from "./pokeapi-service";
 
 export const makeDefensiveValues = async (
@@ -22,6 +28,11 @@ export const makeDefensiveValues = async (
       }
     );
   }
+  const diff = _.difference(
+    Object.keys(TYPE_LOOKUP),
+    Object.keys(thisPokeValues)
+  );
+  diff.forEach((t) => (thisPokeValues[t] = 1));
   return thisPokeValues;
 };
 
