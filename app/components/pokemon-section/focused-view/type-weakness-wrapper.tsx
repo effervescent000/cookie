@@ -9,9 +9,8 @@ import TypeWeaknessCard from "./type-weakness-card";
 const TypeWeaknessWrapper = ({ pokemon }: { pokemon: IPokemonFull }) => {
   const [defenses, setDefenses] = useState<{ [key: number]: string[] }>({});
 
-  const P = new PokeAPIService();
-
   useEffect(() => {
+    const P = new PokeAPIService();
     const getDefenses = async () => {
       const result = await makeDefensiveValues(pokemon, P);
       const values = Object.entries(result).reduce(
