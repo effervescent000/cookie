@@ -2,15 +2,9 @@ import { useContext, useEffect, useState } from "react";
 
 import type { IValues } from "~/interfaces";
 
-import {
-  DEFENSIVE_KEY,
-  TYPES,
-  DAMAGE_RELATION_VALUES,
-} from "~/constants/types-constants";
+import { DEFENSIVE_KEY, TYPES } from "~/constants/types-constants";
 import { PokemonContext } from "~/pokemon-context";
-
-import PokeAPIService from "~/utils/pokeapi-service";
-import { scoreOffValues, sumValues } from "~/utils/helpers";
+import { sumValues } from "~/utils/helpers";
 
 import ElementCard from "./element-card";
 
