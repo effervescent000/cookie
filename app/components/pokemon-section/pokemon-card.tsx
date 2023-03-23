@@ -1,17 +1,24 @@
-import { useMemo, useContext, useState, useEffect, useCallback } from "react";
+import { useMemo, useContext, useState, useEffect } from "react";
 import _ from "lodash";
+import sortArray from "sort-array";
 
 import type { IPokemonFull, IPokeSkeleton } from "~/interfaces";
 
 import { properCase, sortObjectByValue } from "~/utils/text-utils";
+import { PokemonContext } from "~/pokemon-context";
+import {
+  makeTeamDefensiveValues,
+  makeTeamOffensiveValues,
+  makeTotalsStats,
+  scoreMoves,
+  sumValues,
+} from "~/utils/helpers";
+import { isFullPokemon } from "~/utils/type-guards";
+import PokeAPIService from "~/utils/pokeapi-service";
 
 import Select from "../common/select";
-import { PokemonContext } from "~/pokemon-context";
 import EditIcons from "./edit-icons";
-import PokeAPIService from "~/utils/pokeapi-service";
 import SpriteFrame from "../common/sprite-frame";
-import { makeTotalsStats, scoreMoves } from "~/utils/helpers";
-import { isFullPokemon } from "~/utils/type-guards";
 import ScoreCard from "./score-card";
 
 const PokemonInput = ({
@@ -21,12 +28,19 @@ const PokemonInput = ({
   targetPoke: IPokeSkeleton;
   currentLocation: string;
 }) => {
-  const { versionGroup, mergeIntoBench, mergeIntoTeam } =
-    useContext(PokemonContext);
+  const {
+    versionGroup,
+    mergeIntoBench,
+    mergeIntoTeam,
+    team,
+    teamDefScores,
+    teamOffScores,
+  } = useContext(PokemonContext);
   const [fullPoke, setFullPoke] = useState<IPokemonFull>({} as IPokemonFull);
   const [loading, setLoading] = useState(true);
   const [moveScores, setMoveScores] = useState(0);
   const [statTotal, setStatTotal] = useState(0);
+  const [deltas, setDeltas] = useState<{ id: number; delta: number }[]>([]);
 
   useEffect(() => {
     const getFullPoke = async () => {
@@ -52,6 +66,33 @@ const PokemonInput = ({
       setStatTotal(makeTotalsStats(fullPoke));
     }
   }, [fullPoke, versionGroup]);
+
+  useEffect(() => {
+    const calcDeltas = async () => {
+      if (isFullPokemon(fullPoke)) {
+        const P = new PokeAPIService();
+        const result = await Promise.all(
+          team.map(async (teamPoke, i) => {
+            const newTeam = [...team];
+            newTeam[i] = targetPoke;
+            const newDefValues = await makeTeamDefensiveValues(newTeam, P);
+            const newOffValues = await makeTeamOffensiveValues(newTeam, P);
+            return {
+              id: teamPoke.id,
+              delta:
+                sumValues(newDefValues) -
+                sumValues(teamDefScores) +
+                (sumValues(newOffValues) - sumValues(teamOffScores)),
+            };
+          })
+        );
+        sortArray(result, { by: "delta", order: "desc" });
+        setDeltas(result);
+      }
+    };
+
+    calcDeltas();
+  }, [fullPoke, targetPoke, team, teamDefScores, teamOffScores]);
 
   const moveList = useMemo(() => {
     const { moves } = fullPoke;
@@ -96,8 +137,23 @@ const PokemonInput = ({
         <div className="w-[192px]">
           <SpriteFrame pokemon={fullPoke} />
           <div className="flex justify-between">
-            <ScoreCard value={moveScores} />
-            <ScoreCard value={statTotal / 100} />
+            <ScoreCard label="Move score" value={moveScores} />
+            {currentLocation === "bench" ? (
+              <ScoreCard
+                label={
+                  deltas.length
+                    ? `Switched for ${
+                        team.find(({ id: teamId }) => deltas[0].id === teamId)
+                          ?.name
+                      }`
+                    : undefined
+                }
+                value={deltas.length ? deltas[0].delta : 0}
+              />
+            ) : (
+              <></>
+            )}
+            <ScoreCard label="Stat score" value={statTotal / 100} />
           </div>
           <EditIcons
             currentLocation={currentLocation}

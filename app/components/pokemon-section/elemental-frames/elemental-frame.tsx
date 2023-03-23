@@ -2,20 +2,9 @@ import { useContext, useEffect, useState } from "react";
 
 import type { IValues } from "~/interfaces";
 
-import {
-  DEFENSIVE_KEY,
-  TYPES,
-  DAMAGE_RELATION_VALUES,
-} from "~/constants/types-constants";
+import { DEFENSIVE_KEY, TYPES } from "~/constants/types-constants";
 import { PokemonContext } from "~/pokemon-context";
-
-import PokeAPIService from "~/utils/pokeapi-service";
-import {
-  diminishReturns,
-  makeDefensiveValues,
-  scoreDefValues,
-  scoreOffValues,
-} from "~/utils/helpers";
+import { sumValues } from "~/utils/helpers";
 
 import ElementCard from "./element-card";
 
@@ -26,99 +15,30 @@ const ElementalFrame = ({
   title: string;
   tableType: string;
 }) => {
-  const { team } = useContext(PokemonContext);
+  const { team, teamDefScores, teamOffScores } = useContext(PokemonContext);
   const [values, setValues] = useState<IValues>({});
 
   useEffect(() => {
-    const P = new PokeAPIService();
-    const newValues: IValues = {};
     if (tableType === DEFENSIVE_KEY) {
       const makeValues = async () => {
-        const fullPokes = await P.getPokemonByName(
-          team.map(({ name }) => name)
-        );
-        for (const pokemon of fullPokes) {
-          const thisPokeValues = scoreDefValues(
-            await makeDefensiveValues(pokemon, P)
-          );
-          Object.entries(thisPokeValues).forEach(([key, value]) => {
-            newValues[key] = {
-              finalValue:
-                (newValues[key] ? newValues[key].finalValue : 0) + value,
-              details: [
-                ...(newValues[key] ? newValues[key].details : []),
-                [pokemon.name, value],
-              ],
-            };
-          });
-        }
-        setValues(newValues);
+        setValues(teamDefScores);
       };
 
       makeValues();
     } else {
       const makeValues = async () => {
-        for (const pokemon of team) {
-          const thisPokeValues: { [key: string]: number } = {};
-          const selectedMoves = await Promise.all(
-            Object.values(pokemon.moves)
-              .filter((move) => !!move)
-              .map(async (move) => {
-                return await P.getMove(move);
-              })
-          );
-          for (const move of selectedMoves) {
-            const moveTypeResponse = await P.getType(move.type.name);
-            Object.entries(moveTypeResponse.damage_relations).forEach(
-              ([damage_level, relatedTypes]) => {
-                if (damage_level.includes("_to")) {
-                  relatedTypes.forEach((relatedType) => {
-                    if (
-                      thisPokeValues[relatedType.name] === undefined ||
-                      thisPokeValues[relatedType.name] <
-                        DAMAGE_RELATION_VALUES[damage_level]
-                    ) {
-                      thisPokeValues[relatedType.name] =
-                        DAMAGE_RELATION_VALUES[damage_level];
-                    }
-                  });
-                }
-              }
-            );
-          }
-          Object.entries(scoreOffValues(thisPokeValues)).forEach(
-            ([key, value]) => {
-              newValues[key] = {
-                finalValue:
-                  (newValues[key] ? newValues[key].finalValue : 0) + value,
-                details: [
-                  ...(newValues[key] ? newValues[key].details : []),
-                  [pokemon.name, value],
-                ],
-              };
-            }
-          );
-        }
-        setValues(newValues);
+        setValues(teamOffScores);
       };
 
       makeValues();
     }
-  }, [tableType, team]);
+  }, [tableType, team, teamDefScores, teamOffScores]);
 
   return (
     <div className="w-max">
       <div className="flex justify-between text-lg">
         <span>{title}</span>
-        <span>
-          {values &&
-            Math.round(
-              Object.values(values).reduce(
-                (total, cur) => total + diminishReturns(cur.finalValue),
-                0
-              )
-            )}
-        </span>
+        <span>{values && Math.round(sumValues(values))}</span>
       </div>
       <div className="grid grid-cols-6 gap-x-2">
         {TYPES.map((type) => (

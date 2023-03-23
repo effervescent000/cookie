@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-import type { IPokemonFull, IPokeSkeleton } from "./interfaces";
+import type { IPokemonFull, IPokeSkeleton, IValues } from "./interfaces";
 
 export const PokemonContext = createContext<{
   gen: string;
@@ -18,6 +18,10 @@ export const PokemonContext = createContext<{
   removeFromBench: (arg0: IPokeSkeleton) => void;
   focusedPokemon: IPokemonFull | undefined;
   setFocusedPokemon: (arg0: IPokemonFull | undefined) => void;
+  teamDefScores: IValues;
+  setTeamDefScores: (arg0: IValues) => void;
+  teamOffScores: IValues;
+  setTeamOffScores: (arg0: IValues) => void;
 }>({
   gen: "",
   setGen: (target) => {},
@@ -34,4 +38,8 @@ export const PokemonContext = createContext<{
   removeFromTeam: (target) => {},
   focusedPokemon: undefined,
   setFocusedPokemon: (target) => {},
+  teamDefScores: {},
+  setTeamDefScores: (values) => {},
+  teamOffScores: {},
+  setTeamOffScores: (values) => {},
 });

@@ -3,7 +3,7 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import Icon from "../common/icon";
 
-const ScoreCard = ({ value }: { value: number }) => {
+const ScoreCard = ({ value, label }: { value: number; label?: string }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -15,7 +15,8 @@ const ScoreCard = ({ value }: { value: number }) => {
   }, [value]);
 
   return (
-    <div>
+    <div className="text-center">
+      <div className="text-xs">{label}</div>
       {loading ? (
         <Icon classes="animate-spin" icon={faSpinner} />
       ) : (
