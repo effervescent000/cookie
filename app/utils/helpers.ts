@@ -111,6 +111,8 @@ export const diminishReturns = (num: number): number => {
   const cap = 10;
   if (num > 3) {
     return (cap * num) / (num + 7);
+  } else if (num < -3) {
+    return Math.pow(3, (num * -1) / 3) * -1;
   }
   return num;
 };
