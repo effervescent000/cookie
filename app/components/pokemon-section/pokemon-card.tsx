@@ -8,6 +8,7 @@ import { properCase, sortObjectByValue } from "~/utils/text-utils";
 import { PokemonContext } from "~/pokemon-context";
 import {
   makeTeamDefensiveValues,
+  makeTeamOffensiveValues,
   makeTotalsStats,
   scoreMoves,
   sumValues,
@@ -23,14 +24,18 @@ import ScoreCard from "./score-card";
 const PokemonInput = ({
   targetPoke,
   currentLocation,
-  scores,
 }: {
   targetPoke: IPokeSkeleton;
   currentLocation: string;
-  scores: { [key: number]: { [key: string]: number } };
 }) => {
-  const { versionGroup, mergeIntoBench, mergeIntoTeam, team, teamDefScores } =
-    useContext(PokemonContext);
+  const {
+    versionGroup,
+    mergeIntoBench,
+    mergeIntoTeam,
+    team,
+    teamDefScores,
+    teamOffScores,
+  } = useContext(PokemonContext);
   const [fullPoke, setFullPoke] = useState<IPokemonFull>({} as IPokemonFull);
   const [loading, setLoading] = useState(true);
   const [moveScores, setMoveScores] = useState(0);
@@ -70,10 +75,14 @@ const PokemonInput = ({
           team.map(async (teamPoke, i) => {
             const newTeam = [...team];
             newTeam[i] = targetPoke;
-            const newValues = await makeTeamDefensiveValues(newTeam, P);
+            const newDefValues = await makeTeamDefensiveValues(newTeam, P);
+            const newOffValues = await makeTeamOffensiveValues(newTeam, P);
             return {
               id: teamPoke.id,
-              delta: sumValues(newValues) - sumValues(teamDefScores),
+              delta:
+                sumValues(newDefValues) -
+                sumValues(teamDefScores) +
+                (sumValues(newOffValues) - sumValues(teamOffScores)),
             };
           })
         );
@@ -83,7 +92,7 @@ const PokemonInput = ({
     };
 
     calcDeltas();
-  }, [fullPoke, targetPoke, team, teamDefScores]);
+  }, [fullPoke, targetPoke, team, teamDefScores, teamOffScores]);
 
   const moveList = useMemo(() => {
     const { moves } = fullPoke;

@@ -20,6 +20,8 @@ export const PokemonContext = createContext<{
   setFocusedPokemon: (arg0: IPokemonFull | undefined) => void;
   teamDefScores: IValues;
   setTeamDefScores: (arg0: IValues) => void;
+  teamOffScores: IValues;
+  setTeamOffScores: (arg0: IValues) => void;
 }>({
   gen: "",
   setGen: (target) => {},
@@ -38,4 +40,6 @@ export const PokemonContext = createContext<{
   setFocusedPokemon: (target) => {},
   teamDefScores: {},
   setTeamDefScores: (values) => {},
+  teamOffScores: {},
+  setTeamOffScores: (values) => {},
 });

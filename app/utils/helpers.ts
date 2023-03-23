@@ -78,6 +78,67 @@ export const makeTeamDefensiveValues = async (
   return newValues;
 };
 
+export const makeOffensiveValues = async (
+  pokemon: IPokeSkeleton,
+  P: PokeAPIService
+) => {
+  const thisPokeValues: { [key: string]: number } = {};
+  const selectedMoves = await Promise.all(
+    Object.values(pokemon.moves)
+      .filter((move) => !!move)
+      .map(async (move) => {
+        return await P.getMove(move);
+      })
+  );
+  const moveTypes = await Promise.all(
+    selectedMoves.map(async (move) => await P.getType(move.type.name))
+  );
+  moveTypes.forEach((move) => {
+    Object.entries(move.damage_relations).forEach(
+      ([damage_level, relatedTypes]) => {
+        if (damage_level.includes("_to")) {
+          relatedTypes.forEach((relatedType) => {
+            if (
+              thisPokeValues[relatedType.name] === undefined ||
+              thisPokeValues[relatedType.name] <
+                DAMAGE_RELATION_VALUES[damage_level]
+            ) {
+              thisPokeValues[relatedType.name] =
+                DAMAGE_RELATION_VALUES[damage_level];
+            }
+          });
+        }
+      }
+    );
+  });
+  return thisPokeValues;
+};
+
+export const makeTeamOffensiveValues = async (
+  pokemon: IPokeSkeleton[],
+  P: PokeAPIService
+) => {
+  const newValues: IValues = {};
+  const pokeValues = await Promise.all(
+    pokemon.map(async (poke) => {
+      const thisPokeValues = scoreOffValues(await makeOffensiveValues(poke, P));
+      return { name: poke.name, values: thisPokeValues, id: poke.id };
+    })
+  );
+  pokeValues.forEach((pv) =>
+    Object.entries(pv.values).forEach(([key, value]) => {
+      newValues[key] = {
+        finalValue: (newValues[key] ? newValues[key].finalValue : 0) + value,
+        details: [
+          ...(newValues[key] ? newValues[key].details : []),
+          [pv.name, value],
+        ],
+      };
+    })
+  );
+  return newValues;
+};
+
 export const scoreDefValues = (values: {
   [key: string]: number;
 }): { [key: string]: number } => {

@@ -21,12 +21,10 @@ const ElementalFrame = ({
   title: string;
   tableType: string;
 }) => {
-  const { team, teamDefScores } = useContext(PokemonContext);
+  const { team, teamDefScores, teamOffScores } = useContext(PokemonContext);
   const [values, setValues] = useState<IValues>({});
 
   useEffect(() => {
-    const P = new PokeAPIService();
-    const newValues: IValues = {};
     if (tableType === DEFENSIVE_KEY) {
       const makeValues = async () => {
         setValues(teamDefScores);
@@ -35,53 +33,12 @@ const ElementalFrame = ({
       makeValues();
     } else {
       const makeValues = async () => {
-        for (const pokemon of team) {
-          const thisPokeValues: { [key: string]: number } = {};
-          const selectedMoves = await Promise.all(
-            Object.values(pokemon.moves)
-              .filter((move) => !!move)
-              .map(async (move) => {
-                return await P.getMove(move);
-              })
-          );
-          for (const move of selectedMoves) {
-            const moveTypeResponse = await P.getType(move.type.name);
-            Object.entries(moveTypeResponse.damage_relations).forEach(
-              ([damage_level, relatedTypes]) => {
-                if (damage_level.includes("_to")) {
-                  relatedTypes.forEach((relatedType) => {
-                    if (
-                      thisPokeValues[relatedType.name] === undefined ||
-                      thisPokeValues[relatedType.name] <
-                        DAMAGE_RELATION_VALUES[damage_level]
-                    ) {
-                      thisPokeValues[relatedType.name] =
-                        DAMAGE_RELATION_VALUES[damage_level];
-                    }
-                  });
-                }
-              }
-            );
-          }
-          Object.entries(scoreOffValues(thisPokeValues)).forEach(
-            ([key, value]) => {
-              newValues[key] = {
-                finalValue:
-                  (newValues[key] ? newValues[key].finalValue : 0) + value,
-                details: [
-                  ...(newValues[key] ? newValues[key].details : []),
-                  [pokemon.name, value],
-                ],
-              };
-            }
-          );
-        }
-        setValues(newValues);
+        setValues(teamOffScores);
       };
 
       makeValues();
     }
-  }, [tableType, team, teamDefScores]);
+  }, [tableType, team, teamDefScores, teamOffScores]);
 
   return (
     <div className="w-max">
