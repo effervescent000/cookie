@@ -11,8 +11,12 @@ const Icon = ({
   classes?: string;
 }) => {
   return (
-    <div className={`cursor-pointer ${classes}`}>
-      <FontAwesomeIcon icon={icon} onClick={onClick} />
+    <div>
+      <FontAwesomeIcon
+        icon={icon}
+        onClick={onClick}
+        className={`cursor-pointer ${classes}`}
+      />
     </div>
   );
 };

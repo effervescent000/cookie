@@ -1,6 +1,11 @@
 import _ from "lodash";
 
-import type { IMoveResponse, IPokemonFull } from "~/interfaces";
+import type {
+  IMoveResponse,
+  IPokemonFull,
+  IPokeSkeleton,
+  IValues,
+} from "~/interfaces";
 
 import {
   DAMAGE_RELATION_VALUES,
@@ -34,6 +39,35 @@ export const makeDefensiveValues = async (
   );
   diff.forEach((t) => (thisPokeValues[t] = 1));
   return thisPokeValues;
+};
+
+export const sumValues = (values: IValues) =>
+  Object.values(values).reduce(
+    (total, cur) => total + diminishReturns(cur.finalValue),
+    0
+  );
+
+export const makeTeamDefensiveValues = async (
+  pokemon: IPokeSkeleton[],
+  P: PokeAPIService
+) => {
+  const newValues: IValues = {};
+  const fullPokes = await P.getPokemonByName(pokemon.map(({ name }) => name));
+  for (const pokemon of fullPokes) {
+    const thisPokeValues = scoreDefValues(
+      await makeDefensiveValues(pokemon, P)
+    );
+    Object.entries(thisPokeValues).forEach(([key, value]) => {
+      newValues[key] = {
+        finalValue: (newValues[key] ? newValues[key].finalValue : 0) + value,
+        details: [
+          ...(newValues[key] ? newValues[key].details : []),
+          [pokemon.name, value],
+        ],
+      };
+    });
+  }
+  return newValues;
 };
 
 export const scoreDefValues = (values: {
