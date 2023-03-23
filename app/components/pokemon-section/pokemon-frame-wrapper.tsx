@@ -41,6 +41,7 @@ const PokemonFrameWrapper = ({
       }
     };
     makeScores();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [team, bench]);
 
   return (

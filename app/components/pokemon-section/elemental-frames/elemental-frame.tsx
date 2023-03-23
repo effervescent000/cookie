@@ -10,12 +10,7 @@ import {
 import { PokemonContext } from "~/pokemon-context";
 
 import PokeAPIService from "~/utils/pokeapi-service";
-import {
-  diminishReturns,
-  makeDefensiveValues,
-  scoreDefValues,
-  scoreOffValues,
-} from "~/utils/helpers";
+import { scoreOffValues, sumValues } from "~/utils/helpers";
 
 import ElementCard from "./element-card";
 
@@ -26,7 +21,7 @@ const ElementalFrame = ({
   title: string;
   tableType: string;
 }) => {
-  const { team } = useContext(PokemonContext);
+  const { team, teamDefScores } = useContext(PokemonContext);
   const [values, setValues] = useState<IValues>({});
 
   useEffect(() => {
@@ -34,25 +29,7 @@ const ElementalFrame = ({
     const newValues: IValues = {};
     if (tableType === DEFENSIVE_KEY) {
       const makeValues = async () => {
-        const fullPokes = await P.getPokemonByName(
-          team.map(({ name }) => name)
-        );
-        for (const pokemon of fullPokes) {
-          const thisPokeValues = scoreDefValues(
-            await makeDefensiveValues(pokemon, P)
-          );
-          Object.entries(thisPokeValues).forEach(([key, value]) => {
-            newValues[key] = {
-              finalValue:
-                (newValues[key] ? newValues[key].finalValue : 0) + value,
-              details: [
-                ...(newValues[key] ? newValues[key].details : []),
-                [pokemon.name, value],
-              ],
-            };
-          });
-        }
-        setValues(newValues);
+        setValues(teamDefScores);
       };
 
       makeValues();
@@ -104,21 +81,13 @@ const ElementalFrame = ({
 
       makeValues();
     }
-  }, [tableType, team]);
+  }, [tableType, team, teamDefScores]);
 
   return (
     <div className="w-max">
       <div className="flex justify-between text-lg">
         <span>{title}</span>
-        <span>
-          {values &&
-            Math.round(
-              Object.values(values).reduce(
-                (total, cur) => total + diminishReturns(cur.finalValue),
-                0
-              )
-            )}
-        </span>
+        <span>{values && Math.round(sumValues(values))}</span>
       </div>
       <div className="grid grid-cols-6 gap-x-2">
         {TYPES.map((type) => (

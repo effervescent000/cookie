@@ -14,6 +14,8 @@ import reactTooltipStylesheetUrl from "react-tooltip/dist/react-tooltip.css";
 
 import type { IPokemonFull, IPokeSkeleton } from "./interfaces";
 import { PokemonContext } from "~/pokemon-context";
+import PokeAPIService from "./utils/pokeapi-service";
+import { makeTeamDefensiveValues } from "./utils/helpers";
 
 export const links: LinksFunction = () => {
   return [
@@ -38,6 +40,16 @@ export default function App() {
   const [focusedPokemon, setFocusedPokemon] = useState<
     IPokemonFull | undefined
   >(undefined);
+  const [teamDefScores, setTeamDefScores] = useState({});
+
+  useEffect(() => {
+    const P = new PokeAPIService();
+    const getTeamScores = async () => {
+      const currentScores = await makeTeamDefensiveValues(team, P);
+      setTeamDefScores(currentScores);
+    };
+    getTeamScores();
+  }, [team]);
 
   const saveGen = (targetGen: string) => {
     setGen(targetGen);
@@ -145,6 +157,8 @@ export default function App() {
         removeFromTeam,
         focusedPokemon,
         setFocusedPokemon,
+        teamDefScores,
+        setTeamDefScores,
       }}
     >
       <html lang="en" className="h-full">

@@ -15,8 +15,8 @@ const ScoreCard = ({ value, label }: { value: number; label?: string }) => {
   }, [value]);
 
   return (
-    <div>
-      <div className="text-sm">{label}</div>
+    <div className="text-center">
+      <div className="text-xs">{label}</div>
       {loading ? (
         <Icon classes="animate-spin" icon={faSpinner} />
       ) : (

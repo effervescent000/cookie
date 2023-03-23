@@ -29,7 +29,7 @@ const PokemonInput = ({
   currentLocation: string;
   scores: { [key: number]: { [key: string]: number } };
 }) => {
-  const { versionGroup, mergeIntoBench, mergeIntoTeam, team } =
+  const { versionGroup, mergeIntoBench, mergeIntoTeam, team, teamDefScores } =
     useContext(PokemonContext);
   const [fullPoke, setFullPoke] = useState<IPokemonFull>({} as IPokemonFull);
   const [loading, setLoading] = useState(true);
@@ -66,7 +66,6 @@ const PokemonInput = ({
     const calcDeltas = async () => {
       if (isFullPokemon(fullPoke)) {
         const P = new PokeAPIService();
-        const currentScores = await makeTeamDefensiveValues(team, P);
         const result = await Promise.all(
           team.map(async (teamPoke, i) => {
             const newTeam = [...team];
@@ -74,7 +73,7 @@ const PokemonInput = ({
             const newValues = await makeTeamDefensiveValues(newTeam, P);
             return {
               id: teamPoke.id,
-              delta: sumValues(currentScores) - sumValues(newValues),
+              delta: sumValues(teamDefScores) - sumValues(newValues),
             };
           })
         );
@@ -84,7 +83,7 @@ const PokemonInput = ({
     };
 
     calcDeltas();
-  }, [fullPoke, targetPoke, team]);
+  }, [fullPoke, targetPoke, team, teamDefScores]);
 
   const moveList = useMemo(() => {
     const { moves } = fullPoke;
