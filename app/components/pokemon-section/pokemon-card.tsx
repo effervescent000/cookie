@@ -25,6 +25,8 @@ const PokemonInput = ({
     useContext(PokemonContext);
   const [fullPoke, setFullPoke] = useState<IPokemonFull>({} as IPokemonFull);
   const [loading, setLoading] = useState(true);
+  const [moveScores, setMoveScores] = useState(0);
+  const [statTotal, setStatTotal] = useState(0);
 
   useEffect(() => {
     const getFullPoke = async () => {
@@ -37,12 +39,18 @@ const PokemonInput = ({
     getFullPoke();
   }, [targetPoke.name]);
 
-  const getMoveScores = useCallback(async () => {
-    if (isFullPokemon(fullPoke)) {
+  useEffect(() => {
+    const getMoveScores = async () => {
       const result = await scoreMoves(fullPoke, versionGroup);
-      return Object.values(result).reduce((total, cur) => total + cur, 0);
+      setMoveScores(
+        Object.values(result).reduce((total, cur) => total + cur, 0) / 10
+      );
+    };
+
+    if (isFullPokemon(fullPoke)) {
+      getMoveScores();
+      setStatTotal(makeTotalsStats(fullPoke));
     }
-    return 0;
   }, [fullPoke, versionGroup]);
 
   const moveList = useMemo(() => {
@@ -88,8 +96,8 @@ const PokemonInput = ({
         <div className="w-[192px]">
           <SpriteFrame pokemon={fullPoke} />
           <div className="flex justify-between">
-            <ScoreCard callback={getMoveScores} />
-            <ScoreCard callback={async () => makeTotalsStats(fullPoke)} />
+            <ScoreCard value={moveScores} />
+            <ScoreCard value={statTotal / 100} />
           </div>
           <EditIcons
             currentLocation={currentLocation}

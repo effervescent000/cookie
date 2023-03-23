@@ -3,21 +3,24 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import Icon from "../common/icon";
 
-const ScoreCard = ({ callback }: { callback: () => Promise<number> }) => {
-  const [value, setValue] = useState(0);
+const ScoreCard = ({ value }: { value: number }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
-    callback().then((n) => {
-      setValue(Math.round(n));
+    if (value === 0) {
+      setLoading(true);
+    } else {
       setLoading(false);
-    });
-  }, [callback]);
+    }
+  }, [value]);
 
   return (
     <div>
-      {loading ? <Icon classes="animate-spin" icon={faSpinner} /> : value}
+      {loading ? (
+        <Icon classes="animate-spin" icon={faSpinner} />
+      ) : (
+        Math.round(value)
+      )}
     </div>
   );
 };
