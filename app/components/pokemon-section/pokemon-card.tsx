@@ -1,4 +1,4 @@
-import { useMemo, useContext, useState, useEffect } from "react";
+import { useMemo, useContext, useState, useEffect, useCallback } from "react";
 import _ from "lodash";
 
 import type { IPokemonFull, IPokeSkeleton } from "~/interfaces";
@@ -10,8 +10,9 @@ import { PokemonContext } from "~/pokemon-context";
 import EditIcons from "./edit-icons";
 import PokeAPIService from "~/utils/pokeapi-service";
 import SpriteFrame from "../common/sprite-frame";
-import { scoreMoves } from "~/utils/helpers";
+import { makeTotalsStats, scoreMoves } from "~/utils/helpers";
 import { isFullPokemon } from "~/utils/type-guards";
+import ScoreCard from "./score-card";
 
 const PokemonInput = ({
   targetPoke,
@@ -23,26 +24,33 @@ const PokemonInput = ({
   const { versionGroup, mergeIntoBench, mergeIntoTeam } =
     useContext(PokemonContext);
   const [fullPoke, setFullPoke] = useState<IPokemonFull>({} as IPokemonFull);
-  const [moveScores, setMoveScores] = useState<{ [key: string]: number }>({});
+  const [loading, setLoading] = useState(true);
+  const [moveScores, setMoveScores] = useState(0);
+  const [statTotal, setStatTotal] = useState(0);
 
   useEffect(() => {
-    const P = new PokeAPIService();
     const getFullPoke = async () => {
-      const result = await P.getPokemonByName([targetPoke.name]);
-      setFullPoke(result[0]);
+      const P = new PokeAPIService();
+      const result = (await P.getPokemonByName([targetPoke.name]))[0];
+      setFullPoke(result);
+      setLoading(false);
     };
-
+    setLoading(true);
     getFullPoke();
   }, [targetPoke.name]);
 
   useEffect(() => {
     const getMoveScores = async () => {
-      if (isFullPokemon(fullPoke)) {
-        const result = await scoreMoves(fullPoke, versionGroup);
-        setMoveScores(result);
-      }
+      const result = await scoreMoves(fullPoke, versionGroup);
+      setMoveScores(
+        Object.values(result).reduce((total, cur) => total + cur, 0) / 10
+      );
     };
-    getMoveScores();
+
+    if (isFullPokemon(fullPoke)) {
+      getMoveScores();
+      setStatTotal(makeTotalsStats(fullPoke));
+    }
   }, [fullPoke, versionGroup]);
 
   const moveList = useMemo(() => {
@@ -75,7 +83,7 @@ const PokemonInput = ({
     }
   };
 
-  if (!fullPoke.id) {
+  if (loading) {
     return <div>Loading...</div>;
   }
 
@@ -88,11 +96,8 @@ const PokemonInput = ({
         <div className="w-[192px]">
           <SpriteFrame pokemon={fullPoke} />
           <div className="flex justify-between">
-            <span>
-              {Math.round(
-                Object.values(moveScores).reduce((total, cur) => total + cur, 0)
-              )}
-            </span>
+            <ScoreCard value={moveScores} />
+            <ScoreCard value={statTotal / 100} />
           </div>
           <EditIcons
             currentLocation={currentLocation}

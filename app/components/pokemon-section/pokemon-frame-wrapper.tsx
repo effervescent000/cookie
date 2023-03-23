@@ -18,7 +18,7 @@ const PokemonSection = ({
 
   return (
     <div className="flex justify-between gap-10">
-      <div className="">
+      <div>
         <PokemonFrame pokemon={team} location="team" />
         <PokemonFrame pokemon={bench} location="bench" />
       </div>
