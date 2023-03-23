@@ -24,26 +24,26 @@ const PokemonInput = ({
   const { versionGroup, mergeIntoBench, mergeIntoTeam } =
     useContext(PokemonContext);
   const [fullPoke, setFullPoke] = useState<IPokemonFull>({} as IPokemonFull);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getFullPoke = async () => {
       const P = new PokeAPIService();
-      const result = await P.getPokemonByName([targetPoke.name]);
-      setFullPoke(result[0]);
+      const result = (await P.getPokemonByName([targetPoke.name]))[0];
+      setFullPoke(result);
+      setLoading(false);
     };
+    setLoading(true);
     getFullPoke();
   }, [targetPoke.name]);
 
   const getMoveScores = useCallback(async () => {
     if (isFullPokemon(fullPoke)) {
       const result = await scoreMoves(fullPoke, versionGroup);
-      return result;
+      return Object.values(result).reduce((total, cur) => total + cur, 0);
     }
-    return {};
+    return 0;
   }, [fullPoke, versionGroup]);
-
-  const getFinalScore = (scores: { [key: string]: number }) =>
-    Object.values(scores).reduce((total, cur) => total + cur, 0);
 
   const moveList = useMemo(() => {
     const { moves } = fullPoke;
@@ -75,7 +75,7 @@ const PokemonInput = ({
     }
   };
 
-  if (!fullPoke.id) {
+  if (loading) {
     return <div>Loading...</div>;
   }
 
@@ -88,9 +88,7 @@ const PokemonInput = ({
         <div className="w-[192px]">
           <SpriteFrame pokemon={fullPoke} />
           <div className="flex justify-between">
-            <ScoreCard
-              callback={async () => getFinalScore(await getMoveScores())}
-            />
+            <ScoreCard callback={getMoveScores} />
             <ScoreCard callback={async () => makeTotalsStats(fullPoke)} />
           </div>
           <EditIcons
