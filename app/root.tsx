@@ -99,14 +99,18 @@ export default function App() {
 
   const removeFromBench = (target: IPokeSkeleton) => {
     const newBench = bench.filter(({ id: pokeId }) => pokeId !== target.id);
-    setBench(newBench);
-    saveBenchToLocal(newBench);
+    if (bench.length !== newBench.length) {
+      setBench(newBench);
+      saveBenchToLocal(newBench);
+    }
   };
 
   const removeFromTeam = (target: IPokeSkeleton) => {
     const newTeam = team.filter(({ id: pokeId }) => pokeId !== target.id);
-    setTeam(newTeam);
-    saveTeamToLocal(newTeam);
+    if (team.length !== newTeam.length) {
+      setTeam(newTeam);
+      saveTeamToLocal(newTeam);
+    }
   };
 
   useEffect(() => {
