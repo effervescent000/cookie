@@ -73,7 +73,7 @@ const PokemonInput = ({
             const newValues = await makeTeamDefensiveValues(newTeam, P);
             return {
               id: teamPoke.id,
-              delta: sumValues(teamDefScores) - sumValues(newValues),
+              delta: sumValues(newValues) - sumValues(teamDefScores),
             };
           })
         );
