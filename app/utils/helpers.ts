@@ -190,7 +190,7 @@ const getStat = (pokemon: IPokemonFull, stat: string) =>
   pokemon.stats.find(({ stat: { name } }) => name === stat)?.base_stat;
 
 const LEVEL = 5;
-const DEFENSE = 90;
+const DEFENSE = 70;
 
 export const scoreMoves = async (
   pokemon: IPokemonFull,
