@@ -53,20 +53,28 @@ export const makeTeamDefensiveValues = async (
 ) => {
   const newValues: IValues = {};
   const fullPokes = await P.getPokemonByName(pokemon.map(({ name }) => name));
-  for (const pokemon of fullPokes) {
-    const thisPokeValues = scoreDefValues(
-      await makeDefensiveValues(pokemon, P)
-    );
-    Object.entries(thisPokeValues).forEach(([key, value]) => {
+  // const startTime = Date.now();
+  const pokeValues = await Promise.all(
+    fullPokes.map(async (pokemon) => {
+      const thisPokeValues = scoreDefValues(
+        await makeDefensiveValues(pokemon, P)
+      );
+      return { name: pokemon.name, values: thisPokeValues, id: pokemon.id };
+    })
+  );
+  pokeValues.forEach((pv) =>
+    Object.entries(pv.values).forEach(([key, value]) => {
       newValues[key] = {
         finalValue: (newValues[key] ? newValues[key].finalValue : 0) + value,
         details: [
           ...(newValues[key] ? newValues[key].details : []),
-          [pokemon.name, value],
+          [pv.name, value],
         ],
       };
-    });
-  }
+    })
+  );
+
+  // console.log(`creating team defensives took ${Date.now() - startTime}ms`);
   return newValues;
 };
 
