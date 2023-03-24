@@ -16,8 +16,10 @@ import type { IPokemonFull, IPokeSkeleton } from "./interfaces";
 import { PokemonContext } from "~/pokemon-context";
 import PokeAPIService from "./utils/pokeapi-service";
 import {
+  compileTeamValues,
   makeTeamDefensiveValues,
   makeTeamOffensiveValues,
+  sumCompiledTeamValues,
 } from "./utils/helpers";
 
 export const links: LinksFunction = () => {
@@ -43,18 +45,36 @@ export default function App() {
   const [focusedPokemon, setFocusedPokemon] = useState<
     IPokemonFull | undefined
   >(undefined);
-  const [teamDefScores, setTeamDefScores] = useState({});
-  const [teamOffScores, setTeamOffScores] = useState({});
+  const [teamDefScores, setTeamDefScores] = useState({
+    final: 0,
+    raw: {},
+    processed: {},
+  });
+  const [teamOffScores, setTeamOffScores] = useState({
+    final: 0,
+    raw: {},
+    processed: {},
+  });
 
   useEffect(() => {
     const P = new PokeAPIService();
     const getTeamDefScores = async () => {
       const currentScores = await makeTeamDefensiveValues(team, P);
-      setTeamDefScores(currentScores);
+      setTeamDefScores({
+        raw: currentScores.raw,
+        final: sumCompiledTeamValues(compileTeamValues(currentScores.raw)),
+        processed: currentScores.final,
+      });
+      // setTeamDefScores(currentScores);
     };
     const getTeamOffScores = async () => {
       const currentScores = await makeTeamOffensiveValues(team, P);
-      setTeamOffScores(currentScores);
+      // setTeamOffScores(currentScores);
+      setTeamOffScores({
+        raw: currentScores.raw,
+        final: sumCompiledTeamValues(compileTeamValues(currentScores.raw)),
+        processed: currentScores.final,
+      });
     };
     getTeamDefScores();
     getTeamOffScores();

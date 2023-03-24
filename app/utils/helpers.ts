@@ -51,9 +51,8 @@ export const makeTeamDefensiveValues = async (
   pokemon: IPokeSkeleton[],
   P: PokeAPIService
 ) => {
-  const newValues: IValues = {};
   const fullPokes = await P.getPokemonByName(pokemon.map(({ name }) => name));
-  // const startTime = Date.now();
+  const processedValues: IValues = {};
   const pokeValues = await Promise.all(
     fullPokes.map(async (pokemon) => {
       const thisPokeValues = scoreDefValues(
@@ -62,20 +61,21 @@ export const makeTeamDefensiveValues = async (
       return { name: pokemon.name, values: thisPokeValues, id: pokemon.id };
     })
   );
-  pokeValues.forEach((pv) =>
-    Object.entries(pv.values).forEach(([key, value]) => {
-      newValues[key] = {
-        finalValue: (newValues[key] ? newValues[key].finalValue : 0) + value,
-        details: [
-          ...(newValues[key] ? newValues[key].details : []),
-          [pv.name, value],
-        ],
-      };
-    })
-  );
 
-  // console.log(`creating team defensives took ${Date.now() - startTime}ms`);
-  return newValues;
+  pokeValues.forEach((pv) => {
+    Object.entries(pv.values).forEach(([key, value]) => {
+      const targetValue = processedValues[key];
+      processedValues[key] = {
+        finalValue: (targetValue?.finalValue || 0) + value,
+        details: [...(targetValue?.details || []), [pv.name, value]],
+      };
+    });
+  });
+
+  return {
+    raw: pokeValues.reduce((x, y) => ({ ...x, [y.name]: y }), {}),
+    final: processedValues,
+  };
 };
 
 export const makeOffensiveValues = async (
@@ -118,26 +118,47 @@ export const makeTeamOffensiveValues = async (
   pokemon: IPokeSkeleton[],
   P: PokeAPIService
 ) => {
-  const newValues: IValues = {};
-  const pokeValues = await Promise.all(
+  const finalValues: { final: number; raw: IValues } = { raw: {}, final: 0 };
+  const pokeValues: {
+    name: string;
+    values: { [key: string]: number };
+    id: number;
+  }[] = await Promise.all(
     pokemon.map(async (poke) => {
       const thisPokeValues = scoreOffValues(await makeOffensiveValues(poke, P));
       return { name: poke.name, values: thisPokeValues, id: poke.id };
     })
   );
-  pokeValues.forEach((pv) =>
+
+  pokeValues.forEach((pv) => {
     Object.entries(pv.values).forEach(([key, value]) => {
-      newValues[key] = {
-        finalValue: (newValues[key] ? newValues[key].finalValue : 0) + value,
-        details: [
-          ...(newValues[key] ? newValues[key].details : []),
-          [pv.name, value],
-        ],
+      const targetValue = finalValues.raw[key];
+      finalValues.raw[key] = {
+        finalValue: (targetValue?.finalValue || 0) + value,
+        details: [...(targetValue?.details || []), [pv.name, value]],
       };
-    })
-  );
-  return newValues;
+    });
+  });
+  return {
+    raw: pokeValues.reduce((x, y) => ({ ...x, [y.name]: y }), {}),
+    final: finalValues.raw,
+  };
 };
+
+export const compileTeamValues = (teamValues: {
+  [key: string]: { values: { [key: string]: number } };
+}) => {
+  const finalValues: { [key: string]: number } = {};
+  Object.values(teamValues).forEach(({ values }) => {
+    Object.entries(values).forEach(([key, value]) => {
+      finalValues[key] = (finalValues[key] || 0) + value;
+    });
+  });
+  return finalValues;
+};
+
+export const sumCompiledTeamValues = (values: { [key: string]: number }) =>
+  Object.values(values).reduce((x, y) => x + diminishReturns(y), 0);
 
 export const scoreDefValues = (values: {
   [key: string]: number;
@@ -247,3 +268,16 @@ export const calcDamage = ({
       (1 + (move.meta.crit_rate + 0.0625) * 1.5) *
       (move.accuracy ? Math.min(move.accuracy, 100) / 100 : 1)
     : 0;
+
+export const filterKey = (
+  obj: { [key: string | number]: any },
+  key: string
+) => {
+  const result = Object.keys(obj)
+    .filter((existingKey) => existingKey !== key)
+    .reduce(
+      (acc, cur) => ({ ...acc, [cur]: obj[cur] }),
+      {} as { [key: string | number]: any }
+    );
+  return result;
+};
