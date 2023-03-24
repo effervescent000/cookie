@@ -37,8 +37,10 @@ const CoverageWrapper = ({
         _.flatten(
           await Promise.all(
             team.map(async (poke) => {
-              const response = await P.getMoves(
-                Object.values(poke.moves).filter((move) => !!move)
+              const response = await Promise.all(
+                Object.values(poke.moves)
+                  .filter((move) => !!move)
+                  .map(async (move) => await P.getMove(move))
               );
               return response.map((move) => move.type.name);
             })
