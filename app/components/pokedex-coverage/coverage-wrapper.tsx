@@ -55,13 +55,15 @@ const CoverageWrapper = ({
         }))
       );
       defValuesByPoke.forEach((poke) => {
+        let covered = false;
         for (const moveType of moveTypes) {
           if (poke.values[moveType] < 0) {
             count++;
+            covered = true;
             break;
           }
         }
-        uncoveredPokemon.push(poke.fullPoke);
+        if (!covered) uncoveredPokemon.push(poke.fullPoke);
       });
       setCoverageData({ count, uncoveredPokemon });
       setLoading(false);
