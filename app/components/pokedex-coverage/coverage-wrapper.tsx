@@ -31,29 +31,36 @@ const CoverageWrapper = ({
   useEffect(() => {
     setLoading(true);
     let count = 0;
-    const P = new PokeAPIService();
     const uncoveredPokemon: IPokemonFull[] = [];
     const makeCoverageData = async () => {
-      let moveTypes: string[] = [];
-      for (const poke of team) {
-        for (const move of Object.values(poke.moves).filter((move) => !!move)) {
-          const fullMove = await P.getMove(move);
-          moveTypes.push(fullMove.type.name);
-        }
-      }
-      moveTypes = _.uniq(moveTypes);
-      checkPoke: for (const targetPoke of readyPokemon) {
-        const thisPokeValues = scoreDefValues(
-          await makeDefensiveValues(targetPoke, P)
-        );
+      const moveTypes = _.uniq(
+        _.flatten(
+          await Promise.all(
+            team.map(async (poke) => {
+              const response = await P.getMoves(
+                Object.values(poke.moves).filter((move) => !!move)
+              );
+              return response.map((move) => move.type.name);
+            })
+          )
+        )
+      );
+
+      const defValuesByPoke = await Promise.all(
+        readyPokemon.map(async (poke) => ({
+          fullPoke: poke,
+          values: scoreDefValues(await makeDefensiveValues(poke, P)),
+        }))
+      );
+      defValuesByPoke.forEach((poke) => {
         for (const moveType of moveTypes) {
-          if (thisPokeValues[moveType] < 0) {
+          if (poke.values[moveType] < 0) {
             count++;
-            continue checkPoke;
+            break;
           }
         }
-        uncoveredPokemon.push(targetPoke);
-      }
+        uncoveredPokemon.push(poke.fullPoke);
+      });
       setCoverageData({ count, uncoveredPokemon });
       setLoading(false);
     };
