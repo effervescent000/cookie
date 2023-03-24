@@ -18,10 +18,26 @@ export const PokemonContext = createContext<{
   removeFromBench: (arg0: IPokeSkeleton) => void;
   focusedPokemon: IPokemonFull | undefined;
   setFocusedPokemon: (arg0: IPokemonFull | undefined) => void;
-  teamDefScores: IValues;
-  setTeamDefScores: (arg0: IValues) => void;
-  teamOffScores: IValues;
-  setTeamOffScores: (arg0: IValues) => void;
+  teamDefScores: {
+    final: number;
+    raw: { [key: string]: { [key: string]: number } };
+    processed: IValues;
+  };
+  setTeamDefScores: (arg0: {
+    final: number;
+    raw: { [key: string]: { [key: string]: number } };
+    processed: IValues;
+  }) => void;
+  teamOffScores: {
+    final: number;
+    raw: { [key: string]: { [key: string]: number } };
+    processed: IValues;
+  };
+  setTeamOffScores: (arg0: {
+    final: number;
+    raw: { [key: string]: { [key: string]: number } };
+    processed: IValues;
+  }) => void;
 }>({
   gen: "",
   setGen: (target) => {},
@@ -38,8 +54,8 @@ export const PokemonContext = createContext<{
   removeFromTeam: (target) => {},
   focusedPokemon: undefined,
   setFocusedPokemon: (target) => {},
-  teamDefScores: {},
+  teamDefScores: { final: 0, raw: {}, processed: {} },
   setTeamDefScores: (values) => {},
-  teamOffScores: {},
+  teamOffScores: { final: 0, raw: {}, processed: {} },
   setTeamOffScores: (values) => {},
 });

@@ -21,18 +21,20 @@ const ElementalFrame = ({
   useEffect(() => {
     if (tableType === DEFENSIVE_KEY) {
       const makeValues = async () => {
-        setValues(teamDefScores);
+        setValues(teamDefScores.processed);
       };
 
       makeValues();
     } else {
       const makeValues = async () => {
-        setValues(teamOffScores);
+        setValues(teamOffScores.processed);
       };
 
       makeValues();
     }
   }, [tableType, team, teamDefScores, teamOffScores]);
+
+  if (!values) return <div>Loading...</div>;
 
   return (
     <div className="w-max">

@@ -7,11 +7,15 @@ import type { IPokemonFull, IPokeSkeleton } from "~/interfaces";
 import { properCase } from "~/utils/text-utils";
 import { PokemonContext } from "~/pokemon-context";
 import {
-  makeTeamDefensiveValues,
-  makeTeamOffensiveValues,
+  filterKey,
   makeTotalsStats,
   scoreMoves,
-  sumValues,
+  compileTeamValues,
+  sumCompiledTeamValues,
+  makeDefensiveValues,
+  makeOffensiveValues,
+  scoreDefValues,
+  scoreOffValues,
 } from "~/utils/helpers";
 import { isFullPokemon } from "~/utils/type-guards";
 import PokeAPIService from "~/utils/pokeapi-service";
@@ -68,19 +72,34 @@ const PokemonInput = ({
   useEffect(() => {
     const calcDeltas = async () => {
       if (isFullPokemon(fullPoke)) {
+        setDeltas([]);
         const P = new PokeAPIService();
+        const thisPokeDefValues = {
+          name: targetPoke.name,
+          values: scoreDefValues(await makeDefensiveValues(fullPoke, P)),
+        };
+        const thisPokeOffValues = {
+          name: targetPoke.name,
+          values: scoreOffValues(await makeOffensiveValues(targetPoke, P)),
+        };
         const result = await Promise.all(
           team.map(async (teamPoke, i) => {
-            const newTeam = [...team];
-            newTeam[i] = targetPoke;
-            const newDefValues = await makeTeamDefensiveValues(newTeam, P);
-            const newOffValues = await makeTeamOffensiveValues(newTeam, P);
+            // const newTeam = [...team];
+            // newTeam[i] = targetPoke;
+            // const newDefValues = await makeTeamDefensiveValues(newTeam, P);
+            const newDefValues = filterKey(teamDefScores.raw, teamPoke.name);
+            newDefValues[targetPoke.name] = thisPokeDefValues;
+            // const newOffValues = await makeTeamOffensiveValues(newTeam, P);
+            const newOffValues = filterKey(teamOffScores.raw, teamPoke.name);
+            newOffValues[targetPoke.name] = thisPokeOffValues;
+            // debugger;
             return {
               id: teamPoke.id,
               delta:
-                sumValues(newDefValues) -
-                sumValues(teamDefScores) +
-                (sumValues(newOffValues) - sumValues(teamOffScores)),
+                sumCompiledTeamValues(compileTeamValues(newDefValues)) -
+                teamDefScores.final +
+                (sumCompiledTeamValues(compileTeamValues(newOffValues)) -
+                  teamOffScores.final),
             };
           })
         );
@@ -89,7 +108,8 @@ const PokemonInput = ({
       }
     };
 
-    calcDeltas();
+    if (Object.keys(teamOffScores).length && Object.keys(teamDefScores).length)
+      calcDeltas();
   }, [fullPoke, targetPoke, team, teamDefScores, teamOffScores]);
 
   const moveList = useMemo(() => {
