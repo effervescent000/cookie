@@ -4,7 +4,7 @@ import sortArray from "sort-array";
 
 import type { IPokemonFull, IPokeSkeleton } from "~/interfaces";
 
-import { properCase, sortObjectByValue } from "~/utils/text-utils";
+import { properCase } from "~/utils/text-utils";
 import { PokemonContext } from "~/pokemon-context";
 import {
   makeTeamDefensiveValues,
@@ -38,7 +38,7 @@ const PokemonInput = ({
   } = useContext(PokemonContext);
   const [fullPoke, setFullPoke] = useState<IPokemonFull>({} as IPokemonFull);
   const [loading, setLoading] = useState(true);
-  const [moveScores, setMoveScores] = useState(0);
+  const [moveScores, setMoveScores] = useState<{ [key: string]: number }>({});
   const [statTotal, setStatTotal] = useState(0);
   const [deltas, setDeltas] = useState<{ id: number; delta: number }[]>([]);
 
@@ -56,9 +56,7 @@ const PokemonInput = ({
   useEffect(() => {
     const getMoveScores = async () => {
       const result = await scoreMoves(fullPoke, versionGroup);
-      setMoveScores(
-        Object.values(result).reduce((total, cur) => total + cur, 0) / 10
-      );
+      setMoveScores(result);
     };
 
     if (isFullPokemon(fullPoke)) {
@@ -102,13 +100,21 @@ const PokemonInput = ({
         const match = version_group_details.find(
           (detail) => detail.version_group.name === versionGroup
         );
-        if (match) return { name: properCase(name), value: name };
+        if (match)
+          return {
+            name: `${properCase(name)} (${
+              moveScores[name]
+                ? Math.round(Math.round(moveScores[name] * 15) / 15)
+                : "---"
+            })`,
+            value: name,
+          };
         return undefined;
       })
       .filter((move) => !!move) as { name: string; value: string }[];
-    filteredMoves.sort(sortObjectByValue);
+    sortArray(filteredMoves, { by: "value" });
     return filteredMoves;
-  }, [fullPoke, versionGroup]);
+  }, [fullPoke, versionGroup, moveScores]);
 
   const mergeMove = (value: string, moveIndex: number) => {
     if (currentLocation === "team") {
@@ -137,7 +143,10 @@ const PokemonInput = ({
         <div className="w-[192px]">
           <SpriteFrame pokemon={fullPoke} />
           <div className="flex justify-between">
-            <ScoreCard label="Move score" value={moveScores} />
+            <ScoreCard
+              label="Move score"
+              value={Object.values(moveScores).reduce((x, y) => x + y, 0) / 10}
+            />
             {currentLocation === "bench" ? (
               <ScoreCard
                 label={
