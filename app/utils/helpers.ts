@@ -212,10 +212,15 @@ export const scoreMoves = async (
         move.version_group_details[0].move_learn_method.name !== "machine"
     );
 
-  for (const move of filteredMoves) {
-    const fullMove = await P.getMove(move.move.name);
-    scores[fullMove.name] = calcDamage({ pokemon, move: fullMove });
-  }
+  // const startTime = Date.now();
+  const fullMoves = await Promise.all(
+    filteredMoves.map(async (move) => await P.getMove(move.move.name))
+  );
+  fullMoves.forEach((move) => {
+    scores[move.name] = calcDamage({ pokemon, move });
+  });
+  // console.log(`scoring moves took ${Date.now() - startTime}ms`);
+
   return scores;
 };
 
