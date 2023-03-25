@@ -7,8 +7,6 @@ export const PokemonContext = createContext<{
   setGen: (arg0: string) => void;
   versionGroup: string;
   setVersionGroup: (arg0: string) => void;
-  region: string;
-  setRegion: (arg0: string) => void;
   team: IPokeSkeleton[];
   mergeIntoTeam: (arg0: IPokeSkeleton) => void;
   bench: IPokeSkeleton[];
@@ -41,8 +39,6 @@ export const PokemonContext = createContext<{
 }>({
   gen: "",
   setGen: (target) => {},
-  region: "",
-  setRegion: (target) => {},
   team: [],
   mergeIntoTeam: (target) => {},
   bench: [],

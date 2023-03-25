@@ -128,3 +128,11 @@ export interface IEvolutionChainLink {
 export interface IEvolutionResponse {
   chain: IEvolutionChainLink;
 }
+
+export interface IProfile {
+  team: IPokeSkeleton[];
+  bench: IPokeSkeleton[];
+  pokemonIdCounter: number;
+  gen: string;
+  versionGroup: string;
+}

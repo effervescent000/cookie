@@ -12,7 +12,7 @@ import {
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 import reactTooltipStylesheetUrl from "react-tooltip/dist/react-tooltip.css";
 
-import type { IPokemonFull, IPokeSkeleton } from "./interfaces";
+import type { IPokemonFull, IPokeSkeleton, IProfile } from "./interfaces";
 import { PokemonContext } from "~/pokemon-context";
 import PokeAPIService from "./utils/pokeapi-service";
 import {
@@ -36,9 +36,8 @@ export const meta: MetaFunction = () => ({
 });
 
 export default function App() {
-  const [idCounter, setIdCounter] = useState(0);
+  const [pokemonIdCounter, setPokemonIdCounter] = useState(0);
   const [gen, setGen] = useState("");
-  const [selectedRegion, setSelectedRegion] = useState("galar");
   const [versionGroup, setVersionGroup] = useState("");
   const [team, setTeam] = useState<IPokeSkeleton[]>([]);
   const [bench, setBench] = useState<IPokeSkeleton[]>([]);
@@ -55,6 +54,8 @@ export default function App() {
     raw: {},
     processed: {},
   });
+  const [activeProfileId, setActiveProfileId] = useState(0);
+  const [profileIdCounter, setProfileIdCounter] = useState(0);
 
   useEffect(() => {
     const P = new PokeAPIService();
@@ -65,7 +66,6 @@ export default function App() {
         final: sumCompiledTeamValues(compileTeamValues(currentScores.raw)),
         processed: currentScores.final,
       });
-      // setTeamDefScores(currentScores);
     };
     const getTeamOffScores = async () => {
       const currentScores = await makeTeamOffensiveValues(team, P);
@@ -80,20 +80,41 @@ export default function App() {
     getTeamOffScores();
   }, [team]);
 
-  const saveGen = (targetGen: string) => {
-    setGen(targetGen);
-    localStorage.setItem("gen", targetGen);
+  // const saveGen = (targetGen: string) => {
+  //   setGen(targetGen);
+  //   localStorage.setItem("gen", targetGen);
+  // };
+
+  // const saveVersionGroup = (targetVersionGroup: string) => {
+  //   setVersionGroup(targetVersionGroup);
+  //   localStorage.setItem("game", targetVersionGroup);
+  // };
+
+  useEffect(() => {
+    const profile = { team, bench, gen, versionGroup, pokemonIdCounter };
+    localStorage.setItem(`profile-${activeProfileId}`, JSON.stringify(profile));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bench, gen, pokemonIdCounter, team, versionGroup]);
+
+  const addNewProfile = () => {
+    const profile = {
+      team: [],
+      bench: [],
+      gen: "",
+      versionGroup: "",
+      pokemonIdCounter: 0,
+    };
+    localStorage.setItem(
+      `profile-${profileIdCounter}`,
+      JSON.stringify(profile)
+    );
+    setProfileIdCounter(profileIdCounter + 1);
   };
 
-  const saveVersionGroup = (targetVersionGroup: string) => {
-    setVersionGroup(targetVersionGroup);
-    localStorage.setItem("game", targetVersionGroup);
-  };
-
-  const incrementId = () => {
-    const newId = idCounter + 1;
-    localStorage.setItem("id", `${newId}`);
-    setIdCounter(newId);
+  const incrementPokemonId = () => {
+    const newId = pokemonIdCounter + 1;
+    // localStorage.setItem("id", `${newId}`);
+    setPokemonIdCounter(newId);
   };
 
   const mergeIntoTeam = (target: IPokeSkeleton) => {
@@ -108,9 +129,9 @@ export default function App() {
       newList = [...team, target];
     }
     setTeam(newList);
-    saveTeamToLocal(newList);
+    // saveTeamToLocal(newList);
     removeFromBench(target);
-    incrementId();
+    incrementPokemonId();
   };
 
   const mergeIntoBench = (target: IPokeSkeleton) => {
@@ -125,24 +146,23 @@ export default function App() {
       newList = [...bench, target];
     }
     setBench(newList);
-    saveBenchToLocal(newList);
+    // saveBenchToLocal(newList);
     removeFromTeam(target);
-    incrementId();
+    incrementPokemonId();
   };
 
-  const saveTeamToLocal = (newTeam: IPokeSkeleton[]) => {
-    localStorage.setItem("team", JSON.stringify(newTeam));
-  };
+  // const saveTeamToLocal = (newTeam: IPokeSkeleton[]) => {
+  //   localStorage.setItem("team", JSON.stringify(newTeam));
+  // };
 
-  const saveBenchToLocal = (newBench: IPokeSkeleton[]) => {
-    localStorage.setItem("bench", JSON.stringify(newBench));
-  };
+  // const saveBenchToLocal = (newBench: IPokeSkeleton[]) => {
+  //   localStorage.setItem("bench", JSON.stringify(newBench));
+  // };
 
   const removeFromBench = (target: IPokeSkeleton) => {
     const newBench = bench.filter(({ id: pokeId }) => pokeId !== target.id);
     if (bench.length !== newBench.length) {
       setBench(newBench);
-      saveBenchToLocal(newBench);
     }
   };
 
@@ -150,38 +170,53 @@ export default function App() {
     const newTeam = team.filter(({ id: pokeId }) => pokeId !== target.id);
     if (team.length !== newTeam.length) {
       setTeam(newTeam);
-      saveTeamToLocal(newTeam);
+      // saveTeamToLocal(newTeam);
     }
   };
 
+  const getProfile = (profileId: number): IProfile | undefined =>
+    JSON.parse(localStorage.getItem(`profile-${profileId}`) || "");
+
   useEffect(() => {
-    setGen(localStorage.getItem("gen") || "VIII");
-    setVersionGroup(localStorage.getItem("game") || "sword-shield");
-    setIdCounter(+(localStorage.getItem("id") || 0));
-    const foundTeam = localStorage.getItem("team");
-    if (foundTeam) {
-      setTeam(JSON.parse(foundTeam));
+    // setGen(localStorage.getItem("gen") || "VIII");
+    // setVersionGroup(localStorage.getItem("game") || "sword-shield");
+    // setPokemonIdCounter(+(localStorage.getItem("id") || 0));
+    // const foundTeam = localStorage.getItem("team");
+    // if (foundTeam) {
+    //   setTeam(JSON.parse(foundTeam));
+    // }
+    // const foundBench = localStorage.getItem("bench");
+    // if (foundBench) {
+    //   setBench(JSON.parse(foundBench));
+    // }
+    localStorage.set("activeProfileId", activeProfileId);
+    const profile = getProfile(activeProfileId);
+    if (profile) {
+      setTeam(profile.team || []);
+      setBench(profile.bench || []);
+      setGen(profile.gen || "");
+      setVersionGroup(profile.versionGroup || "");
+      setPokemonIdCounter(+profile.pokemonIdCounter || 0);
     }
-    const foundBench = localStorage.getItem("bench");
-    if (foundBench) {
-      setBench(JSON.parse(foundBench));
-    }
+  }, [activeProfileId]);
+
+  useEffect(() => {
+    const foundProfileId = localStorage.getItem("activeProfileId");
+    if (foundProfileId) setActiveProfileId(+foundProfileId);
   }, []);
 
   return (
     <PokemonContext.Provider
       value={{
         gen,
-        setGen: saveGen,
-        region: selectedRegion,
+        setGen,
         team,
         bench,
-        idCounter,
+        idCounter: pokemonIdCounter,
         mergeIntoTeam,
         mergeIntoBench,
-        setRegion: setSelectedRegion,
         versionGroup,
-        setVersionGroup: saveVersionGroup,
+        setVersionGroup,
         removeFromBench,
         removeFromTeam,
         focusedPokemon,
