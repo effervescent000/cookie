@@ -36,6 +36,9 @@ export const PokemonContext = createContext<{
     raw: { [key: string]: { [key: string]: number } };
     processed: IValues;
   }) => void;
+  activeProfileId: number;
+  setActiveProfileId: (arg0: number) => void;
+  addNewProfile: () => void;
 }>({
   gen: "",
   setGen: (target) => {},
@@ -54,4 +57,7 @@ export const PokemonContext = createContext<{
   setTeamDefScores: (values) => {},
   teamOffScores: { final: 0, raw: {}, processed: {} },
   setTeamOffScores: (values) => {},
+  activeProfileId: 0,
+  setActiveProfileId: (target) => {},
+  addNewProfile: () => {},
 });

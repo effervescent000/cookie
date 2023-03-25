@@ -12,7 +12,7 @@ import {
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 import reactTooltipStylesheetUrl from "react-tooltip/dist/react-tooltip.css";
 
-import type { IPokemonFull, IPokeSkeleton, IProfile } from "./interfaces";
+import type { IPokemonFull, IPokeSkeleton } from "./interfaces";
 import { PokemonContext } from "~/pokemon-context";
 import PokeAPIService from "./utils/pokeapi-service";
 import {
@@ -80,16 +80,6 @@ export default function App() {
     getTeamOffScores();
   }, [team]);
 
-  // const saveGen = (targetGen: string) => {
-  //   setGen(targetGen);
-  //   localStorage.setItem("gen", targetGen);
-  // };
-
-  // const saveVersionGroup = (targetVersionGroup: string) => {
-  //   setVersionGroup(targetVersionGroup);
-  //   localStorage.setItem("game", targetVersionGroup);
-  // };
-
   useEffect(() => {
     const profile = { team, bench, gen, versionGroup, pokemonIdCounter };
     localStorage.setItem(`profile-${activeProfileId}`, JSON.stringify(profile));
@@ -106,14 +96,17 @@ export default function App() {
     };
     localStorage.setItem(
       `profile-${profileIdCounter}`,
-      JSON.stringify(profile)
+      JSON.stringify({ name: "Unnamed", values: profile })
+    );
+    setActiveProfileId(profileIdCounter);
+    console.log(
+      `profile Id Counter is currently ${profileIdCounter}, updating`
     );
     setProfileIdCounter(profileIdCounter + 1);
   };
 
   const incrementPokemonId = () => {
     const newId = pokemonIdCounter + 1;
-    // localStorage.setItem("id", `${newId}`);
     setPokemonIdCounter(newId);
   };
 
@@ -129,7 +122,6 @@ export default function App() {
       newList = [...team, target];
     }
     setTeam(newList);
-    // saveTeamToLocal(newList);
     removeFromBench(target);
     incrementPokemonId();
   };
@@ -146,18 +138,10 @@ export default function App() {
       newList = [...bench, target];
     }
     setBench(newList);
-    // saveBenchToLocal(newList);
+
     removeFromTeam(target);
     incrementPokemonId();
   };
-
-  // const saveTeamToLocal = (newTeam: IPokeSkeleton[]) => {
-  //   localStorage.setItem("team", JSON.stringify(newTeam));
-  // };
-
-  // const saveBenchToLocal = (newBench: IPokeSkeleton[]) => {
-  //   localStorage.setItem("bench", JSON.stringify(newBench));
-  // };
 
   const removeFromBench = (target: IPokeSkeleton) => {
     const newBench = bench.filter(({ id: pokeId }) => pokeId !== target.id);
@@ -170,27 +154,14 @@ export default function App() {
     const newTeam = team.filter(({ id: pokeId }) => pokeId !== target.id);
     if (team.length !== newTeam.length) {
       setTeam(newTeam);
-      // saveTeamToLocal(newTeam);
     }
   };
 
-  const getProfile = (profileId: number): IProfile | undefined =>
-    JSON.parse(localStorage.getItem(`profile-${profileId}`) || "");
-
   useEffect(() => {
-    // setGen(localStorage.getItem("gen") || "VIII");
-    // setVersionGroup(localStorage.getItem("game") || "sword-shield");
-    // setPokemonIdCounter(+(localStorage.getItem("id") || 0));
-    // const foundTeam = localStorage.getItem("team");
-    // if (foundTeam) {
-    //   setTeam(JSON.parse(foundTeam));
-    // }
-    // const foundBench = localStorage.getItem("bench");
-    // if (foundBench) {
-    //   setBench(JSON.parse(foundBench));
-    // }
     localStorage.setItem("activeProfileId", `${activeProfileId}`);
-    const profile = getProfile(activeProfileId);
+    const profile = JSON.parse(
+      localStorage.getItem(`profile-${activeProfileId}`) || ""
+    );
     if (profile) {
       setTeam(profile.team || []);
       setBench(profile.bench || []);
@@ -201,8 +172,15 @@ export default function App() {
   }, [activeProfileId]);
 
   useEffect(() => {
+    console.log(`updating profileIdCounter to ${profileIdCounter}`);
+    localStorage.setItem("profileIdCounter", `${profileIdCounter}`);
+  }, [profileIdCounter]);
+
+  useEffect(() => {
     const foundProfileId = localStorage.getItem("activeProfileId");
+    const foundProfileCounter = localStorage.getItem("profileIdCounter");
     if (foundProfileId) setActiveProfileId(+foundProfileId);
+    if (foundProfileCounter) setProfileIdCounter(+foundProfileCounter);
   }, []);
 
   return (
@@ -225,6 +203,9 @@ export default function App() {
         setTeamDefScores,
         teamOffScores,
         setTeamOffScores,
+        activeProfileId,
+        setActiveProfileId,
+        addNewProfile,
       }}
     >
       <html lang="en" className="h-full">

@@ -130,9 +130,12 @@ export interface IEvolutionResponse {
 }
 
 export interface IProfile {
-  team: IPokeSkeleton[];
-  bench: IPokeSkeleton[];
-  pokemonIdCounter: number;
-  gen: string;
-  versionGroup: string;
+  name: string;
+  values: {
+    team: IPokeSkeleton[];
+    bench: IPokeSkeleton[];
+    pokemonIdCounter: number;
+    gen: string;
+    versionGroup: string;
+  };
 }
