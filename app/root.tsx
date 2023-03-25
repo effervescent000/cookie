@@ -189,7 +189,7 @@ export default function App() {
     // if (foundBench) {
     //   setBench(JSON.parse(foundBench));
     // }
-    localStorage.set("activeProfileId", activeProfileId);
+    localStorage.setItem("activeProfileId", `${activeProfileId}`);
     const profile = getProfile(activeProfileId);
     if (profile) {
       setTeam(profile.team || []);

@@ -73,7 +73,7 @@ const PokemonMiniCard = ({
 
   if (full)
     return (
-      <div>
+      <div data-cy={`mini-card-${poke.name}`}>
         <div className="flex justify-center gap-5">
           <div>{properCase(poke.name)}</div>
 
@@ -81,7 +81,11 @@ const PokemonMiniCard = ({
             <Icon icon={faExpand} onClick={focusPokemon} />
             {!hideIcons && (
               <>
-                <Icon icon={faCircleUp} onClick={selectPokemon} />
+                <Icon
+                  icon={faCircleUp}
+                  onClick={selectPokemon}
+                  dataCy="add-to-bench"
+                />
               </>
             )}
           </div>
@@ -91,14 +95,21 @@ const PokemonMiniCard = ({
     );
 
   return (
-    <div className="flex w-full justify-between">
+    <div
+      className="flex w-full justify-between"
+      data-cy={`mini-card-${poke.name}`}
+    >
       <div>{properCase(poke.name)}</div>
 
       <div className="grid grid-cols-3 gap-1">
         <Icon icon={faExpand} onClick={focusPokemon} />
         {!hideIcons && (
           <>
-            <Icon icon={faCircleUp} onClick={selectPokemon} />
+            <Icon
+              icon={faCircleUp}
+              onClick={selectPokemon}
+              dataCy="add-to-bench"
+            />
             {loading && <Icon icon={faSpinner} classes="animate-spin" />}
             {!loading && !isFullPokemon(poke) && (
               <Icon

@@ -6,10 +6,12 @@ const Icon = ({
   icon,
   onClick = () => {},
   classes,
+  dataCy,
 }: {
   icon: IconProp;
   onClick?: () => void;
   classes?: string;
+  dataCy?: string;
 }) => {
   return (
     <div>
@@ -17,6 +19,7 @@ const Icon = ({
         icon={icon}
         onClick={onClick}
         className={`cursor-pointer ${classes}`}
+        data-cy={dataCy}
       />
     </div>
   );

@@ -155,7 +155,7 @@ const PokemonInput = ({
   }
 
   return (
-    <div className="flex">
+    <div className="flex" data-cy={`poke-card-${targetPoke.name}`}>
       <div>
         <div>
           <span>{properCase(targetPoke.name)}</span>

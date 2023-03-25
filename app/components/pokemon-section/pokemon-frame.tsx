@@ -12,7 +12,7 @@ const PokemonFrame = ({
   location: string;
 }) => {
   return (
-    <div>
+    <div data-cy={`frame-${location}`}>
       <div>{properCase(location)}</div>
       <div className="grid min-h-40 min-w-max grid-cols-2 gap-2 border border-light-blue">
         {pokemon.map((poke, i) => (

@@ -13,6 +13,7 @@ const GenHeader = ({
     <span
       className={`${versionKey === selectedVersion && "underline"}`}
       onClick={() => setVersion(versionKey)}
+      data-cy={`version-${versionKey}`}
     >
       {version}
     </span>
