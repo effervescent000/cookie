@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 
-import { IEvolutionResponse, ISpeciesResponse, IType } from "~/interfaces";
+import type { IEvolutionResponse, ISpeciesResponse, IType } from "~/interfaces";
 
 import { PokemonContext } from "~/pokemon-context";
 import { TYPES } from "~/constants/types-constants";
@@ -26,6 +26,7 @@ const FocusedCard = () => {
     const P = new PokeAPIService();
     const getEvolutionInfo = async () => {
       if (pokemon) {
+        setEvolutionInfo(undefined);
         const speciesResult = await P.getSpecies(pokemon.species.name);
         setSpecies(speciesResult);
         const evolutionResult = await P.getEvolutionDetails(

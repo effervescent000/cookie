@@ -12,6 +12,7 @@ const TypeWeaknessWrapper = ({ pokemon }: { pokemon: IPokemonFull }) => {
   useEffect(() => {
     const P = new PokeAPIService();
     const getDefenses = async () => {
+      setDefenses({});
       const result = await makeDefensiveValues(pokemon, P);
       const values = Object.entries(result).reduce(
         (acc, [key, value]) => ({
