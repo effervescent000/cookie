@@ -38,6 +38,15 @@ declare global {
        *    cy.visitAndCheck('/', 500)
        */
       visitAndCheck: typeof visitAndCheck;
+
+      /**
+       * Adds the data from the provided fixture into localStorage.
+       * @returns {typeof addLocalStorage}
+       * @memberof Chainable
+       * @example
+       *    cy.addLocalStorage('empty-roster-s-s')
+       */
+      addLocalStorage: typeof addLocalStorage;
     }
   }
 }
@@ -90,6 +99,19 @@ function visitAndCheck(url: string, waitTime: number = 1000) {
   cy.location("pathname").should("contain", url).wait(waitTime);
 }
 
+const addLocalStorage = (file: string) => {
+  cy.fixture(`${file}.json`).then((data) => {
+    localStorage.setItem("activeProfileId", data.activeProfileId);
+    localStorage.setItem(
+      `profile-${data.activeProfileId}`,
+      JSON.stringify(data[`profile-${data.activeProfileId}`])
+    );
+    localStorage.setItem("profileIdCounter", data.profileIdCounter);
+    cy.reload();
+  });
+};
+
 Cypress.Commands.add("login", login);
 Cypress.Commands.add("cleanupUser", cleanupUser);
 Cypress.Commands.add("visitAndCheck", visitAndCheck);
+Cypress.Commands.add("addLocalStorage", addLocalStorage);

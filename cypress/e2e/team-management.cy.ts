@@ -2,14 +2,10 @@ import { makeDataCy } from "support/utils";
 
 describe("smoke tests", () => {
   beforeEach(() => {
-    cy.fixture("empty-roster-s-s.json").then((data) => {
-      localStorage.setItem("activeProfileId", data.activeProfileId);
-      localStorage.setItem("profile-1", JSON.stringify(data["profile-1"]));
-      localStorage.setItem("profileIdCounter", data.profileIdCounter);
-    });
     cy.visitAndCheck("/");
   });
   it("can add a pokemon to the bench and team", () => {
+    cy.addLocalStorage("empty-roster-s-s");
     cy.get(makeDataCy("mini-card-abra"))
       .find(makeDataCy("add-to-bench"))
       .click();
