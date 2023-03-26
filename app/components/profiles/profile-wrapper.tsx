@@ -38,7 +38,12 @@ const ProfileWrapper = () => {
           versionGroup={versionGroup}
         />
       ))}
-      <button data-cy="new-profile" onClick={addNewProfile}>
+
+      <button
+        data-cy="new-profile"
+        className="border-b-2 border-white"
+        onClick={addNewProfile}
+      >
         Create a new profile +
       </button>
     </div>

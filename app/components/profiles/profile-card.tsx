@@ -26,16 +26,18 @@ const ProfileCard = ({
   }, [activeProfileId, profile.id, versionGroup]);
 
   return (
-    <div
-      data-cy={`profile-${profile.id}`}
-      onClick={() => setActiveProfileId(profile.id)}
-      className={`${
-        activeProfileId === profile.id ? "border-dark-blue" : "border-white"
-      } border-b-2 px-2`}
-    >
-      {profile.profile.name ||
-        (profileVersion && properCase(profileVersion)) ||
-        "Unnamed profile"}
+    <div className="mr-2">
+      <div
+        data-cy={`profile-${profile.id}`}
+        onClick={() => setActiveProfileId(profile.id)}
+        className={`${
+          activeProfileId === profile.id ? "border-dark-blue" : "border-white"
+        } cursor-pointer border-b-2 px-2`}
+      >
+        {profile.profile.name ||
+          (profileVersion && properCase(profileVersion)) ||
+          "Unnamed profile"}
+      </div>
     </div>
   );
 };
