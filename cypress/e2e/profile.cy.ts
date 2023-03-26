@@ -51,4 +51,13 @@ describe("Profile functionality", () => {
     cy.get(makeDataCy("profile-1")).click();
     cy.get(makeDataCy("profile-1")).should("have.class", "underline");
   });
+
+  it("has a sensible default name", () => {
+    const usum = "version-ultra-sun-ultra-moon";
+    cy.get(makeDataCy("new-profile")).click();
+    cy.get(makeDataCy("profile-1")).should("have.text", "Unnamed profile");
+    cy.get(makeDataCy("version-VII")).click();
+    cy.get(makeDataCy(usum)).click();
+    cy.get(makeDataCy("profile-1")).should("have.text", "Ultra Sun Ultra Moon");
+  });
 });
