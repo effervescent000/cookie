@@ -156,9 +156,9 @@ const PokemonCard = ({
         <div>
           <span>{properCase(targetPoke.name)}</span>
         </div>
-        <div className="w-[192px]">
+        <div className="">
           <SpriteFrame pokemon={fullPoke} />
-          <div className="flex justify-between">
+          <div className="flex items-end justify-between">
             <ScoreCard
               label="Move score"
               value={Object.values(moveScores).reduce((x, y) => x + y, 0) / 10}

@@ -11,7 +11,7 @@ const Button = ({
 }) => {
   return (
     <button
-      className={`text-very-light-blue rounded-md border border-blue bg-light-blue px-2 ${classes}`}
+      className={`text-very-light-blue rounded-md border border-blue bg-light-blue px-1 text-sm ${classes}`}
       onClick={onClick}
       data-cy={dataCy}
     >
