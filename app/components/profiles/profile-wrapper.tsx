@@ -25,7 +25,10 @@ const ProfileWrapper = () => {
   }, [activeProfileId]);
 
   return (
-    <div data-cy="profiles" className="flex">
+    <div
+      data-cy="profiles"
+      className="flex border-b border-light-blue text-center"
+    >
       {profiles.map((profile) => (
         <ProfileCard
           profile={profile}

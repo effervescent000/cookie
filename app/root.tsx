@@ -79,16 +79,29 @@ export default function App() {
     getTeamOffScores();
   }, [team]);
 
-  useEffect(() => {
-    if (profileIds.active !== -1) {
+  const getActiveProfile = () => {
+    return JSON.parse(
+      localStorage.getItem(`profile-${profileIds.active}`) || "{}"
+    );
+  };
+
+  const saveCurrentProfile = (name?: string) => {
+    const storedProfile = getActiveProfile();
+    if (Object.keys(storedProfile).length) {
       const profile = {
-        name: "Unnamed",
+        name: name || storedProfile.name,
         values: { team, bench, gen, versionGroup, pokemonIdCounter },
       };
       localStorage.setItem(
         `profile-${profileIds.active}`,
         JSON.stringify(profile)
       );
+    }
+  };
+
+  useEffect(() => {
+    if (profileIds.active !== -1) {
+      saveCurrentProfile();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bench, gen, pokemonIdCounter, team, versionGroup]);

@@ -29,7 +29,9 @@ const ProfileCard = ({
     <div
       data-cy={`profile-${profile.id}`}
       onClick={() => setActiveProfileId(profile.id)}
-      className={`${activeProfileId === profile.id && "underline"}`}
+      className={`${
+        activeProfileId === profile.id ? "border-dark-blue" : "border-white"
+      } border-b-2 px-2`}
     >
       {profile.profile.name ||
         (profileVersion && properCase(profileVersion)) ||
