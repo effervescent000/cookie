@@ -7,13 +7,15 @@ const ProfileCard = ({
   activeProfileId: number;
   setActiveProfileId: (arg0: number) => void;
 }) => {
+  console.log("profile.id", profile.id);
+  console.log("activeProfileId", activeProfileId);
   return (
     <div
       data-cy={`profile-${profile.id}`}
       onClick={() => setActiveProfileId(profile.id)}
       className={`${activeProfileId === profile.id && "underline"}`}
     >
-      {profile.name}
+      {profile.name || "Unnamed"}
     </div>
   );
 };
