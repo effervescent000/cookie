@@ -1,5 +1,8 @@
 import { makeDataCy } from "support/utils";
 
+const selectedClass = "border-dark-blue";
+const unselectedClass = "border-white";
+
 describe("Profile functionality", () => {
   beforeEach(() => {
     cy.visitAndCheck("/");
@@ -13,7 +16,7 @@ describe("Profile functionality", () => {
     cy.reload();
     cy.get(makeDataCy("profile-1"))
       .should("exist.and.be.visible")
-      .and("have.class", "border-dark-blue");
+      .and("have.class", selectedClass);
   });
 
   it("can discern which profile is active", () => {
@@ -25,14 +28,14 @@ describe("Profile functionality", () => {
       .and("have.class", "border-white");
     cy.get(makeDataCy("profile-2"))
       .should("exist.and.be.visible")
-      .and("have.class", "border-dark-blue");
+      .and("have.class", selectedClass);
     cy.reload();
     cy.get(makeDataCy("profile-1"))
       .should("exist.and.be.visible")
       .and("have.class", "border-white");
     cy.get(makeDataCy("profile-2"))
       .should("exist.and.be.visible")
-      .and("have.class", "border-dark-blue");
+      .and("have.class", selectedClass);
   });
 
   it("persists deeper profile data", () => {
@@ -49,7 +52,7 @@ describe("Profile functionality", () => {
     cy.wait(100);
     cy.get(makeDataCy("new-profile")).click();
     cy.get(makeDataCy("profile-1")).click();
-    cy.get(makeDataCy("profile-1")).should("have.class", "border-dark-blue");
+    cy.get(makeDataCy("profile-1")).should("have.class", selectedClass);
   });
 
   it("has a sensible default name and handles multiple profiles", () => {
@@ -63,6 +66,6 @@ describe("Profile functionality", () => {
     cy.get(makeDataCy("new-profile")).click();
     cy.get(makeDataCy("profile-1"))
       .should("have.text", "Ultra Sun Ultra Moon")
-      .and("have.class", "border-white");
+      .and("have.class", unselectedClass);
   });
 });
