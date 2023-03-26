@@ -20,7 +20,7 @@ const ResultsWrapper = ({
 
   const filteredOutput = useMemo(() => {
     const filteredByName = filters.name
-      ? output.filter((poke) => poke.name.includes(filters.name))
+      ? output.filter((poke) => poke.name.includes(filters.name.toLowerCase()))
       : output;
     const filteredByType =
       filters.type1 || filters.type2
