@@ -30,7 +30,7 @@ const FilterSection = ({
       const pokemonResult = await P.getAllPokemon();
       const checkedResults = pokemonResult.map((poke) => {
         if (!isFullPokemon(poke)) return { value: poke, include: true };
-        const moves = poke.moves.slice(0, 5);
+        const moves = poke.moves.slice(0, Math.round(poke.moves.length * 0.2));
         const checkedMoves = moves.map((move) => {
           return !!move.version_group_details.find(
             ({ version_group }) => versionGroup === version_group.name

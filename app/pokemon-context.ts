@@ -7,8 +7,6 @@ export const PokemonContext = createContext<{
   setGen: (arg0: string) => void;
   versionGroup: string;
   setVersionGroup: (arg0: string) => void;
-  region: string;
-  setRegion: (arg0: string) => void;
   team: IPokeSkeleton[];
   mergeIntoTeam: (arg0: IPokeSkeleton) => void;
   bench: IPokeSkeleton[];
@@ -38,11 +36,12 @@ export const PokemonContext = createContext<{
     raw: { [key: string]: { [key: string]: number } };
     processed: IValues;
   }) => void;
+  activeProfileId: number;
+  setActiveProfileId: (arg0: number) => void;
+  addNewProfile: () => void;
 }>({
   gen: "",
   setGen: (target) => {},
-  region: "",
-  setRegion: (target) => {},
   team: [],
   mergeIntoTeam: (target) => {},
   bench: [],
@@ -58,4 +57,7 @@ export const PokemonContext = createContext<{
   setTeamDefScores: (values) => {},
   teamOffScores: { final: 0, raw: {}, processed: {} },
   setTeamOffScores: (values) => {},
+  activeProfileId: 0,
+  setActiveProfileId: (target) => {},
+  addNewProfile: () => {},
 });
