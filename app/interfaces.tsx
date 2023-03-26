@@ -107,6 +107,7 @@ export interface ISpeciesResponse {
   evolution_chain: { url: string };
   evolves_from_species: IResourceListItem;
   flavor_text_entries: { flavor_text: string; version: IResourceListItem }[];
+  name: string;
   pokedex_numbers: {
     entry_number: number;
     pokedex: IResourceListItem;

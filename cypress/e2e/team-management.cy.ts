@@ -1,6 +1,6 @@
 import { makeDataCy } from "support/utils";
 
-describe("smoke tests", () => {
+describe("roster management tests", () => {
   beforeEach(() => {
     cy.visitAndCheck("/");
   });

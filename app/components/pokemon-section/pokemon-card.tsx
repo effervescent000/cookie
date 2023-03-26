@@ -24,8 +24,9 @@ import Select from "../common/select";
 import EditIcons from "./edit-icons";
 import SpriteFrame from "../common/sprite-frame";
 import ScoreCard from "./score-card";
+import EvolutionSelector from "./evolution-selector";
 
-const PokemonInput = ({
+const PokemonCard = ({
   targetPoke,
   currentLocation,
 }: {
@@ -83,16 +84,11 @@ const PokemonInput = ({
           values: scoreOffValues(await makeOffensiveValues(targetPoke, P)),
         };
         const result = await Promise.all(
-          team.map(async (teamPoke, i) => {
-            // const newTeam = [...team];
-            // newTeam[i] = targetPoke;
-            // const newDefValues = await makeTeamDefensiveValues(newTeam, P);
+          team.map(async (teamPoke) => {
             const newDefValues = filterKey(teamDefScores.raw, teamPoke.name);
             newDefValues[targetPoke.name] = thisPokeDefValues;
-            // const newOffValues = await makeTeamOffensiveValues(newTeam, P);
             const newOffValues = filterKey(teamOffScores.raw, teamPoke.name);
             newOffValues[targetPoke.name] = thisPokeOffValues;
-            // debugger;
             return {
               id: teamPoke.id,
               delta:
@@ -180,7 +176,12 @@ const PokemonInput = ({
                 value={deltas.length ? deltas[0].delta : 0}
               />
             ) : (
-              <></>
+              <EvolutionSelector
+                pokemon={fullPoke}
+                evolve={(newSpecies: string) =>
+                  mergeIntoTeam({ ...targetPoke, name: newSpecies })
+                }
+              />
             )}
             <ScoreCard label="Stat score" value={statTotal / 100} />
           </div>
@@ -198,6 +199,7 @@ const PokemonInput = ({
             options={moveList}
             callback={(value) => mergeMove(value, i)}
             selection={targetPoke.moves[i]}
+            dataCy={`move-${i}`}
           />
         ))}
       </div>
@@ -205,4 +207,4 @@ const PokemonInput = ({
   );
 };
 
-export default PokemonInput;
+export default PokemonCard;

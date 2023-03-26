@@ -6,12 +6,14 @@ const Select = ({
   label,
   callback = () => {},
   selection,
+  dataCy,
 }: {
   options: IOptions[];
   placeholder?: string;
   label?: string;
   callback?: (arg0: string) => void;
   selection?: string;
+  dataCy?: string;
 }) => {
   return (
     <div>
@@ -21,6 +23,7 @@ const Select = ({
         onChange={(e) => callback(e.target.value)}
         value={selection}
         className="m-1 w-48 rounded-md border border-light-blue bg-gray p-1"
+        data-cy={dataCy}
       >
         {[{ name: "---", value: "" }, ...options].map(({ value, name }) => (
           <option key={value} value={value}>
