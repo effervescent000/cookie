@@ -43,4 +43,12 @@ describe("Profile functionality", () => {
     cy.reload();
     cy.get(makeDataCy(usum)).should("have.class", "underline");
   });
+
+  it("can select a profile", () => {
+    cy.get(makeDataCy("new-profile")).click();
+    cy.wait(100);
+    cy.get(makeDataCy("new-profile")).click();
+    cy.get(makeDataCy("profile-1")).click();
+    cy.get(makeDataCy("profile-1")).should("have.class", "underline");
+  });
 });

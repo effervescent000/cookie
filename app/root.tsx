@@ -90,7 +90,6 @@ export default function App() {
         JSON.stringify(profile)
       );
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bench, gen, pokemonIdCounter, team, versionGroup]);
 
