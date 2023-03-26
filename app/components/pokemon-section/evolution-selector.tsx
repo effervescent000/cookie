@@ -8,6 +8,7 @@ import type {
 } from "~/interfaces";
 
 import PokeAPIService from "~/utils/pokeapi-service";
+import Button from "../common/button";
 
 const EvolutionSelector = ({
   pokemon,
@@ -78,9 +79,9 @@ const EvolutionSelector = ({
   return (
     <div>
       {canHandleEvolution() && (
-        <button data-cy="evolve-btn" onClick={pushEvolution}>
+        <Button dataCy="evolve-btn" onClick={pushEvolution}>
           Evolve
-        </button>
+        </Button>
       )}
     </div>
   );
