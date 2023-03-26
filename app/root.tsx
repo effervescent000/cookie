@@ -103,7 +103,7 @@ export default function App() {
     };
     localStorage.setItem(
       `profile-${profileIds.counter}`,
-      JSON.stringify({ name: "Unnamed", values: profile })
+      JSON.stringify({ name: "", values: profile })
     );
     setProfileIds({
       active: profileIds.counter,

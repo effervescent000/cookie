@@ -5,9 +5,11 @@ import { PokemonContext } from "~/pokemon-context";
 import ProfileCard from "./profile-card";
 
 const ProfileWrapper = () => {
-  const { activeProfileId, setActiveProfileId, addNewProfile } =
+  const { activeProfileId, setActiveProfileId, addNewProfile, versionGroup } =
     useContext(PokemonContext);
-  const [profiles, setProfiles] = useState<{ name: string; id: number }[]>([]);
+  const [profiles, setProfiles] = useState<{ id: number; profile: IProfile }[]>(
+    []
+  );
 
   useEffect(() => {
     const mappedProfiles = Object.keys(localStorage)
@@ -17,7 +19,7 @@ const ProfileWrapper = () => {
         const profile = JSON.parse(
           localStorage.getItem(key) || "{}"
         ) as IProfile;
-        return { name: profile.name, id: idMatch !== null ? +idMatch : -1 };
+        return { id: idMatch !== null ? +idMatch : -1, profile };
       });
     setProfiles(mappedProfiles);
   }, [activeProfileId]);
@@ -30,6 +32,7 @@ const ProfileWrapper = () => {
           key={profile.id}
           activeProfileId={activeProfileId}
           setActiveProfileId={setActiveProfileId}
+          versionGroup={versionGroup}
         />
       ))}
       <button data-cy="new-profile" onClick={addNewProfile}>
