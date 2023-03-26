@@ -15,4 +15,14 @@ describe("smoke tests", () => {
       .click();
     cy.get(makeDataCy("frame-team")).find(makeDataCy("poke-card-abra"));
   });
+  it("can delete a pokemon from the team", () => {
+    cy.addLocalStorage("single-pokemon-in-team-s-s");
+    cy.get(makeDataCy("frame-team"))
+      .find(makeDataCy("poke-card-abra"))
+      .find(makeDataCy("delete"))
+      .click();
+    cy.get(makeDataCy("frame-team"))
+      .find(makeDataCy("poke-card-abra"))
+      .should("not.exist");
+  });
 });

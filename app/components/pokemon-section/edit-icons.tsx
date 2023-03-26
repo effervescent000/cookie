@@ -38,7 +38,11 @@ const EditIcons = ({
             onClick={() => mergeIntoTeam(pokemon)}
           />
           <Icon icon={faExpand} onClick={() => setFocusedPokemon(fullPoke)} />
-          <Icon icon={faTrash} onClick={() => removeFromBench(pokemon)} />
+          <Icon
+            dataCy="delete"
+            icon={faTrash}
+            onClick={() => removeFromBench(pokemon)}
+          />
         </>
       ) : (
         <>
@@ -48,7 +52,11 @@ const EditIcons = ({
             onClick={() => mergeIntoBench(pokemon)}
           />
           <Icon icon={faExpand} onClick={() => setFocusedPokemon(fullPoke)} />
-          <Icon icon={faTrash} onClick={() => removeFromTeam(pokemon)} />
+          <Icon
+            dataCy="delete"
+            icon={faTrash}
+            onClick={() => removeFromTeam(pokemon)}
+          />
         </>
       )}
     </div>
