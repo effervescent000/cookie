@@ -199,6 +199,7 @@ const PokemonCard = ({
             options={moveList}
             callback={(value) => mergeMove(value, i)}
             selection={targetPoke.moves[i]}
+            dataCy={`move-${i}`}
           />
         ))}
       </div>
