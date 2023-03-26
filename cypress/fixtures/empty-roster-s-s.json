@@ -1,0 +1,14 @@
+{
+  "activeProfileId": 1,
+  "profile-1": {
+    "name": "",
+    "values": {
+      "team": [],
+      "bench": [],
+      "gen": "VIII",
+      "versionGroup": "sword-shield",
+      "pokemonIdCounter": 0
+    }
+  },
+  "profileIdCounter": 2
+}

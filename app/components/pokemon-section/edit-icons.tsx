@@ -32,13 +32,21 @@ const EditIcons = ({
     <div className="flex justify-between">
       {currentLocation === "bench" ? (
         <>
-          <Icon icon={faCircleUp} onClick={() => mergeIntoTeam(pokemon)} />
+          <Icon
+            dataCy="bench-to-team"
+            icon={faCircleUp}
+            onClick={() => mergeIntoTeam(pokemon)}
+          />
           <Icon icon={faExpand} onClick={() => setFocusedPokemon(fullPoke)} />
           <Icon icon={faTrash} onClick={() => removeFromBench(pokemon)} />
         </>
       ) : (
         <>
-          <Icon icon={faCircleDown} onClick={() => mergeIntoBench(pokemon)} />
+          <Icon
+            dataCy="team-to-bench"
+            icon={faCircleDown}
+            onClick={() => mergeIntoBench(pokemon)}
+          />
           <Icon icon={faExpand} onClick={() => setFocusedPokemon(fullPoke)} />
           <Icon icon={faTrash} onClick={() => removeFromTeam(pokemon)} />
         </>
