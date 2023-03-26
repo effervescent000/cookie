@@ -183,11 +183,10 @@ export default function App() {
       const foundProfileId = localStorage.getItem("activeProfileId");
       const foundProfileCounter = localStorage.getItem("profileIdCounter");
       setProfileIds({
-        active: foundProfileId !== null ? +foundProfileId : 1,
+        active: foundProfileId !== null ? +foundProfileId : 0,
         counter: foundProfileCounter !== null ? +foundProfileCounter : 1,
       });
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileIds]);
 
