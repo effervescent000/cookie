@@ -251,23 +251,30 @@ export const calcDamage = ({
 }: {
   pokemon: IPokemonFull;
   move: IMoveResponse;
-}) =>
-  move.power
-    ? ((((2 * LEVEL) / 5 + 2) *
-        (move.power *
-          (move.meta.min_hits && move.meta.max_hits
-            ? (move.meta.min_hits + move.meta.max_hits) / 2
-            : 1)) *
-        (getStat(
-          pokemon,
-          move.damage_class.name === "physical" ? "attack" : "special-attack"
-        ) || 0)) /
-        DEFENSE /
-        50 +
-        2) *
-      (1 + (move.meta.crit_rate + 0.0625) * 1.5) *
-      (move.accuracy ? Math.min(move.accuracy, 100) / 100 : 1)
-    : 0;
+}) => {
+  try {
+    const damage = move.power
+      ? ((((2 * LEVEL) / 5 + 2) *
+          (move.power *
+            (move.meta?.min_hits && move.meta?.max_hits
+              ? (move.meta.min_hits + move.meta.max_hits) / 2
+              : 1)) *
+          (getStat(
+            pokemon,
+            move.damage_class.name === "physical" ? "attack" : "special-attack"
+          ) || 0)) /
+          DEFENSE /
+          50 +
+          2) *
+        (1 + ((move.meta?.crit_rate || 0) + 0.0625) * 1.5) *
+        (move.accuracy ? Math.min(move.accuracy, 100) / 100 : 1)
+      : 0;
+    return damage;
+  } catch (error) {
+    console.log(`move ${move.name} is malformed`);
+    return 0;
+  }
+};
 
 export const filterKey = (
   obj: { [key: string | number]: any },

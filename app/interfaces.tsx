@@ -79,13 +79,13 @@ export interface IMoveResponse {
   type: IResourceListItem;
   accuracy: number;
   meta: {
-    crit_rate: number;
-    flinch_chance: number;
-    max_hits: number;
-    min_hits: number;
-  };
-  power: number;
-  pp: number;
+    crit_rate: number | null;
+    flinch_chance: number | null;
+    max_hits: number | null;
+    min_hits: number | null;
+  } | null;
+  power: number | null;
+  pp: number | null;
   damage_class: IResourceListItem;
 }
 
