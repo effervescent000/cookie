@@ -7,8 +7,6 @@ const ProfileCard = ({
   activeProfileId: number;
   setActiveProfileId: (arg0: number) => void;
 }) => {
-  console.log("profile.id", profile.id);
-  console.log("activeProfileId", activeProfileId);
   return (
     <div
       data-cy={`profile-${profile.id}`}

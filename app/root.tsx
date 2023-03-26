@@ -165,7 +165,6 @@ export default function App() {
   };
 
   useEffect(() => {
-    debugger;
     if (profileIds.active !== -1) {
       localStorage.setItem("activeProfileId", `${profileIds.active}`);
       localStorage.setItem("profileIdCounter", `${profileIds.counter}`);

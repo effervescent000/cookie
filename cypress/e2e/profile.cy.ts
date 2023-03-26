@@ -15,6 +15,7 @@ describe("Profile functionality", () => {
       .should("exist.and.be.visible")
       .and("have.class", "underline");
   });
+
   it("can discern which profile is active", () => {
     cy.get(makeDataCy("new-profile")).click();
     cy.wait(100);
@@ -32,5 +33,14 @@ describe("Profile functionality", () => {
     cy.get(makeDataCy("profile-2"))
       .should("exist.and.be.visible")
       .and("have.class", "underline");
+  });
+
+  it("persists deeper profile data", () => {
+    const usum = "version-ultra-sun-ultra-moon";
+    cy.get(makeDataCy("new-profile")).click();
+    cy.get(makeDataCy("version-VII")).click();
+    cy.get(makeDataCy(usum)).click();
+    cy.reload();
+    cy.get(makeDataCy(usum)).should("have.class", "underline");
   });
 });
