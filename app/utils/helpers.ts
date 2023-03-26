@@ -267,7 +267,12 @@ export const calcDamage = ({
           50 +
           2) *
         (1 + ((move.meta?.crit_rate || 0) + 0.0625) * 1.5) *
-        (move.accuracy ? Math.min(move.accuracy, 100) / 100 : 1)
+        (move.accuracy ? Math.min(move.accuracy, 100) / 100 : 1) *
+        (pokemon.types
+          .map(({ type: { name } }) => name)
+          .includes(move.type.name)
+          ? 1.5
+          : 1)
       : 0;
     return damage;
   } catch (error) {
