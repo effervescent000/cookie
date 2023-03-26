@@ -9,7 +9,6 @@ auto_rollback = true
 cmd = "start.sh"
 entrypoint = "sh"
 
-
 [[services]]
 internal_port = 8_080
 processes = [ "app" ]
