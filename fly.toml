@@ -1,4 +1,4 @@
-app = "cookie-fe-cbe8"
+app = "cookie"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = [ ]
