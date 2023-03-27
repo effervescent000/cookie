@@ -17,11 +17,7 @@ const ScoreCard = ({ value, label }: { value: number; label?: string }) => {
   return (
     <div className="flex max-w-[50px] flex-col flex-wrap text-center">
       <div className="text-xs">{label}</div>
-      {loading ? (
-        <Icon classes="animate-spin" icon={faSpinner} />
-      ) : (
-        Math.round(value)
-      )}
+      {loading ? <Icon classes="animate-spin" icon={faSpinner} /> : value}
     </div>
   );
 };

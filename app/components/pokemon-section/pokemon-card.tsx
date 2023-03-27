@@ -8,7 +8,6 @@ import { properCase } from "~/utils/text-utils";
 import { PokemonContext } from "~/pokemon-context";
 import {
   filterKey,
-  makeTotalsStats,
   scoreMoves,
   compileTeamValues,
   sumCompiledTeamValues,
@@ -16,6 +15,7 @@ import {
   makeOffensiveValues,
   scoreDefValues,
   scoreOffValues,
+  scoreTotalStats,
 } from "~/utils/helpers";
 import { isFullPokemon } from "~/utils/type-guards";
 import PokeAPIService from "~/utils/pokeapi-service";
@@ -70,7 +70,7 @@ const PokemonCard = ({
 
     if (isFullPokemon(fullPoke)) {
       getMoveScores();
-      setStatTotal(makeTotalsStats(fullPoke));
+      setStatTotal(scoreTotalStats(fullPoke));
     }
   }, [fullPoke, targetPoke, versionGroup]);
 
@@ -122,11 +122,7 @@ const PokemonCard = ({
         );
         if (match)
           return {
-            name: `${properCase(name)} (${
-              moveScores[name]
-                ? Math.round(Math.round(moveScores[name] * 15) / 15)
-                : "---"
-            })`,
+            name: `${properCase(name)} (${moveScores[name] || "---"})`,
             value: name,
           };
         return undefined;
@@ -163,10 +159,7 @@ const PokemonCard = ({
         <div className="">
           <SpriteFrame pokemon={fullPoke} />
           <div className="flex items-end justify-between">
-            <ScoreCard
-              label="Move score"
-              value={Object.values(moveScores).reduce((x, y) => x + y, 0) / 10}
-            />
+            <ScoreCard label="Move score" value={moveScores.finalScore || 0} />
             {currentLocation === "bench" ? (
               <ScoreCard
                 label={
@@ -187,7 +180,7 @@ const PokemonCard = ({
                 }
               />
             )}
-            <ScoreCard label="Stat score" value={statTotal / 100} />
+            <ScoreCard label="Stat score" value={statTotal} />
           </div>
           <EditIcons
             currentLocation={currentLocation}
