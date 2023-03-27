@@ -1,0 +1,52 @@
+{
+  "accuracy": 100,
+  "damage_class": {
+    "name": "special",
+    "url": "https://pokeapi.co/api/v2/move-damage-class/3/"
+  },
+  "effect_chance": 10,
+  "effect_changes": [],
+  "generation": {
+    "name": "generation-i",
+    "url": "https://pokeapi.co/api/v2/generation/1/"
+  },
+  "id": 60,
+  "machines": [],
+  "meta": {
+    "ailment": {
+      "name": "confusion",
+      "url": "https://pokeapi.co/api/v2/move-ailment/6/"
+    },
+    "ailment_chance": 10,
+    "category": {
+      "name": "damage+ailment",
+      "url": "https://pokeapi.co/api/v2/move-category/4/"
+    },
+    "crit_rate": 0,
+    "drain": 0,
+    "flinch_chance": 0,
+    "healing": 0,
+    "max_hits": null,
+    "max_turns": 5,
+    "min_hits": null,
+    "min_turns": 2,
+    "stat_chance": 0
+  },
+  "name": "psybeam",
+  "past_values": [],
+  "power": 65,
+  "pp": 20,
+  "priority": 0,
+  "stat_changes": [],
+  "super_contest_effect": {
+    "url": "https://pokeapi.co/api/v2/super-contest-effect/17/"
+  },
+  "target": {
+    "name": "selected-pokemon",
+    "url": "https://pokeapi.co/api/v2/move-target/10/"
+  },
+  "type": {
+    "name": "psychic",
+    "url": "https://pokeapi.co/api/v2/type/14/"
+  }
+}

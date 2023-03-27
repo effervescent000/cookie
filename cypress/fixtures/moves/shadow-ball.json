@@ -1,0 +1,223 @@
+{
+  "accuracy": 100,
+  "damage_class": {
+    "name": "special",
+    "url": "https://pokeapi.co/api/v2/move-damage-class/3/"
+  },
+  "effect_chance": 20,
+  "effect_changes": [],
+  "generation": {
+    "name": "generation-ii",
+    "url": "https://pokeapi.co/api/v2/generation/2/"
+  },
+  "id": 247,
+  "machines": [
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/584/"
+      },
+      "version_group": {
+        "name": "gold-silver",
+        "url": "https://pokeapi.co/api/v2/version-group/3/"
+      }
+    },
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/585/"
+      },
+      "version_group": {
+        "name": "crystal",
+        "url": "https://pokeapi.co/api/v2/version-group/4/"
+      }
+    },
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/586/"
+      },
+      "version_group": {
+        "name": "ruby-sapphire",
+        "url": "https://pokeapi.co/api/v2/version-group/5/"
+      }
+    },
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/587/"
+      },
+      "version_group": {
+        "name": "emerald",
+        "url": "https://pokeapi.co/api/v2/version-group/6/"
+      }
+    },
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/588/"
+      },
+      "version_group": {
+        "name": "firered-leafgreen",
+        "url": "https://pokeapi.co/api/v2/version-group/7/"
+      }
+    },
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/589/"
+      },
+      "version_group": {
+        "name": "diamond-pearl",
+        "url": "https://pokeapi.co/api/v2/version-group/8/"
+      }
+    },
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/590/"
+      },
+      "version_group": {
+        "name": "platinum",
+        "url": "https://pokeapi.co/api/v2/version-group/9/"
+      }
+    },
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/591/"
+      },
+      "version_group": {
+        "name": "heartgold-soulsilver",
+        "url": "https://pokeapi.co/api/v2/version-group/10/"
+      }
+    },
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/592/"
+      },
+      "version_group": {
+        "name": "black-white",
+        "url": "https://pokeapi.co/api/v2/version-group/11/"
+      }
+    },
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/593/"
+      },
+      "version_group": {
+        "name": "colosseum",
+        "url": "https://pokeapi.co/api/v2/version-group/12/"
+      }
+    },
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/594/"
+      },
+      "version_group": {
+        "name": "xd",
+        "url": "https://pokeapi.co/api/v2/version-group/13/"
+      }
+    },
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/595/"
+      },
+      "version_group": {
+        "name": "black-2-white-2",
+        "url": "https://pokeapi.co/api/v2/version-group/14/"
+      }
+    },
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/596/"
+      },
+      "version_group": {
+        "name": "x-y",
+        "url": "https://pokeapi.co/api/v2/version-group/15/"
+      }
+    },
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/597/"
+      },
+      "version_group": {
+        "name": "omega-ruby-alpha-sapphire",
+        "url": "https://pokeapi.co/api/v2/version-group/16/"
+      }
+    },
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/598/"
+      },
+      "version_group": {
+        "name": "sun-moon",
+        "url": "https://pokeapi.co/api/v2/version-group/17/"
+      }
+    },
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/599/"
+      },
+      "version_group": {
+        "name": "ultra-sun-ultra-moon",
+        "url": "https://pokeapi.co/api/v2/version-group/18/"
+      }
+    },
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/860/"
+      },
+      "version_group": {
+        "name": "lets-go-pikachu-lets-go-eevee",
+        "url": "https://pokeapi.co/api/v2/version-group/19/"
+      }
+    },
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/1622/"
+      },
+      "version_group": {
+        "name": "sword-shield",
+        "url": "https://pokeapi.co/api/v2/version-group/20/"
+      }
+    }
+  ],
+  "meta": {
+    "ailment": {
+      "name": "none",
+      "url": "https://pokeapi.co/api/v2/move-ailment/0/"
+    },
+    "ailment_chance": 0,
+    "category": {
+      "name": "damage+lower",
+      "url": "https://pokeapi.co/api/v2/move-category/6/"
+    },
+    "crit_rate": 0,
+    "drain": 0,
+    "flinch_chance": 0,
+    "healing": 0,
+    "max_hits": null,
+    "max_turns": null,
+    "min_hits": null,
+    "min_turns": null,
+    "stat_chance": 20
+  },
+  "name": "shadow-ball",
+  "past_values": [],
+  "power": 80,
+  "pp": 15,
+  "priority": 0,
+  "stat_changes": [
+    {
+      "change": -1,
+      "stat": {
+        "name": "special-defense",
+        "url": "https://pokeapi.co/api/v2/stat/5/"
+      }
+    }
+  ],
+  "super_contest_effect": {
+    "url": "https://pokeapi.co/api/v2/super-contest-effect/17/"
+  },
+  "target": {
+    "name": "selected-pokemon",
+    "url": "https://pokeapi.co/api/v2/move-target/10/"
+  },
+  "type": {
+    "name": "ghost",
+    "url": "https://pokeapi.co/api/v2/type/8/"
+  }
+}
