@@ -1,0 +1,25 @@
+{
+  "activeProfileId": 1,
+  "profile-1": {
+    "name": "",
+    "values": {
+      "team": [
+        {
+          "name": "abra",
+          "moves": { "0": "", "1": "", "2": "", "3": "" },
+          "id": 0
+        },
+        {
+          "name": "alakazam",
+          "moves": { "0": "", "1": "", "2": "", "3": "" },
+          "id": 1
+        }
+      ],
+      "bench": [],
+      "gen": "VIII",
+      "versionGroup": "sword-shield",
+      "pokemonIdCounter": 0
+    }
+  },
+  "profileIdCounter": 2
+}
