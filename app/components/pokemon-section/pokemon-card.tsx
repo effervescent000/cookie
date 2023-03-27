@@ -60,7 +60,11 @@ const PokemonCard = ({
 
   useEffect(() => {
     const getMoveScores = async () => {
-      const result = await scoreMoves(fullPoke, versionGroup);
+      const result = await scoreMoves({
+        pokemon: targetPoke,
+        fullPokemon: fullPoke,
+        versionGroup,
+      });
       setMoveScores(result);
     };
 
@@ -68,7 +72,7 @@ const PokemonCard = ({
       getMoveScores();
       setStatTotal(makeTotalsStats(fullPoke));
     }
-  }, [fullPoke, versionGroup]);
+  }, [fullPoke, targetPoke, versionGroup]);
 
   useEffect(() => {
     const calcDeltas = async () => {
