@@ -34,4 +34,12 @@ describe("Tests for move functionality", () => {
       .find("svg")
       .should("not.exist");
   });
+
+  it("builds a stat delta for pokemon in bench", () => {
+    cy.addLocalStorage("two-in-team-one-in-bench-s-s");
+    cy.get(makeDataCy("poke-card-sylveon"))
+      .as("alaCard")
+      .find(makeDataCy("delta-card"))
+      .contains(/\d+\.\d$/);
+  });
 });

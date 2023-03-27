@@ -65,9 +65,11 @@ export default function App() {
   const prevTeam = usePrevious(team);
   const prevBench = usePrevious(bench);
   const [moveScores, setMoveScores] = useState<{
-    [id: number]: { [key: string]: number };
+    [id: number]: { [key: string]: number | undefined };
   }>({});
-  const [statScores, setStatScores] = useState<{ [id: number]: number }>({});
+  const [statScores, setStatScores] = useState<{
+    [id: number]: number | undefined;
+  }>({});
 
   useEffect(() => {
     const P = new PokeAPIService();
@@ -119,7 +121,7 @@ export default function App() {
             }
             return {
               id: pokemon.id,
-              scores: moveScores ? moveScores[pokemon.id] : 0,
+              scores: moveScores ? moveScores[pokemon.id] : undefined,
             };
           })
         )

@@ -78,13 +78,17 @@ const PokemonCard = ({
             return {
               id: teamPoke.id,
               delta:
-                sumCompiledTeamValues(compileTeamValues(newDefValues)) -
-                teamDefScores.final +
-                (sumCompiledTeamValues(compileTeamValues(newOffValues)) -
-                  teamOffScores.final) +
-                (moveScores[targetPoke.id].finalScore -
-                  moveScores[teamPoke.id].finalScore) +
-                (statScores[targetPoke.id] - statScores[teamPoke.id]),
+                Math.round(
+                  (sumCompiledTeamValues(compileTeamValues(newDefValues)) -
+                    teamDefScores.final +
+                    (sumCompiledTeamValues(compileTeamValues(newOffValues)) -
+                      teamOffScores.final) +
+                    ((_.get(moveScores, "[targetPoke.id].finalScore") || 0) -
+                      (_.get(moveScores, "[teamPoke.id].finalScore") || 0)) +
+                    ((statScores[targetPoke.id] || 0) -
+                      (statScores[teamPoke.id] || 0))) *
+                    10
+                ) / 10,
             };
           })
         );
@@ -93,7 +97,12 @@ const PokemonCard = ({
       }
     };
 
-    if (Object.keys(teamOffScores).length && Object.keys(teamDefScores).length)
+    if (
+      Object.keys(teamOffScores).length &&
+      Object.keys(teamDefScores).length &&
+      Object.keys(moveScores).length &&
+      Object.keys(statScores).length
+    )
       calcDeltas();
   }, [
     fullPoke,
@@ -175,6 +184,7 @@ const PokemonCard = ({
                     : undefined
                 }
                 value={deltas.length ? deltas[0].delta : 0}
+                dataCy="delta-card"
               />
             ) : (
               <EvolutionSelector
@@ -184,7 +194,10 @@ const PokemonCard = ({
                 }
               />
             )}
-            <ScoreCard label="Stat score" value={statScores[targetPoke.id]} />
+            <ScoreCard
+              label="Stat score"
+              value={statScores[targetPoke.id] || 0}
+            />
           </div>
           <EditIcons
             currentLocation={currentLocation}

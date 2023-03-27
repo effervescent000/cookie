@@ -40,9 +40,9 @@ export const PokemonContext = createContext<{
   setActiveProfileId: (arg0: number) => void;
   addNewProfile: () => void;
   moveScores: {
-    [key: number]: { [key: string]: number };
+    [key: number]: { [key: string]: number | undefined };
   };
-  statScores: { [id: number]: number };
+  statScores: { [id: number]: number | undefined };
 }>({
   gen: "",
   setGen: (target) => {},
