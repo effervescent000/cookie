@@ -64,7 +64,7 @@ export default function App() {
   const prevBench = usePrevious(bench);
   const [moveScores, setMoveScores] = useState<{
     [key: number]: { [key: string]: number };
-  }>();
+  }>({});
 
   useEffect(() => {
     const P = new PokeAPIService();
@@ -275,6 +275,7 @@ export default function App() {
         setActiveProfileId: (id) =>
           setProfileIds({ ...profileIds, active: id }),
         addNewProfile,
+        moveScores,
       }}
     >
       <html lang="en" className="h-full">
