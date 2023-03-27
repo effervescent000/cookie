@@ -25,7 +25,7 @@ const PokemonFrameWrapper = ({
         <PokemonFrame pokemon={bench} location="bench" />
       </div>
       <FocusedCard />
-      {windowSize > 1080 && <CoverageWrapper allPokemon={allPokemon} />}
+      {/* {windowSize > 1080 && <CoverageWrapper allPokemon={allPokemon} />} */}
       <ElementalFramesWrapper />
     </div>
   );
