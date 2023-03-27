@@ -15,7 +15,7 @@ const ScoreCard = ({ value, label }: { value: number; label?: string }) => {
   }, [value]);
 
   return (
-    <div className="text-center">
+    <div className="flex max-w-[50px] flex-col flex-wrap text-center">
       <div className="text-xs">{label}</div>
       {loading ? (
         <Icon classes="animate-spin" icon={faSpinner} />

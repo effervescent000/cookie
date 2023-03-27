@@ -2,6 +2,7 @@ import { Tooltip } from "react-tooltip";
 import TypeLabel from "~/components/common/type-label";
 
 import type { IIndividualValues, IType } from "~/interfaces";
+import useWindowSize from "~/utils/hooks/use-window-size";
 import { properCase } from "~/utils/text-utils";
 
 const ElementCard = ({
@@ -13,12 +14,14 @@ const ElementCard = ({
   value: IIndividualValues;
   tooltipKey: string;
 }) => {
+  const { windowSize } = useWindowSize();
+
   return (
     <div
       className="flex w-full flex-col items-center"
       data-tooltip-id={tooltipKey}
     >
-      <TypeLabel type={type} full />
+      <TypeLabel type={type} full mini={windowSize <= 1080} />
       <div
         className={`${
           (value.finalValue < 0 && "text-red") ||

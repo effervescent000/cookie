@@ -1,3 +1,4 @@
+import { faTurnUp } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 
 import type {
@@ -6,9 +7,11 @@ import type {
   IPokemonFull,
   ISpeciesResponse,
 } from "~/interfaces";
+import useWindowSize from "~/utils/hooks/use-window-size";
 
 import PokeAPIService from "~/utils/pokeapi-service";
 import Button from "../common/button";
+import Icon from "../common/icon";
 
 const EvolutionSelector = ({
   pokemon,
@@ -26,6 +29,7 @@ const EvolutionSelector = ({
   const [currentStage, setCurrentStage] = useState<
     IEvolutionChainLink | undefined
   >(undefined);
+  const { windowSize } = useWindowSize();
 
   useEffect(() => {
     const P = new PokeAPIService();
@@ -39,6 +43,16 @@ const EvolutionSelector = ({
   }, [pokemon]);
 
   useEffect(() => {
+    const findCurrentStage = (
+      chainLink: IEvolutionChainLink
+    ): IEvolutionChainLink | undefined => {
+      if (chainLink.species.name === pokemon.name) return chainLink;
+      if (chainLink.evolves_to.length) {
+        return chainLink.evolves_to
+          .map((link) => findCurrentStage(link))
+          .find((child) => !!child);
+      }
+    };
     const getEvolutionInfo = async () => {
       const P = new PokeAPIService();
       if (speciesData) {
@@ -51,18 +65,7 @@ const EvolutionSelector = ({
     };
 
     getEvolutionInfo();
-  }, [speciesData]);
-
-  const findCurrentStage = (
-    chainLink: IEvolutionChainLink
-  ): IEvolutionChainLink | undefined => {
-    if (chainLink.species.name === pokemon.name) return chainLink;
-    if (chainLink.evolves_to.length) {
-      return chainLink.evolves_to
-        .map((link) => findCurrentStage(link))
-        .find((child) => !!child);
-    }
-  };
+  }, [pokemon.name, speciesData]);
 
   const canHandleEvolution = () => {
     if (evolutionInfo && currentStage) {
@@ -80,7 +83,7 @@ const EvolutionSelector = ({
     <div>
       {canHandleEvolution() && (
         <Button dataCy="evolve-btn" onClick={pushEvolution}>
-          Evolve
+          {windowSize > 1080 ? "Evolve" : <Icon icon={faTurnUp} />}
         </Button>
       )}
     </div>

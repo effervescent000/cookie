@@ -2,6 +2,7 @@ import { useContext } from "react";
 
 import type { IPokemonFull, IResourceListItem } from "~/interfaces";
 import { PokemonContext } from "~/pokemon-context";
+import useWindowSize from "~/utils/hooks/use-window-size";
 
 import CoverageWrapper from "../pokedex-coverage/coverage-wrapper";
 import ElementalFramesWrapper from "./elemental-frames/elemental-frames-wrapper";
@@ -15,6 +16,7 @@ const PokemonFrameWrapper = ({
   allPokemon: (IPokemonFull | IResourceListItem)[];
 }) => {
   const { team, bench } = useContext(PokemonContext);
+  const { windowSize } = useWindowSize();
 
   return (
     <div className="flex justify-between gap-10">
@@ -23,7 +25,7 @@ const PokemonFrameWrapper = ({
         <PokemonFrame pokemon={bench} location="bench" />
       </div>
       <FocusedCard />
-      <CoverageWrapper allPokemon={allPokemon} />
+      {windowSize > 1080 && <CoverageWrapper allPokemon={allPokemon} />}
       <ElementalFramesWrapper />
     </div>
   );

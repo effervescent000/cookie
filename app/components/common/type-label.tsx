@@ -18,7 +18,7 @@ const TypeLabel = ({
         full && "w-full"
       }`}
     >
-      {properCase(mini ? type.abbr || type.key : type.key)}
+      {mini ? type.abbr || properCase(type.key) : properCase(type.key)}
     </div>
   );
 };

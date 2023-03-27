@@ -22,7 +22,7 @@ const Select = ({
         placeholder={placeholder}
         onChange={(e) => callback(e.target.value)}
         value={selection}
-        className="m-1 w-48 rounded-md border border-light-blue bg-gray p-1"
+        className="m-1 w-44 rounded-md border border-blue bg-gray p-1 text-sm"
         data-cy={dataCy}
       >
         {[{ name: "---", value: "" }, ...options].map(({ value, name }) => (
