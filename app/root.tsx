@@ -19,9 +19,11 @@ import { PokemonContext } from "~/pokemon-context";
 import PokeAPIService from "./utils/pokeapi-service";
 import {
   compileTeamValues,
+  makeLookup,
   makeTeamDefensiveValues,
   makeTeamOffensiveValues,
   scoreMoves,
+  scoreTotalStats,
   sumCompiledTeamValues,
 } from "./utils/helpers";
 import usePrevious from "./utils/hooks/use-previous";
@@ -63,7 +65,10 @@ export default function App() {
   const prevTeam = usePrevious(team);
   const prevBench = usePrevious(bench);
   const [moveScores, setMoveScores] = useState<{
-    [key: number]: { [key: string]: number };
+    [id: number]: { [key: string]: number | undefined };
+  }>({});
+  const [statScores, setStatScores] = useState<{
+    [id: number]: number | undefined;
   }>({});
 
   useEffect(() => {
@@ -116,7 +121,7 @@ export default function App() {
             }
             return {
               id: pokemon.id,
-              scores: moveScores ? moveScores[pokemon.id] : 0,
+              scores: moveScores ? moveScores[pokemon.id] : undefined,
             };
           })
         )
@@ -125,7 +130,36 @@ export default function App() {
       setMoveScores(updatedScores);
     };
 
+    const getStatScores = async () => {
+      const P = new PokeAPIService();
+      const fullRoster = [...team, ...bench];
+      const prevRoster = [...prevTeam, ...prevBench];
+
+      const updatedScores = makeLookup(
+        await Promise.all(
+          fullRoster.map(async (pokemon) => {
+            const foundInPrevRoster = prevRoster.find(
+              ({ id: prevId }) => prevId === pokemon.id
+            );
+            if (!foundInPrevRoster) {
+              const fullPokemon = (await P.getPokemonByName([pokemon.name]))[0];
+              return {
+                id: pokemon.id,
+                score: scoreTotalStats(fullPokemon),
+              };
+            }
+            return { id: pokemon.id, score: statScores[pokemon.id] };
+          })
+        ),
+        "id",
+        "score"
+      );
+
+      setStatScores(updatedScores);
+    };
+
     getMoveScores();
+    getStatScores();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [team, bench, versionGroup]);
 
@@ -277,6 +311,7 @@ export default function App() {
           setProfileIds({ ...profileIds, active: id }),
         addNewProfile,
         moveScores,
+        statScores,
       }}
     >
       <html lang="en" className="h-full">

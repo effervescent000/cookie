@@ -1,10 +1,24 @@
-import { makeDataCy } from "support/utils";
+import { extractSearchFromUrl, makeDataCy } from "support/utils";
 
 const abraCard = "poke-card-abra";
 
 describe("Tests for move functionality", () => {
   beforeEach(() => {
     cy.visitAndCheck("/");
+    // cy.intercept("**/v2/pokemon/*", (req) => {
+    //   const targetPokemon = extractSearchFromUrl(req.url);
+
+    //   req.reply({ fixture: `pokemon/${targetPokemon}.json` });
+    // }).as("getPokemon");
+    // cy.intercept("**/v2/move/*", (req) => {
+    //   const targetMove = extractSearchFromUrl(req.url);
+    //   req.reply({ fixture: `moves/${targetMove}.json` });
+    // }).as("getMove");
+    // cy.intercept("**/v2/type/*", (req) => {
+    //   const targetType = extractSearchFromUrl(req.url);
+    //   req.reply({ fixture: `types/${targetType}.json` });
+    // }).as("getType");
+    cy.wait(1000);
   });
 
   it("initializes move score properly", () => {

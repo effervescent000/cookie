@@ -3,6 +3,7 @@ import _ from "lodash";
 import sortArray from "sort-array";
 
 import type { IPokemonFull, IPokeSkeleton } from "~/interfaces";
+import { isFullPokemon } from "~/utils/type-guards";
 
 import { properCase } from "~/utils/text-utils";
 import { PokemonContext } from "~/pokemon-context";
@@ -14,9 +15,7 @@ import {
   makeOffensiveValues,
   scoreDefValues,
   scoreOffValues,
-  scoreTotalStats,
 } from "~/utils/helpers";
-import { isFullPokemon } from "~/utils/type-guards";
 import PokeAPIService from "~/utils/pokeapi-service";
 
 import Select from "../common/select";
@@ -40,10 +39,10 @@ const PokemonCard = ({
     teamDefScores,
     teamOffScores,
     moveScores,
+    statScores,
   } = useContext(PokemonContext);
   const [fullPoke, setFullPoke] = useState<IPokemonFull>({} as IPokemonFull);
   const [loading, setLoading] = useState(true);
-  const [statTotal, setStatTotal] = useState(0);
   const [deltas, setDeltas] = useState<{ id: number; delta: number }[]>([]);
 
   useEffect(() => {
@@ -56,22 +55,6 @@ const PokemonCard = ({
     setLoading(true);
     getFullPoke();
   }, [targetPoke.name]);
-
-  useEffect(() => {
-    // const getMoveScores = async () => {
-    //   const result = await scoreMoves({
-    //     pokemon: targetPoke,
-    //     fullPokemon: fullPoke,
-    //     versionGroup,
-    //   });
-    //   setMoveScores(result);
-    // };
-
-    if (isFullPokemon(fullPoke)) {
-      // getMoveScores();
-      setStatTotal(scoreTotalStats(fullPoke));
-    }
-  }, [fullPoke, targetPoke, versionGroup]);
 
   useEffect(() => {
     const calcDeltas = async () => {
@@ -95,10 +78,17 @@ const PokemonCard = ({
             return {
               id: teamPoke.id,
               delta:
-                sumCompiledTeamValues(compileTeamValues(newDefValues)) -
-                teamDefScores.final +
-                (sumCompiledTeamValues(compileTeamValues(newOffValues)) -
-                  teamOffScores.final),
+                Math.round(
+                  (sumCompiledTeamValues(compileTeamValues(newDefValues)) -
+                    teamDefScores.final +
+                    (sumCompiledTeamValues(compileTeamValues(newOffValues)) -
+                      teamOffScores.final) +
+                    ((_.get(moveScores, "[targetPoke.id].finalScore") || 0) -
+                      (_.get(moveScores, "[teamPoke.id].finalScore") || 0)) +
+                    ((statScores[targetPoke.id] || 0) -
+                      (statScores[teamPoke.id] || 0))) *
+                    10
+                ) / 10,
             };
           })
         );
@@ -107,9 +97,22 @@ const PokemonCard = ({
       }
     };
 
-    if (Object.keys(teamOffScores).length && Object.keys(teamDefScores).length)
+    if (
+      Object.keys(teamOffScores).length &&
+      Object.keys(teamDefScores).length &&
+      Object.keys(moveScores).length &&
+      Object.keys(statScores).length
+    )
       calcDeltas();
-  }, [fullPoke, targetPoke, team, teamDefScores, teamOffScores]);
+  }, [
+    fullPoke,
+    moveScores,
+    statScores,
+    targetPoke,
+    team,
+    teamDefScores,
+    teamOffScores,
+  ]);
 
   const moveList = useMemo(() => {
     const { moves } = fullPoke;
@@ -181,6 +184,7 @@ const PokemonCard = ({
                     : undefined
                 }
                 value={deltas.length ? deltas[0].delta : 0}
+                dataCy="delta-card"
               />
             ) : (
               <EvolutionSelector
@@ -190,7 +194,10 @@ const PokemonCard = ({
                 }
               />
             )}
-            <ScoreCard label="Stat score" value={statTotal} />
+            <ScoreCard
+              label="Stat score"
+              value={statScores[targetPoke.id] || 0}
+            />
           </div>
           <EditIcons
             currentLocation={currentLocation}
