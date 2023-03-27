@@ -8,7 +8,6 @@ import { properCase } from "~/utils/text-utils";
 import { PokemonContext } from "~/pokemon-context";
 import {
   filterKey,
-  scoreMoves,
   compileTeamValues,
   sumCompiledTeamValues,
   makeDefensiveValues,
@@ -40,10 +39,10 @@ const PokemonCard = ({
     team,
     teamDefScores,
     teamOffScores,
+    moveScores,
   } = useContext(PokemonContext);
   const [fullPoke, setFullPoke] = useState<IPokemonFull>({} as IPokemonFull);
   const [loading, setLoading] = useState(true);
-  const [moveScores, setMoveScores] = useState<{ [key: string]: number }>({});
   const [statTotal, setStatTotal] = useState(0);
   const [deltas, setDeltas] = useState<{ id: number; delta: number }[]>([]);
 
@@ -59,17 +58,17 @@ const PokemonCard = ({
   }, [targetPoke.name]);
 
   useEffect(() => {
-    const getMoveScores = async () => {
-      const result = await scoreMoves({
-        pokemon: targetPoke,
-        fullPokemon: fullPoke,
-        versionGroup,
-      });
-      setMoveScores(result);
-    };
+    // const getMoveScores = async () => {
+    //   const result = await scoreMoves({
+    //     pokemon: targetPoke,
+    //     fullPokemon: fullPoke,
+    //     versionGroup,
+    //   });
+    //   setMoveScores(result);
+    // };
 
     if (isFullPokemon(fullPoke)) {
-      getMoveScores();
+      // getMoveScores();
       setStatTotal(scoreTotalStats(fullPoke));
     }
   }, [fullPoke, targetPoke, versionGroup]);
@@ -122,7 +121,10 @@ const PokemonCard = ({
         );
         if (match)
           return {
-            name: `${properCase(name)} (${moveScores[name] || "---"})`,
+            name: `${properCase(name)} (${
+              (moveScores[targetPoke.id] && moveScores[targetPoke.id][name]) ||
+              "---"
+            })`,
             value: name,
           };
         return undefined;
@@ -130,7 +132,7 @@ const PokemonCard = ({
       .filter((move) => !!move) as { name: string; value: string }[];
     sortArray(filteredMoves, { by: "value" });
     return filteredMoves;
-  }, [fullPoke, versionGroup, moveScores]);
+  }, [fullPoke, moveScores, targetPoke.id, versionGroup]);
 
   const mergeMove = (value: string, moveIndex: number) => {
     if (currentLocation === "team") {
@@ -159,7 +161,15 @@ const PokemonCard = ({
         <div className="">
           <SpriteFrame pokemon={fullPoke} />
           <div className="flex items-end justify-between">
-            <ScoreCard label="Move score" value={moveScores.finalScore || 0} />
+            <ScoreCard
+              label="Move score"
+              value={
+                (moveScores[targetPoke.id] &&
+                  moveScores[targetPoke.id].finalScore) ||
+                0
+              }
+              dataCy="move-score-card"
+            />
             {currentLocation === "bench" ? (
               <ScoreCard
                 label={

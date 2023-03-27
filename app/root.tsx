@@ -102,7 +102,8 @@ export default function App() {
             const foundInPrevRoster = prevRoster.find(
               ({ id: prevId }) => prevId === pokemon.id
             );
-            if (!foundInPrevRoster || _.isEqual(foundInPrevRoster, pokemon)) {
+            if (!foundInPrevRoster || !_.isEqual(foundInPrevRoster, pokemon)) {
+              setMoveScores({ ...moveScores, [pokemon.id]: {} });
               const fullPokemon = (await P.getPokemonByName([pokemon.name]))[0];
               return {
                 id: pokemon.id,

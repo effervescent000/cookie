@@ -108,7 +108,7 @@ const addLocalStorage = (file: string) => {
     );
     localStorage.setItem("profileIdCounter", data.profileIdCounter);
     cy.reload();
-    cy.wait(500);
+    cy.wait(200);
   });
 };
 
