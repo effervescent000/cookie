@@ -8,19 +8,23 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import _ from "lodash";
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 import reactTooltipStylesheetUrl from "react-tooltip/dist/react-tooltip.css";
 
 import type { IPokemonFull, IPokeSkeleton, IProfile } from "./interfaces";
+
 import { PokemonContext } from "~/pokemon-context";
 import PokeAPIService from "./utils/pokeapi-service";
 import {
   compileTeamValues,
   makeTeamDefensiveValues,
   makeTeamOffensiveValues,
+  scoreMoves,
   sumCompiledTeamValues,
 } from "./utils/helpers";
+import usePrevious from "./utils/hooks/use-previous";
 
 export const links: LinksFunction = () => {
   return [
@@ -56,6 +60,11 @@ export default function App() {
   });
 
   const [profileIds, setProfileIds] = useState({ active: -1, counter: 1 });
+  const prevTeam = usePrevious(team);
+  const prevBench = usePrevious(bench);
+  const [moveScores, setMoveScores] = useState<{
+    [key: number]: { [key: string]: number };
+  }>();
 
   useEffect(() => {
     const P = new PokeAPIService();
@@ -67,6 +76,7 @@ export default function App() {
         processed: currentScores.final,
       });
     };
+
     const getTeamOffScores = async () => {
       const currentScores = await makeTeamOffensiveValues(team, P);
       setTeamOffScores({
@@ -75,9 +85,48 @@ export default function App() {
         processed: currentScores.final,
       });
     };
+
     getTeamDefScores();
     getTeamOffScores();
   }, [team]);
+
+  useEffect(() => {
+    const getMoveScores = async () => {
+      const P = new PokeAPIService();
+      const fullRoster = [...team, ...bench];
+      const prevRoster = [...prevTeam, ...prevBench];
+
+      const updatedScores = (
+        await Promise.all(
+          fullRoster.map(async (pokemon) => {
+            const foundInPrevRoster = prevRoster.find(
+              ({ id: prevId }) => prevId === pokemon.id
+            );
+            if (!foundInPrevRoster || _.isEqual(foundInPrevRoster, pokemon)) {
+              const fullPokemon = (await P.getPokemonByName([pokemon.name]))[0];
+              return {
+                id: pokemon.id,
+                scores: await scoreMoves({
+                  pokemon,
+                  fullPokemon,
+                  versionGroup,
+                }),
+              };
+            }
+            return {
+              id: pokemon.id,
+              scores: moveScores ? moveScores[pokemon.id] : 0,
+            };
+          })
+        )
+      ).reduce((acc, cur) => ({ ...acc, [cur.id]: cur.scores }), {});
+
+      setMoveScores(updatedScores);
+    };
+
+    getMoveScores();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [team, bench, versionGroup]);
 
   const getActiveProfile = () => {
     return JSON.parse(

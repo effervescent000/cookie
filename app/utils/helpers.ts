@@ -345,3 +345,9 @@ export const filterKey = (
     );
   return result;
 };
+
+export const makeLookup = (list: { [key: string]: any }[], key: string) =>
+  list.reduce(
+    (acc, cur) => ({ ...acc, [cur[key]]: cur }),
+    {} as { [key: string]: any }
+  );
