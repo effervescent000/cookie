@@ -23,4 +23,15 @@ describe("Tests for move functionality", () => {
       .select("teleport");
     cy.get("@abraCard").find(makeDataCy("move-score-card")).find("svg");
   });
+
+  it("only recalculates for the changed pokemon", () => {
+    cy.addLocalStorage("two-pokemon-in-team-s-s");
+    cy.get(makeDataCy("poke-card-abra"))
+      .find(makeDataCy("move-0"))
+      .select("teleport");
+    cy.get(makeDataCy("poke-card-alakazam"))
+      .find(makeDataCy("move-score-card"))
+      .find("svg")
+      .should("not.exist");
+  });
 });
