@@ -198,6 +198,13 @@ export const scoreOffValues = (values: {
 export const makeTotalsStats = (pokemon: IPokemonFull) =>
   pokemon.stats.reduce((total, acc) => total + acc.base_stat, 0);
 
+export const scoreTotalStats = (pokemon: IPokemonFull) => {
+  const stats = makeTotalsStats(pokemon);
+  // for now just clean it up and return.
+  // in the future we will make extra adjustments.
+  return Math.round(stats / 5) / 10;
+};
+
 export const diminishReturns = (num: number): number => {
   const cap = 10;
   if (num > 3) {
@@ -268,7 +275,8 @@ export const scoreMoves = async ({
     filteredMoves.map(async (move) => await P.getMove(move))
   );
   fullMoves.forEach((move) => {
-    scores[move.name] = calcDamage({ pokemon: fullPokemon, move });
+    scores[move.name] =
+      Math.round(calcDamage({ pokemon: fullPokemon, move }) * 10) / 10;
   });
   if (Object.keys(scores).length < 4) {
     const allMovesScored = Object.entries(
@@ -284,6 +292,8 @@ export const scoreMoves = async ({
       scores[move.name] = move.score;
     });
   }
+  scores.finalScore =
+    Math.round(Object.values(scores).reduce((x, y) => x + y, 0)) / 5;
   return scores;
 };
 
