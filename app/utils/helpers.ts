@@ -12,6 +12,7 @@ import {
   TYPE_LOOKUP,
 } from "~/constants/types-constants";
 import PokeAPIService from "./pokeapi-service";
+import sortArray from "sort-array";
 
 export const makeDefensiveValues = async (
   pokemon: IPokemonFull,
@@ -213,10 +214,15 @@ const getStat = (pokemon: IPokemonFull, stat: string) =>
 const LEVEL = 5;
 const DEFENSE = 70;
 
-export const scoreMoves = async (
-  pokemon: IPokemonFull,
-  versionGroup: string
-) => {
+export const scoreAllMoves = async ({
+  pokemon,
+  versionGroup,
+  knownMoves,
+}: {
+  pokemon: IPokemonFull;
+  versionGroup: string;
+  knownMoves: string[];
+}) => {
   const P = new PokeAPIService();
   const scores: { [key: string]: number } = {};
 
@@ -230,18 +236,54 @@ export const scoreMoves = async (
     .filter(
       (move) =>
         move.version_group_details[0] &&
+        !knownMoves.includes(move.move.name) &&
         move.version_group_details[0].move_learn_method.name !== "machine"
     );
-
-  // const startTime = Date.now();
   const fullMoves = await Promise.all(
     filteredMoves.map(async (move) => await P.getMove(move.move.name))
   );
   fullMoves.forEach((move) => {
     scores[move.name] = calcDamage({ pokemon, move });
   });
-  // console.log(`scoring moves took ${Date.now() - startTime}ms`);
 
+  return scores;
+};
+
+export const scoreMoves = async ({
+  pokemon,
+  fullPokemon,
+  versionGroup,
+}: {
+  pokemon: IPokeSkeleton;
+  fullPokemon: IPokemonFull;
+  versionGroup: string;
+}) => {
+  const P = new PokeAPIService();
+  const scores: { [key: string]: number } = {};
+
+  const filteredMoves = _.uniq(
+    Object.values(pokemon.moves).filter((move) => !!move)
+  );
+  const fullMoves = await Promise.all(
+    filteredMoves.map(async (move) => await P.getMove(move))
+  );
+  fullMoves.forEach((move) => {
+    scores[move.name] = calcDamage({ pokemon: fullPokemon, move });
+  });
+  if (Object.keys(scores).length < 4) {
+    const allMovesScored = Object.entries(
+      await scoreAllMoves({
+        pokemon: fullPokemon,
+        versionGroup,
+        knownMoves: filteredMoves,
+      })
+    ).map(([key, value]) => ({ name: key, score: value }));
+    sortArray(allMovesScored, { by: "score", order: "desc" });
+    const slicedMoves = allMovesScored.slice(0, 4 - Object.keys(scores).length);
+    slicedMoves.forEach((move) => {
+      scores[move.name] = move.score;
+    });
+  }
   return scores;
 };
 
