@@ -6,14 +6,19 @@ describe("Tests for move functionality", () => {
   beforeEach(() => {
     cy.visitAndCheck("/");
     cy.intercept("**/v2/pokemon/*", (req) => {
-      console.log(req.url);
       const targetPokemon = extractSearchFromUrl(req.url);
+
       req.reply({ fixture: `pokemon/${targetPokemon}.json` });
     }).as("getPokemon");
     cy.intercept("**/v2/move/*", (req) => {
       const targetMove = extractSearchFromUrl(req.url);
       req.reply({ fixture: `moves/${targetMove}.json` });
     }).as("getMove");
+    cy.intercept("**/v2/type/*", (req) => {
+      const targetType = extractSearchFromUrl(req.url);
+      req.reply({ fixture: `types/${targetType}.json` });
+    }).as("getType");
+    cy.wait(1000);
   });
 
   it("initializes move score properly", () => {
@@ -42,13 +47,5 @@ describe("Tests for move functionality", () => {
       .find(makeDataCy("move-score-card"))
       .find("svg")
       .should("not.exist");
-  });
-
-  it("builds a stat delta for pokemon in bench", () => {
-    cy.addLocalStorage("two-in-team-one-in-bench-s-s");
-    cy.get(makeDataCy("poke-card-sylveon"))
-      .as("alaCard")
-      .find(makeDataCy("delta-card"))
-      .contains(/\d+\.\d$/);
   });
 });

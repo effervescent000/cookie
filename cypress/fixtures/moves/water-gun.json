@@ -1,0 +1,71 @@
+{
+  "accuracy": 100,
+  "damage_class": {
+    "name": "special",
+    "url": "https://pokeapi.co/api/v2/move-damage-class/3/"
+  },
+  "effect_chance": null,
+  "effect_changes": [],
+  "generation": {
+    "name": "generation-i",
+    "url": "https://pokeapi.co/api/v2/generation/1/"
+  },
+  "id": 55,
+  "machines": [
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/222/"
+      },
+      "version_group": {
+        "name": "red-blue",
+        "url": "https://pokeapi.co/api/v2/version-group/1/"
+      }
+    },
+    {
+      "machine": {
+        "url": "https://pokeapi.co/api/v2/machine/223/"
+      },
+      "version_group": {
+        "name": "yellow",
+        "url": "https://pokeapi.co/api/v2/version-group/2/"
+      }
+    }
+  ],
+  "meta": {
+    "ailment": {
+      "name": "none",
+      "url": "https://pokeapi.co/api/v2/move-ailment/0/"
+    },
+    "ailment_chance": 0,
+    "category": {
+      "name": "damage",
+      "url": "https://pokeapi.co/api/v2/move-category/0/"
+    },
+    "crit_rate": 0,
+    "drain": 0,
+    "flinch_chance": 0,
+    "healing": 0,
+    "max_hits": null,
+    "max_turns": null,
+    "min_hits": null,
+    "min_turns": null,
+    "stat_chance": 0
+  },
+  "name": "water-gun",
+  "past_values": [],
+  "power": 40,
+  "pp": 25,
+  "priority": 0,
+  "stat_changes": [],
+  "super_contest_effect": {
+    "url": "https://pokeapi.co/api/v2/super-contest-effect/5/"
+  },
+  "target": {
+    "name": "selected-pokemon",
+    "url": "https://pokeapi.co/api/v2/move-target/10/"
+  },
+  "type": {
+    "name": "water",
+    "url": "https://pokeapi.co/api/v2/type/11/"
+  }
+}
