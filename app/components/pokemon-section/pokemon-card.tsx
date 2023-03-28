@@ -69,29 +69,27 @@ const PokemonCard = ({
           name: targetPoke.name,
           values: scoreOffValues(await makeOffensiveValues(targetPoke, P)),
         };
-        const result = await Promise.all(
-          team.map(async (teamPoke) => {
-            const newDefValues = filterKey(teamDefScores.raw, teamPoke.name);
-            newDefValues[targetPoke.name] = thisPokeDefValues;
-            const newOffValues = filterKey(teamOffScores.raw, teamPoke.name);
-            newOffValues[targetPoke.name] = thisPokeOffValues;
-            return {
-              id: teamPoke.id,
-              delta:
-                Math.round(
-                  (sumCompiledTeamValues(compileTeamValues(newDefValues)) -
-                    teamDefScores.final +
-                    (sumCompiledTeamValues(compileTeamValues(newOffValues)) -
-                      teamOffScores.final) +
-                    ((_.get(moveScores, "[targetPoke.id].finalScore") || 0) -
-                      (_.get(moveScores, "[teamPoke.id].finalScore") || 0)) +
-                    ((statScores[targetPoke.id] || 0) -
-                      (statScores[teamPoke.id] || 0))) *
-                    10
-                ) / 10,
-            };
-          })
-        );
+        const result = team.map((teamPoke) => {
+          const newDefValues = filterKey(teamDefScores.raw, teamPoke.name);
+          newDefValues[targetPoke.name] = thisPokeDefValues;
+          const newOffValues = filterKey(teamOffScores.raw, teamPoke.name);
+          newOffValues[targetPoke.name] = thisPokeOffValues;
+          return {
+            id: teamPoke.id,
+            delta:
+              Math.round(
+                (sumCompiledTeamValues(compileTeamValues(newDefValues)) -
+                  teamDefScores.final +
+                  (sumCompiledTeamValues(compileTeamValues(newOffValues)) -
+                    teamOffScores.final) +
+                  ((_.get(moveScores, "[targetPoke.id].finalScore") || 0) -
+                    (_.get(moveScores, "[teamPoke.id].finalScore") || 0)) +
+                  ((statScores[targetPoke.id] || 0) -
+                    (statScores[teamPoke.id] || 0))) *
+                  10
+              ) / 10,
+          };
+        });
         sortArray(result, { by: "delta", order: "desc" });
         setDeltas(result);
       }

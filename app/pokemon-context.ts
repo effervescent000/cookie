@@ -1,6 +1,11 @@
 import { createContext } from "react";
 
-import type { IPokemonFull, IPokeSkeleton, IValues } from "./interfaces";
+import type {
+  IMoveScores,
+  IPokemonFull,
+  IPokeSkeleton,
+  IValues,
+} from "./interfaces";
 
 export const PokemonContext = createContext<{
   gen: string;
@@ -39,9 +44,7 @@ export const PokemonContext = createContext<{
   activeProfileId: number;
   setActiveProfileId: (arg0: number) => void;
   addNewProfile: () => void;
-  moveScores: {
-    [key: number]: { [key: string]: number | undefined };
-  };
+  moveScores: IMoveScores;
   statScores: { [id: number]: number | undefined };
 }>({
   gen: "",

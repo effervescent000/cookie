@@ -4,6 +4,7 @@ import type {
   IMoveResponse,
   IPokemonFull,
   IPokeSkeleton,
+  ITeamTypeScores,
   IValues,
 } from "~/interfaces";
 
@@ -147,9 +148,9 @@ export const makeTeamOffensiveValues = async (
 };
 
 export const compileTeamValues = (teamValues: {
-  [key: string]: { values: { [key: string]: number } };
+  [pokemon: string]: { values: { [type: string]: number } };
 }) => {
-  const finalValues: { [key: string]: number } = {};
+  const finalValues: { [type: string]: number } = {};
   Object.values(teamValues).forEach(({ values }) => {
     Object.entries(values).forEach(([key, value]) => {
       finalValues[key] = (finalValues[key] || 0) + value;
@@ -355,3 +356,49 @@ export const makeLookup = (
     (acc, cur) => ({ ...acc, [cur[key]]: pluckKey ? cur[pluckKey] : cur }),
     {} as { [key: string]: any }
   );
+
+export const makeDelta = ({
+  teamDefScores,
+  teamOffScores,
+  scoringPokeOffValues,
+  scoringPokeDefValues,
+  teamPokemon,
+  scoringPokemon,
+  moveScores,
+  statScores,
+}: {
+  teamDefScores: ITeamTypeScores;
+  teamOffScores: ITeamTypeScores;
+  scoringPokeOffValues: { name: string; values: { [key: string]: number } };
+  scoringPokeDefValues: { name: string; values: { [key: string]: number } };
+  teamPokemon: IPokeSkeleton;
+  scoringPokemon: IPokeSkeleton;
+  moveScores: {
+    [id: number]: { [move: string]: number | undefined };
+  };
+  statScores: { [id: number]: number | undefined };
+}): number => {
+  const modifiedTeamDefScores = filterKey(teamDefScores.raw, teamPokemon.name);
+  modifiedTeamDefScores[scoringPokemon.name] = scoringPokeDefValues;
+  const modifiedTeamOffScores = filterKey(teamOffScores.raw, teamPokemon.name);
+  modifiedTeamOffScores[scoringPokemon.name] = scoringPokeOffValues;
+
+  const modifiedTotalScore =
+    sumCompiledTeamValues(compileTeamValues(modifiedTeamDefScores)) +
+    sumCompiledTeamValues(compileTeamValues(modifiedTeamOffScores)) +
+    (_.get(moveScores, `[${scoringPokemon.id}].final`) || 0) +
+    (statScores[scoringPokemon.id] || 0);
+
+  const originalTotalScore =
+    teamOffScores.final +
+    teamDefScores.final +
+    (_.get(moveScores, `[${teamPokemon.id}].final`) || 0) +
+    (statScores[teamPokemon.id] || 0);
+
+  return roundToPrecision(modifiedTotalScore - originalTotalScore, 1);
+};
+
+export const roundToPrecision = (value: number, numDigits: number) => {
+  const modifier = Math.pow(10, numDigits);
+  return Math.round(value * modifier) / modifier;
+};

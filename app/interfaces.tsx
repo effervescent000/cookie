@@ -140,3 +140,13 @@ export interface IProfile {
     versionGroup: string;
   };
 }
+
+export interface ITeamTypeScores {
+  final: number;
+  raw: { [key: string]: { values: { [key: string]: number } } };
+  processed: IValues;
+}
+
+export interface IMoveScores {
+  [id: number]: { final: number; [move: string]: number | undefined };
+}
