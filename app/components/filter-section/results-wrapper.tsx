@@ -6,6 +6,7 @@ import { isFullPokemon } from "~/utils/type-guards";
 
 import PokemonMiniCard from "./pokemon-mini-card";
 import PokeAPIService from "~/utils/pokeapi-service";
+import useWindowSize from "~/utils/hooks/use-window-size";
 
 const ResultsWrapper = ({
   output,
@@ -17,6 +18,7 @@ const ResultsWrapper = ({
   merge: (target: IPokemonFull) => void;
 }) => {
   const P = new PokeAPIService();
+  const { windowSize } = useWindowSize();
 
   const filteredOutput = useMemo(() => {
     const filteredByName = filters.name
@@ -37,12 +39,15 @@ const ResultsWrapper = ({
     return _.intersection(filteredByName, filteredByType);
   }, [filters, output]);
 
+  const getGridSize = () => {
+    if (windowSize <= 1080) {
+      return "grid-cols-5";
+    }
+    return filteredOutput.length > 20 ? "grid-cols-8" : "grid-cols-5";
+  };
+
   return (
-    <div
-      className={`grid gap-x-10 ${
-        filteredOutput.length > 20 ? "grid-cols-8" : "grid-cols-5"
-      }`}
-    >
+    <div className={`grid gap-x-10 ${getGridSize()}`}>
       {filteredOutput.map((poke) => (
         <PokemonMiniCard
           key={poke.name}
