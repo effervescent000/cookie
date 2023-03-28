@@ -12,17 +12,15 @@ const Icon = ({
   onClick?: () => void;
   classes?: string;
   dataCy?: string;
-}) => {
-  return (
-    <div>
-      <FontAwesomeIcon
-        icon={icon}
-        onClick={onClick}
-        className={`cursor-pointer ${classes}`}
-        data-cy={dataCy}
-      />
-    </div>
-  );
-};
+}) => (
+  <div>
+    <FontAwesomeIcon
+      icon={icon}
+      onClick={onClick}
+      className={`cursor-pointer ${classes}`}
+      data-cy={dataCy}
+    />
+  </div>
+);
 
 export default Icon;
