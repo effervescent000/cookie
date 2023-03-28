@@ -8,13 +8,11 @@ import { isFullPokemon } from "~/utils/type-guards";
 import { properCase } from "~/utils/text-utils";
 import { PokemonContext } from "~/pokemon-context";
 import {
-  filterKey,
-  compileTeamValues,
-  sumCompiledTeamValues,
   makeDefensiveValues,
   makeOffensiveValues,
   scoreDefValues,
   scoreOffValues,
+  makeDelta,
 } from "~/utils/helpers";
 import PokeAPIService from "~/utils/pokeapi-service";
 
@@ -70,24 +68,18 @@ const PokemonCard = ({
           values: scoreOffValues(await makeOffensiveValues(targetPoke, P)),
         };
         const result = team.map((teamPoke) => {
-          const newDefValues = filterKey(teamDefScores.raw, teamPoke.name);
-          newDefValues[targetPoke.name] = thisPokeDefValues;
-          const newOffValues = filterKey(teamOffScores.raw, teamPoke.name);
-          newOffValues[targetPoke.name] = thisPokeOffValues;
           return {
             id: teamPoke.id,
-            delta:
-              Math.round(
-                (sumCompiledTeamValues(compileTeamValues(newDefValues)) -
-                  teamDefScores.final +
-                  (sumCompiledTeamValues(compileTeamValues(newOffValues)) -
-                    teamOffScores.final) +
-                  ((_.get(moveScores, "[targetPoke.id].finalScore") || 0) -
-                    (_.get(moveScores, "[teamPoke.id].finalScore") || 0)) +
-                  ((statScores[targetPoke.id] || 0) -
-                    (statScores[teamPoke.id] || 0))) *
-                  10
-              ) / 10,
+            delta: makeDelta({
+              teamDefScores,
+              teamOffScores,
+              scoringPokeDefValues: thisPokeDefValues,
+              scoringPokeOffValues: thisPokeOffValues,
+              teamPokemon: teamPoke,
+              scoringPokemon: targetPoke,
+              moveScores,
+              statScores,
+            }),
           };
         });
         sortArray(result, { by: "delta", order: "desc" });

@@ -4,6 +4,7 @@ import type {
   IMoveScores,
   IPokemonFull,
   IPokeSkeleton,
+  ITeamTypeScores,
   IValues,
 } from "./interfaces";
 
@@ -21,21 +22,13 @@ export const PokemonContext = createContext<{
   removeFromBench: (arg0: IPokeSkeleton) => void;
   focusedPokemon: IPokemonFull | undefined;
   setFocusedPokemon: (arg0: IPokemonFull | undefined) => void;
-  teamDefScores: {
-    final: number;
-    raw: { [key: string]: { [key: string]: number } };
-    processed: IValues;
-  };
+  teamDefScores: ITeamTypeScores;
   setTeamDefScores: (arg0: {
     final: number;
     raw: { [key: string]: { [key: string]: number } };
     processed: IValues;
   }) => void;
-  teamOffScores: {
-    final: number;
-    raw: { [key: string]: { [key: string]: number } };
-    processed: IValues;
-  };
+  teamOffScores: ITeamTypeScores;
   setTeamOffScores: (arg0: {
     final: number;
     raw: { [key: string]: { [key: string]: number } };
