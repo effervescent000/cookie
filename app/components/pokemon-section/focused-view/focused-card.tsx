@@ -12,6 +12,7 @@ import EvolutionCard from "./evolution-card";
 import StatBlock from "./stats-block";
 import TypeWeaknessWrapper from "./type-weakness-wrapper";
 import CatchRateCard from "./catch-rate-card";
+import Button from "~/components/common/button";
 
 const FocusedCard = () => {
   const [evolutionInfo, setEvolutionInfo] = useState<
@@ -20,7 +21,8 @@ const FocusedCard = () => {
   const [species, setSpecies] = useState<ISpeciesResponse | undefined>(
     undefined
   );
-  const { focusedPokemon: pokemon } = useContext(PokemonContext);
+  const { focusedPokemon: pokemon, setFocusedPokemon } =
+    useContext(PokemonContext);
 
   useEffect(() => {
     const P = new PokeAPIService();
@@ -43,24 +45,36 @@ const FocusedCard = () => {
   if (!pokemon) return <></>;
 
   return (
-    <div className="max-w-sm border border-light-blue">
+    <div data-cy="focus-frame">
       <div className="flex justify-between">
-        <div className="flex">
-          <div>{properCase(pokemon.species.name)}</div>
-          <div className="flex">
-            {pokemon.types.map(({ type: { name } }) => (
-              <TypeLabel
-                key={name}
-                type={TYPES.find(({ key }) => key === name) as IType}
-              />
-            ))}
-          </div>
-        </div>
-        <div>{species && <CatchRateCard pokemon={species} />}</div>
+        <div />
+        <Button
+          dataCy="close-focus-btn"
+          onClick={() => setFocusedPokemon(undefined)}
+        >
+          Close
+        </Button>
       </div>
-      {evolutionInfo && <EvolutionCard link={evolutionInfo.chain} />}
-      <StatBlock pokemon={pokemon} />
-      <TypeWeaknessWrapper pokemon={pokemon} />
+
+      <div className="max-w-sm border border-light-blue">
+        <div className="flex justify-between">
+          <div className="flex">
+            <div>{properCase(pokemon.species.name)}</div>
+            <div className="flex">
+              {pokemon.types.map(({ type: { name } }) => (
+                <TypeLabel
+                  key={name}
+                  type={TYPES.find(({ key }) => key === name) as IType}
+                />
+              ))}
+            </div>
+          </div>
+          <div>{species && <CatchRateCard pokemon={species} />}</div>
+        </div>
+        {evolutionInfo && <EvolutionCard link={evolutionInfo.chain} />}
+        <StatBlock pokemon={pokemon} />
+        <TypeWeaknessWrapper pokemon={pokemon} />
+      </div>
     </div>
   );
 };

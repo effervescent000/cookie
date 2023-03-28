@@ -37,6 +37,7 @@ const PokemonMiniCard = ({
     if (full && !isFullPokemon(poke)) {
       queryAndAddPokemon(poke.name);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [full, poke]);
 
   const selectPokemon = async () => {
@@ -78,7 +79,7 @@ const PokemonMiniCard = ({
           <div>{properCase(poke.name)}</div>
 
           <div className="grid grid-cols-3 gap-1">
-            <Icon icon={faExpand} onClick={focusPokemon} />
+            <Icon icon={faExpand} onClick={focusPokemon} dataCy="focus-btn" />
             {!hideIcons && (
               <>
                 <Icon
@@ -102,7 +103,7 @@ const PokemonMiniCard = ({
       <div>{properCase(poke.name)}</div>
 
       <div className="grid grid-cols-3 gap-1">
-        <Icon icon={faExpand} onClick={focusPokemon} />
+        <Icon icon={faExpand} onClick={focusPokemon} dataCy="focus-btn" />
         {!hideIcons && (
           <>
             <Icon
