@@ -114,11 +114,11 @@ const fakeAbra = {
   moves: { 1: "", 2: "", 3: "", 4: "" },
 };
 
-const fakeKadabra = {
-  id: 1,
-  name: "kadabra",
-  moves: { 1: "", 2: "", 3: "", 4: "" },
-};
+// const fakeKadabra = {
+//   id: 1,
+//   name: "kadabra",
+//   moves: { 1: "", 2: "", 3: "", 4: "" },
+// };
 
 const fakeAlakazam = {
   id: 2,
