@@ -40,7 +40,7 @@ describe("test easy-evolution feature", () => {
         cy.wrap(abraStats).as("abraStats");
         cy.wait(1000);
         cy.get(makeDataCy("evolve-btn")).click();
-        cy.wait(50);
+        cy.wait(100);
         cy.get(makeDataCy("poke-card-kadabra"))
           .find(makeDataCy("stat-card"))
           .invoke("text")
