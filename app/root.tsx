@@ -13,7 +13,12 @@ import _ from "lodash";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 import reactTooltipStylesheetUrl from "react-tooltip/dist/react-tooltip.css";
 
-import type { IPokemonFull, IPokeSkeleton, IProfile } from "./interfaces";
+import type {
+  IMoveScores,
+  IPokemonFull,
+  IPokeSkeleton,
+  IProfile,
+} from "./interfaces";
 
 import { PokemonContext } from "~/pokemon-context";
 import PokeAPIService from "./utils/pokeapi-service";
@@ -64,9 +69,7 @@ export default function App() {
   const [profileIds, setProfileIds] = useState({ active: -1, counter: 1 });
   const prevTeam = usePrevious(team);
   const prevBench = usePrevious(bench);
-  const [moveScores, setMoveScores] = useState<{
-    [id: number]: { [key: string]: number | undefined };
-  }>({});
+  const [moveScores, setMoveScores] = useState<IMoveScores>({});
   const [statScores, setStatScores] = useState<{
     [id: number]: number | undefined;
   }>({});
@@ -108,7 +111,7 @@ export default function App() {
               ({ id: prevId }) => prevId === pokemon.id
             );
             if (!foundInPrevRoster || !_.isEqual(foundInPrevRoster, pokemon)) {
-              setMoveScores({ ...moveScores, [pokemon.id]: {} });
+              setMoveScores({ ...moveScores, [pokemon.id]: { final: 0 } });
               const fullPokemon = (await P.getPokemonByName([pokemon.name]))[0];
               return {
                 id: pokemon.id,
