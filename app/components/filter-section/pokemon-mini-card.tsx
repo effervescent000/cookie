@@ -116,6 +116,7 @@ const PokemonMiniCard = ({
               <Icon
                 icon={faDownload}
                 onClick={() => queryAndAddPokemon(poke.name)}
+                dataCy="query"
               />
             )}
           </>
