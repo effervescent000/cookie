@@ -187,6 +187,7 @@ const PokemonCard = ({
             <ScoreCard
               label="Stat score"
               value={statScores[targetPoke.id] || 0}
+              dataCy="stat-card"
             />
           </div>
           <EditIcons
