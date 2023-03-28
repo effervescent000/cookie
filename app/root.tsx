@@ -142,7 +142,8 @@ export default function App() {
         await Promise.all(
           fullRoster.map(async (pokemon) => {
             const foundInPrevRoster = prevRoster.find(
-              ({ id: prevId }) => prevId === pokemon.id
+              ({ id: prevId, name: prevName }) =>
+                prevId === pokemon.id && prevName === pokemon.name
             );
             if (!foundInPrevRoster) {
               const fullPokemon = (await P.getPokemonByName([pokemon.name]))[0];
