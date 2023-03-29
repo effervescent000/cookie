@@ -115,7 +115,7 @@ const PokemonCard = ({
         if (match)
           return {
             name: `${properCase(name)} (${
-              (moveScores[targetPoke.id] && moveScores[targetPoke.id][name]) ||
+              _.get(moveScores, `[${targetPoke.id}].moves[${name}].score`) ||
               "---"
             })`,
             value: name,
@@ -156,11 +156,7 @@ const PokemonCard = ({
           <div className="flex items-end justify-between">
             <ScoreCard
               label="Move score"
-              value={
-                (moveScores[targetPoke.id] &&
-                  moveScores[targetPoke.id].finalScore) ||
-                0
-              }
+              value={_.get(moveScores, `[${targetPoke.id}].final`) || 0}
               dataCy="move-score-card"
             />
             {currentLocation === "bench" ? (

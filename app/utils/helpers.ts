@@ -2,6 +2,7 @@ import _ from "lodash";
 
 import type {
   IMoveResponse,
+  IMoveScores,
   IPokemonFull,
   IPokeSkeleton,
   ITeamTypeScores,
@@ -234,7 +235,7 @@ export const scoreAllMoves = async ({
   gen: number;
 }) => {
   const P = new PokeAPIService();
-  const scores: { [key: string]: number } = {};
+  const scores: { [key: string]: { dmg: number; score: number } } = {};
 
   const filteredMoves = pokemon.moves
     .map((move) => ({
@@ -253,10 +254,24 @@ export const scoreAllMoves = async ({
     filteredMoves.map(async (move) => await P.getMove(move.move.name))
   );
   fullMoves.forEach((move) => {
-    scores[move.name] = calcDamage({ pokemon, move, gen });
+    scores[move.name] = scoreSingleMove({ pokemon, move, gen });
   });
 
   return scores;
+};
+
+export const scoreSingleMove = ({
+  pokemon,
+  move,
+  gen,
+}: {
+  pokemon: IPokemonFull;
+  move: IMoveResponse;
+  gen: number;
+}) => {
+  const dmg = calcDamage({ pokemon, move, gen });
+  const score = dmg;
+  return { dmg: roundToPrecision(dmg, 1), score: roundToPrecision(score, 1) };
 };
 
 export const scoreMoves = async ({
@@ -271,7 +286,7 @@ export const scoreMoves = async ({
   gen: number;
 }) => {
   const P = new PokeAPIService();
-  const scores: { [key: string]: number } = {};
+  const scores: { [key: string]: { dmg: number; score: number } } = {};
 
   const filteredMoves = _.uniq(
     Object.values(pokemon.moves).filter((move) => !!move)
@@ -280,8 +295,7 @@ export const scoreMoves = async ({
     filteredMoves.map(async (move) => await P.getMove(move))
   );
   fullMoves.forEach((move) => {
-    scores[move.name] =
-      Math.round(calcDamage({ pokemon: fullPokemon, move, gen }) * 10) / 10;
+    scores[move.name] = scoreSingleMove({ pokemon: fullPokemon, move, gen });
   });
   if (Object.keys(scores).length < 4) {
     const allMovesScored = Object.entries(
@@ -298,9 +312,9 @@ export const scoreMoves = async ({
       scores[move.name] = move.score;
     });
   }
-  scores.finalScore =
-    Math.round(Object.values(scores).reduce((x, y) => x + y, 0)) / 5;
-  return scores;
+  const final =
+    Math.round(Object.values(scores).reduce((x, y) => x + y.score, 0)) / 5;
+  return { final, moves: scores };
 };
 
 export const calcDamage = ({
@@ -442,9 +456,7 @@ export const makeDelta = ({
   scoringPokeDefValues: { name: string; values: { [key: string]: number } };
   teamPokemon: IPokeSkeleton;
   scoringPokemon: IPokeSkeleton;
-  moveScores: {
-    [id: number]: { [move: string]: number | undefined };
-  };
+  moveScores: IMoveScores;
   statScores: { [id: number]: number | undefined };
 }): number => {
   const modifiedTeamDefScores = filterKey(teamDefScores.raw, teamPokemon.name);

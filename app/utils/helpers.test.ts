@@ -12,6 +12,7 @@ import {
   diminishReturns,
   makeDelta,
   roundToPrecision,
+  scoreSingleMove,
 } from "./helpers";
 
 const fakeGothita = {
@@ -183,9 +184,26 @@ test("makeDelta works", () => {
     processed: {},
   };
   const fakeMoveScores: IMoveScores = {
-    0: { final: 3, teleport: 1, pound: 1, scratch: 1 },
-    1: { final: 2, teleport: 1, psychic: 1 },
-    2: { final: 5, teleport: 2, psychic: 2, slam: 1 },
+    0: {
+      final: 3,
+      moves: {
+        teleport: { dmg: 1, score: 1 },
+        pound: { dmg: 1, score: 1 },
+        scratch: { dmg: 1, score: 1 },
+      },
+    },
+    1: {
+      final: 2,
+      moves: { teleport: { dmg: 1, score: 1 }, psychic: { dmg: 1, score: 1 } },
+    },
+    2: {
+      final: 5,
+      moves: {
+        teleport: { dmg: 1, score: 2 },
+        psychic: { dmg: 1, score: 2 },
+        slam: { dmg: 1, score: 1 },
+      },
+    },
   };
   const fakeStatScores: {
     [id: number]: number | undefined;
@@ -219,4 +237,13 @@ test("calcCritRate works", () => {
   expect(calcCritRate({ critStage: 1, gen: 3 })).toBe(1 / 8);
   expect(calcCritRate({ critStage: 1, gen: 7 })).toBe(1 / 8);
   expect(calcCritRate({ critStage: 0, gen: 7 })).toBe(1 / 24);
+});
+
+test("scoreSingleMove works", () => {
+  expect(
+    scoreSingleMove({ pokemon: fakeGothita, move: fakePound, gen: 7 })
+  ).toEqual({ dmg: 3.6, score: 3.6 });
+  expect(
+    scoreSingleMove({ pokemon: fakeGothita, move: fakeConfusion, gen: 7 })
+  ).toEqual({ dmg: 8.2, score: 8.2 });
 });
