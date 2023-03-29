@@ -148,5 +148,10 @@ export interface ITeamTypeScores {
 }
 
 export interface IMoveScores {
-  [id: number]: { final: number; [move: string]: number | undefined };
+  [id: number]: {
+    final: number;
+    moves?: {
+      [move: string]: { dmg?: number; score?: number };
+    };
+  };
 }
