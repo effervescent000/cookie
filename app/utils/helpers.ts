@@ -223,42 +223,20 @@ const getStat = (pokemon: IPokemonFull, stat: string) =>
 const LEVEL = 5;
 const DEFENSE = 70;
 
-export const scoreAllMoves = async ({
-  pokemon,
-  versionGroup,
-  knownMoves,
-  gen,
-}: {
-  pokemon: IPokemonFull;
-  versionGroup: string;
-  knownMoves: string[];
-  gen: number;
-}) => {
-  const P = new PokeAPIService();
-  const scores: { [key: string]: { dmg: number; score: number } } = {};
+// export const scoreAllMoves = async ({
+//   pokemon,
+//   versionGroup,
+//   gen,
+// }: {
+//   pokemon: IPokemonFull;
+//   versionGroup: string;
+//   gen: number;
+// }) => {
+//   const P = new PokeAPIService();
+//   const scores: { [key: string]: { dmg: number; score: number } } = {};
 
-  const filteredMoves = pokemon.moves
-    .map((move) => ({
-      ...move,
-      version_group_details: move.version_group_details.filter(
-        (detail) => detail.version_group.name === versionGroup
-      ),
-    }))
-    .filter(
-      (move) =>
-        move.version_group_details[0] &&
-        !knownMoves.includes(move.move.name) &&
-        move.version_group_details[0].move_learn_method.name !== "machine"
-    );
-  const fullMoves = await Promise.all(
-    filteredMoves.map(async (move) => await P.getMove(move.move.name))
-  );
-  fullMoves.forEach((move) => {
-    scores[move.name] = scoreSingleMove({ pokemon, move, gen });
-  });
-
-  return scores;
-};
+//   return scores;
+// };
 
 export const scoreSingleMove = ({
   pokemon,
@@ -288,32 +266,39 @@ export const scoreMoves = async ({
   const P = new PokeAPIService();
   const scores: { [key: string]: { dmg: number; score: number } } = {};
 
-  const filteredMoves = _.uniq(
+  const thisPokeMoves = _.uniq(
     Object.values(pokemon.moves).filter((move) => !!move)
   );
+
+  const thisVersionMoves = fullPokemon.moves
+    .map((move) => ({
+      ...move,
+      version_group_details: move.version_group_details.filter(
+        (detail) => detail.version_group.name === versionGroup
+      ),
+    }))
+    .filter(
+      (move) =>
+        move.version_group_details[0] &&
+        move.version_group_details[0].move_learn_method.name !== "machine"
+    );
   const fullMoves = await Promise.all(
-    filteredMoves.map(async (move) => await P.getMove(move))
+    thisVersionMoves.map(async (move) => await P.getMove(move.move.name))
   );
   fullMoves.forEach((move) => {
     scores[move.name] = scoreSingleMove({ pokemon: fullPokemon, move, gen });
   });
-  if (Object.keys(scores).length < 4) {
-    const allMovesScored = Object.entries(
-      await scoreAllMoves({
-        pokemon: fullPokemon,
-        versionGroup,
-        knownMoves: filteredMoves,
-        gen,
-      })
-    ).map(([key, value]) => ({ name: key, score: value }));
-    sortArray(allMovesScored, { by: "score", order: "desc" });
-    const slicedMoves = allMovesScored.slice(0, 4 - Object.keys(scores).length);
-    slicedMoves.forEach((move) => {
-      scores[move.name] = move.score;
-    });
-  }
-  const final =
-    Math.round(Object.values(scores).reduce((x, y) => x + y.score, 0)) / 5;
+
+  const movesToSort = Object.entries(scores).map(([key, value]) => ({
+    name: key,
+    value: value.score,
+  }));
+  sortArray(movesToSort, { by: "value", order: "desc" });
+  const movesToScore = [
+    ...thisPokeMoves.map((move) => ({ name: move, value: scores[move].score })),
+    ...movesToSort.slice(0, 4 - thisPokeMoves.length),
+  ];
+  const final = Math.round(movesToScore.reduce((x, y) => x + y.value, 0)) / 5;
   return { final, moves: scores };
 };
 
