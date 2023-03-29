@@ -6,6 +6,7 @@ import type {
 } from "~/interfaces";
 
 import {
+  calcCritRate,
   calcDamage,
   compileTeamValues,
   diminishReturns,
@@ -127,10 +128,18 @@ const fakeAlakazam = {
 };
 
 test("calcDamage works", () => {
-  expect(calcDamage({ pokemon: fakeGothita, move: fakePound })).toBe(3.6875);
-  expect(calcDamage({ pokemon: fakeGothita, move: fakeConfusion })).toBe(
-    8.437499999999998
-  );
+  expect(
+    roundToPrecision(
+      calcDamage({ pokemon: fakeGothita, move: fakePound, gen: 7 }),
+      2
+    )
+  ).toBe(3.58);
+  expect(
+    roundToPrecision(
+      calcDamage({ pokemon: fakeGothita, move: fakeConfusion, gen: 7 }),
+      2
+    )
+  ).toBe(8.2);
 });
 
 test("compileValues works", () => {
@@ -203,4 +212,11 @@ test("makeDelta works", () => {
       statScores: fakeStatScores,
     })
   ).toBe(25 - 14);
+});
+
+test("calcCritRate works", () => {
+  expect(calcCritRate({ critStage: 0, gen: 2 })).toBe(17 / 256);
+  expect(calcCritRate({ critStage: 1, gen: 3 })).toBe(1 / 8);
+  expect(calcCritRate({ critStage: 1, gen: 7 })).toBe(1 / 8);
+  expect(calcCritRate({ critStage: 0, gen: 7 })).toBe(1 / 24);
 });
