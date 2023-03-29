@@ -226,10 +226,12 @@ export const scoreAllMoves = async ({
   pokemon,
   versionGroup,
   knownMoves,
+  gen,
 }: {
   pokemon: IPokemonFull;
   versionGroup: string;
   knownMoves: string[];
+  gen: number;
 }) => {
   const P = new PokeAPIService();
   const scores: { [key: string]: number } = {};
@@ -251,7 +253,7 @@ export const scoreAllMoves = async ({
     filteredMoves.map(async (move) => await P.getMove(move.move.name))
   );
   fullMoves.forEach((move) => {
-    scores[move.name] = calcDamage({ pokemon, move });
+    scores[move.name] = calcDamage({ pokemon, move, gen });
   });
 
   return scores;
@@ -261,10 +263,12 @@ export const scoreMoves = async ({
   pokemon,
   fullPokemon,
   versionGroup,
+  gen,
 }: {
   pokemon: IPokeSkeleton;
   fullPokemon: IPokemonFull;
   versionGroup: string;
+  gen: number;
 }) => {
   const P = new PokeAPIService();
   const scores: { [key: string]: number } = {};
@@ -277,7 +281,7 @@ export const scoreMoves = async ({
   );
   fullMoves.forEach((move) => {
     scores[move.name] =
-      Math.round(calcDamage({ pokemon: fullPokemon, move }) * 10) / 10;
+      Math.round(calcDamage({ pokemon: fullPokemon, move, gen }) * 10) / 10;
   });
   if (Object.keys(scores).length < 4) {
     const allMovesScored = Object.entries(
@@ -285,6 +289,7 @@ export const scoreMoves = async ({
         pokemon: fullPokemon,
         versionGroup,
         knownMoves: filteredMoves,
+        gen,
       })
     ).map(([key, value]) => ({ name: key, score: value }));
     sortArray(allMovesScored, { by: "score", order: "desc" });
@@ -301,9 +306,11 @@ export const scoreMoves = async ({
 export const calcDamage = ({
   pokemon,
   move,
+  gen,
 }: {
   pokemon: IPokemonFull;
   move: IMoveResponse;
+  gen: number;
 }) => {
   try {
     const damage = move.power
@@ -319,7 +326,8 @@ export const calcDamage = ({
           DEFENSE /
           50 +
           2) *
-        (1 + ((move.meta?.crit_rate || 0) + 0.0625) * 1.5) *
+        (1 +
+          calcCritRate({ critStage: move.meta?.crit_rate || 0, gen }) * 1.5) *
         (move.accuracy ? Math.min(move.accuracy, 100) / 100 : 1) *
         (pokemon.types
           .map(({ type: { name } }) => name)
@@ -332,6 +340,67 @@ export const calcDamage = ({
     console.log(`move ${move.name} is malformed`);
     return 0;
   }
+};
+
+export const calcCritRate = ({
+  critStage,
+  gen,
+}: {
+  critStage: number;
+  gen: number;
+}) => {
+  const critRateError = new Error("Invalid crit rate passed to calcCritRate");
+  if (gen === 2) {
+    switch (critStage) {
+      case 0:
+        return 17 / 256;
+      case 1:
+        return 1 / 8;
+      case 2:
+        return 1 / 4;
+      default:
+        throw critRateError;
+    }
+  }
+  if (gen >= 3 && gen <= 5) {
+    switch (critStage) {
+      case 0:
+        return 1 / 16;
+      case 1:
+        return 1 / 8;
+      case 2:
+        return 1 / 4;
+      default:
+        throw critRateError;
+    }
+  }
+  if (gen === 6) {
+    switch (critStage) {
+      case 0:
+        return 1 / 16;
+      case 1:
+        return 1 / 8;
+      case 2:
+        return 1 / 2;
+      default:
+        throw critRateError;
+    }
+  }
+  if (gen >= 7) {
+    switch (critStage) {
+      case 0:
+        return 1 / 24;
+      case 1:
+        return 1 / 8;
+      case 2:
+        return 1 / 2;
+      default:
+        throw critRateError;
+    }
+  }
+  throw new Error(
+    "Gen 1 is currently not supported, or else you passed an invalid gen, oops!"
+  );
 };
 
 export const filterKey = (
