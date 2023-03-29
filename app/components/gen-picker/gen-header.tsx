@@ -5,9 +5,9 @@ const GenHeader = ({
   versionKey,
 }: {
   version: string;
-  selectedVersion: string;
-  setVersion: (arg0: string) => void;
-  versionKey: string;
+  selectedVersion: number | string;
+  setVersion: <Type>(arg0: Type) => void;
+  versionKey: number | string;
 }) => {
   return (
     <span

@@ -48,7 +48,7 @@ export const meta: MetaFunction = () => ({
 
 export default function App() {
   const [pokemonIdCounter, setPokemonIdCounter] = useState(0);
-  const [gen, setGen] = useState("");
+  const [gen, setGen] = useState(0);
   const [versionGroup, setVersionGroup] = useState("");
   const [team, setTeam] = useState<IPokeSkeleton[]>([]);
   const [bench, setBench] = useState<IPokeSkeleton[]>([]);
@@ -275,7 +275,7 @@ export default function App() {
         const { values } = profile;
         setTeam(values.team || []);
         setBench(values.bench || []);
-        setGen(values.gen || "");
+        setGen(+values.gen || 0);
         setVersionGroup(values.versionGroup || "");
         setPokemonIdCounter(+values.pokemonIdCounter || 0);
       }

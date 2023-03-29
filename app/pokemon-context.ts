@@ -9,8 +9,8 @@ import type {
 } from "./interfaces";
 
 export const PokemonContext = createContext<{
-  gen: string;
-  setGen: (arg0: string) => void;
+  gen: number;
+  setGen: (arg0: number) => void;
   versionGroup: string;
   setVersionGroup: (arg0: string) => void;
   team: IPokeSkeleton[];
@@ -40,7 +40,7 @@ export const PokemonContext = createContext<{
   moveScores: IMoveScores;
   statScores: { [id: number]: number | undefined };
 }>({
-  gen: "",
+  gen: 0,
   setGen: (target) => {},
   team: [],
   mergeIntoTeam: (target) => {},
