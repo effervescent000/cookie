@@ -16,7 +16,7 @@
         }
       ],
       "bench": [],
-      "gen": "VIII",
+      "gen": 8,
       "versionGroup": "sword-shield",
       "pokemonIdCounter": 0
     }
