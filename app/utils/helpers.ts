@@ -337,7 +337,7 @@ export const calcDamage = ({
       : 0;
     return damage;
   } catch (error) {
-    console.log(`move ${move.name} is malformed`);
+    console.log(`move ${move.name} is malformed, error: ${error}`);
     return 0;
   }
 };

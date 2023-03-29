@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import "cypress-wait-until";
 
 declare global {
   namespace Cypress {
