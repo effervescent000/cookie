@@ -6,14 +6,14 @@ import GenHeader from "./gen-header";
 const GenHeaderWrapper = () => {
   const { gen: selectedGen, setGen } = useContext(PokemonContext);
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-3" data-cy="gen-selector">
       {VERSIONS.map((vrs) => (
         <GenHeader
           key={vrs.name}
           version={vrs.name}
           selectedVersion={selectedGen}
-          setVersion={setGen}
-          versionKey={vrs.name}
+          setVersion={(value) => setGen(value as number)}
+          versionKey={vrs.value}
         />
       ))}
     </div>

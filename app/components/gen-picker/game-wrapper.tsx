@@ -5,7 +5,7 @@ import GenHeader from "./gen-header";
 
 const GameWrapper = () => {
   const { gen, versionGroup, setVersionGroup } = useContext(PokemonContext);
-  const foundGen = VERSIONS.find(({ name }) => gen === name);
+  const foundGen = VERSIONS.find(({ value }) => gen === value);
 
   return (
     <div className="flex gap-3">
@@ -15,7 +15,7 @@ const GameWrapper = () => {
             key={child.key}
             version={child.name}
             versionKey={child.key}
-            setVersion={setVersionGroup}
+            setVersion={(value) => setVersionGroup(value as string)}
             selectedVersion={versionGroup}
           />
         ))}

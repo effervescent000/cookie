@@ -1,14 +1,4 @@
-export const REGIONS = [
-  "kanto",
-  "johto",
-  "hoenn",
-  "sinnoh",
-  "unova",
-  "kalos",
-  "alola",
-  "galar",
-  "paldea",
-];
+import { makeLookup } from "~/utils/helpers";
 
 export const VERSIONS = [
   {
@@ -73,4 +63,6 @@ export const VERSIONS = [
     ],
   },
   { name: "IX", children: [{ name: "S/V", key: "scarlet-violet" }] },
-];
+].map((gen, i) => ({ ...gen, value: i + 1 }));
+
+export const GEN_LOOKUP = makeLookup(VERSIONS, "value");
