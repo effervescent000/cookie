@@ -223,21 +223,6 @@ const getStat = (pokemon: IPokemonFull, stat: string) =>
 const LEVEL = 5;
 const DEFENSE = 70;
 
-// export const scoreAllMoves = async ({
-//   pokemon,
-//   versionGroup,
-//   gen,
-// }: {
-//   pokemon: IPokemonFull;
-//   versionGroup: string;
-//   gen: number;
-// }) => {
-//   const P = new PokeAPIService();
-//   const scores: { [key: string]: { dmg: number; score: number } } = {};
-
-//   return scores;
-// };
-
 export const scoreSingleMove = ({
   pokemon,
   move,
