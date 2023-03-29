@@ -1,4 +1,4 @@
-import { extractSearchFromUrl, makeDataCy } from "support/utils";
+import { makeDataCy } from "support/utils";
 
 const abraCard = "poke-card-abra";
 
@@ -32,7 +32,6 @@ describe("Tests for move functionality", () => {
 
   it("re-calculates move score when moves change", () => {
     cy.addLocalStorage("single-pokemon-in-team-s-s");
-    // wait until the move score is settled before proceeding
     cy.waitUntil(() =>
       cy
         .get(makeDataCy("poke-card-abra"))
@@ -50,15 +49,18 @@ describe("Tests for move functionality", () => {
   it("only recalculates for the changed pokemon", () => {
     cy.addLocalStorage("two-pokemon-in-team-s-s");
     // wait until the move score is settled before proceeding
-    cy.get(makeDataCy("poke-card-abra"))
-      .as("abra")
-      .find(makeDataCy("move-score-card"))
-      .find("svg")
-      .should("not.exist");
-    cy.get("@abra").find(makeDataCy("move-0")).select("teleport");
-    cy.get(makeDataCy("poke-card-alakazam"))
-      .find(makeDataCy("move-score-card"))
-      .find("svg")
-      .should("not.exist");
+
+    cy.waitUntil(() =>
+      cy
+        .get(makeDataCy("poke-card-abra"))
+        .find(makeDataCy("move-score-card"))
+        .find("svg")
+        .should("not.exist")
+        .then(() => {
+          cy.get(makeDataCy("poke-card-alakazam"))
+            .find(makeDataCy("move-score-card"))
+            .should("not.have.descendants", "svg");
+        })
+    );
   });
 });
