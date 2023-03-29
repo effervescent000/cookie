@@ -111,7 +111,10 @@ export default function App() {
               ({ id: prevId }) => prevId === pokemon.id
             );
             if (!foundInPrevRoster || !_.isEqual(foundInPrevRoster, pokemon)) {
-              setMoveScores({ ...moveScores, [pokemon.id]: { final: 0 } });
+              setMoveScores({
+                ...moveScores,
+                [pokemon.id]: { final: 0, moves: {} },
+              });
               const fullPokemon = (await P.getPokemonByName([pokemon.name]))[0];
               return {
                 id: pokemon.id,
@@ -125,7 +128,7 @@ export default function App() {
             }
             return {
               id: pokemon.id,
-              scores: moveScores ? moveScores[pokemon.id] : undefined,
+              scores: _.get(moveScores, `[${pokemon.id}]`),
             };
           })
         )

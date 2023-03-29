@@ -150,7 +150,7 @@ export interface ITeamTypeScores {
 export interface IMoveScores {
   [id: number]: {
     final: number;
-    moves?: {
+    moves: {
       [move: string]: { dmg?: number; score?: number };
     };
   };
