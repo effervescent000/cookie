@@ -9,7 +9,7 @@ interface IAbility {
   };
 }
 
-interface IMove {
+export interface IMove {
   move: IResourceListItem;
   version_group_details: {
     level_learned_at: number;

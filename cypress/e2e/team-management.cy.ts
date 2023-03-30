@@ -4,6 +4,7 @@ describe("roster management tests", () => {
   beforeEach(() => {
     cy.visitAndCheck("/");
   });
+
   it("can add a pokemon to the bench and team", () => {
     cy.addLocalStorage("empty-roster-s-s");
     cy.get(makeDataCy("mini-card-abra"))
@@ -15,6 +16,7 @@ describe("roster management tests", () => {
       .click();
     cy.get(makeDataCy("frame-team")).find(makeDataCy("poke-card-abra"));
   });
+
   it("can delete a pokemon from the team", () => {
     cy.addLocalStorage("single-pokemon-in-team-s-s");
     cy.get(makeDataCy("frame-team"))
@@ -24,5 +26,18 @@ describe("roster management tests", () => {
     cy.get(makeDataCy("frame-team"))
       .find(makeDataCy("poke-card-abra"))
       .should("not.exist");
+  });
+
+  it("can select moves that previous evolutions could learn", () => {
+    cy.addLocalStorage("jolteon-in-roster-s-m");
+    cy.waitUntil(() => cy.get(makeDataCy("poke-card-jolteon")).as("jolteon"));
+    cy.get("@jolteon")
+      .find(makeDataCy("move-0"))
+      .as("jolteonMoves")
+      .contains("Bite");
+    cy.get("@jolteonMoves")
+      .find("option")
+      .filter(":contains('Confide')")
+      .should("have.length", 1);
   });
 });
