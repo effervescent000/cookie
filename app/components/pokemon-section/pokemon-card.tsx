@@ -2,7 +2,7 @@ import { useMemo, useContext, useState, useEffect } from "react";
 import _ from "lodash";
 import sortArray from "sort-array";
 
-import type { IPokemonFull, IPokeSkeleton } from "~/interfaces";
+import type { IMove, IPokemonFull, IPokeSkeleton } from "~/interfaces";
 import { isFullPokemon } from "~/utils/type-guards";
 
 import { properCase } from "~/utils/text-utils";
@@ -13,6 +13,7 @@ import {
   scoreDefValues,
   scoreOffValues,
   makeDelta,
+  filterMovesByVersionGroup,
 } from "~/utils/helpers";
 import PokeAPIService from "~/utils/pokeapi-service";
 
@@ -41,18 +42,55 @@ const PokemonCard = ({
   } = useContext(PokemonContext);
   const [fullPoke, setFullPoke] = useState<IPokemonFull>({} as IPokemonFull);
   const [loading, setLoading] = useState(true);
+  const [prevEvoMoves, setPrevEvoMoves] = useState<IMove[]>([]);
   const [deltas, setDeltas] = useState<{ id: number; delta: number }[]>([]);
 
   useEffect(() => {
+    const P = new PokeAPIService();
+    const getPrevEvoMoves = async (pokemon: IPokemonFull): Promise<IMove[]> => {
+      const species = await P.getSpecies(pokemon.species.name);
+      if (species.evolves_from_species) {
+        const parentSpecies = await P.getSpecies(
+          species.evolves_from_species.name
+        );
+        // we dont have a way to tell from the API which varieties evolve to/from which, so
+        // we're forced to just check moves for all the varieties
+        const parentSpeciesVarieties = await P.getPokemonByName(
+          parentSpecies.varieties.map(
+            ({ pokemon: parentVariety }) => parentVariety.name
+          )
+        );
+        const immediateParentMoves = _.uniqBy(
+          _.flatten(
+            parentSpeciesVarieties.map((parent) =>
+              filterMovesByVersionGroup(parent.moves, versionGroup)
+            )
+          ),
+          "id"
+        );
+        return [
+          ...immediateParentMoves,
+          ..._.flatten(
+            await Promise.all(
+              parentSpeciesVarieties.map(
+                async (parent) => await getPrevEvoMoves(parent)
+              )
+            )
+          ),
+        ];
+      }
+      return [];
+    };
+
     const getFullPoke = async () => {
-      const P = new PokeAPIService();
       const result = (await P.getPokemonByName([targetPoke.name]))[0];
+      setPrevEvoMoves(await getPrevEvoMoves(result));
       setFullPoke(result);
       setLoading(false);
     };
     setLoading(true);
     getFullPoke();
-  }, [targetPoke.name]);
+  }, [targetPoke.name, versionGroup]);
 
   useEffect(() => {
     const calcDeltas = async () => {
@@ -107,25 +145,18 @@ const PokemonCard = ({
   const moveList = useMemo(() => {
     const { moves } = fullPoke;
     if (!moves) return [];
-    const filteredMoves = moves
-      .map(({ move: { name }, version_group_details }) => {
-        const match = version_group_details.find(
-          (detail) => detail.version_group.name === versionGroup
-        );
-        if (match)
-          return {
-            name: `${properCase(name)} (${
-              _.get(moveScores, `[${targetPoke.id}].moves[${name}].score`) ||
-              "---"
-            })`,
-            value: name,
-          };
-        return undefined;
-      })
-      .filter((move) => !!move) as { name: string; value: string }[];
+    const filteredMoves = [
+      ...prevEvoMoves,
+      ...filterMovesByVersionGroup(moves, versionGroup),
+    ].map(({ move: { name } }) => ({
+      name: `${properCase(name)} (${
+        _.get(moveScores, `[${targetPoke.id}].moves[${name}].score`) || "---"
+      })`,
+      value: name,
+    }));
     sortArray(filteredMoves, { by: "value" });
     return filteredMoves;
-  }, [fullPoke, moveScores, targetPoke.id, versionGroup]);
+  }, [fullPoke, moveScores, prevEvoMoves, targetPoke.id, versionGroup]);
 
   const mergeMove = (value: string, moveIndex: number) => {
     if (currentLocation === "team") {

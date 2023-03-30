@@ -1,6 +1,7 @@
 import _ from "lodash";
 
 import type {
+  IMove,
   IMoveResponse,
   IMoveScores,
   IPokemonFull,
@@ -452,4 +453,18 @@ export const makeDelta = ({
 export const roundToPrecision = (value: number, numDigits: number) => {
   const modifier = Math.pow(10, numDigits);
   return Math.round(value * modifier) / modifier;
+};
+
+export const filterMovesByVersionGroup = (
+  moves: IMove[],
+  versionGroup: string
+) => {
+  return moves
+    .map((move) => {
+      const foundMove = move.version_group_details.find(
+        (detail) => detail.version_group.name === versionGroup
+      );
+      return foundMove && move;
+    })
+    .filter((move) => !!move) as IMove[];
 };
