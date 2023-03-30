@@ -6,3 +6,5 @@ export const parseAllValues = (obj: { [key: string]: string }) =>
     .reduce((acc, cur) => ({ ...acc, ...cur }), {});
 
 export const extractSearchFromUrl = (url: string) => url.match(/\/(\w+-?)+$/);
+
+export const defaultWaitUntilConfigs = { timeout: 10000, interval: 500 };

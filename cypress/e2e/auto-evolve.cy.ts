@@ -1,4 +1,4 @@
-import { makeDataCy } from "support/utils";
+import { defaultWaitUntilConfigs, makeDataCy } from "support/utils";
 
 describe("test easy-evolution feature", () => {
   beforeEach(() => {
@@ -6,6 +6,10 @@ describe("test easy-evolution feature", () => {
   });
   it("can evolve a pokemon", () => {
     cy.addLocalStorage("single-pokemon-in-team-s-s");
+    cy.waitUntil(
+      () => cy.get(makeDataCy("poke-card-abra")),
+      defaultWaitUntilConfigs
+    );
     cy.get(makeDataCy("evolve-btn")).click();
     cy.get(makeDataCy("poke-card-kadabra"));
   });
