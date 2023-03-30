@@ -66,7 +66,7 @@ const PokemonCard = ({
               filterMovesByVersionGroup(parent.moves, versionGroup)
             )
           ),
-          "id"
+          "move.name"
         );
         return [
           ...immediateParentMoves,
