@@ -145,10 +145,10 @@ const PokemonCard = ({
   const moveList = useMemo(() => {
     const { moves } = fullPoke;
     if (!moves) return [];
-    const filteredMoves = [
-      ...prevEvoMoves,
-      ...filterMovesByVersionGroup(moves, versionGroup),
-    ].map(({ move: { name } }) => ({
+    const filteredMoves = _.uniqBy(
+      [...prevEvoMoves, ...filterMovesByVersionGroup(moves, versionGroup)],
+      "move.name"
+    ).map(({ move: { name } }) => ({
       name: `${properCase(name)} (${
         _.get(moveScores, `[${targetPoke.id}].moves[${name}].score`) || "---"
       })`,
