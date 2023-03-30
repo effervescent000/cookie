@@ -1,9 +1,4 @@
-import type {
-  IMoveResponse,
-  IMoveScores,
-  IPokemonFull,
-  ITeamTypeScores,
-} from "~/interfaces";
+import type { IMoveScores, ITeamTypeScores } from "~/interfaces";
 import {
   fakeAbra,
   fakeAlakazam,
@@ -141,6 +136,7 @@ test("scoreSingleMove works", () => {
   expect(
     scoreSingleMove({ pokemon: fakeGothita, move: fakeConfusion, gen: 7 })
   ).toEqual({ dmg: 8.2, score: 8.2 });
+  // moves below a PP threshold lose points
   expect(
     scoreSingleMove({ pokemon: fakeGothita, move: fakeHydroPump, gen: 7 })
   ).toEqual({ dmg: 7.6, score: 6.1 });

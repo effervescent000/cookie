@@ -233,7 +233,7 @@ export const scoreSingleMove = ({
   gen: number;
 }) => {
   const dmg = calcDamage({ pokemon, move, gen });
-  const score = dmg;
+  const score = dmg * (move.pp && move.pp <= 10 ? 1 - 100 / move.pp / 100 : 1);
   return { dmg: roundToPrecision(dmg, 1), score: roundToPrecision(score, 1) };
 };
 
