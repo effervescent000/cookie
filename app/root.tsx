@@ -89,7 +89,11 @@ export default function App() {
     };
 
     const getTeamOffScores = async () => {
-      const currentScores = await makeTeamOffensiveValues(team, P);
+      const currentScores = await makeTeamOffensiveValues({
+        pokemon: team,
+        P,
+        gen,
+      });
       setTeamOffScores({
         raw: currentScores.raw,
         final: sumCompiledTeamValues(compileTeamValues(currentScores.raw)),

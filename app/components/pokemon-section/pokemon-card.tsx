@@ -106,7 +106,9 @@ const PokemonCard = ({
         };
         const thisPokeOffValues = {
           name: targetPoke.name,
-          values: scoreOffValues(await makeOffensiveValues(targetPoke, P)),
+          values: scoreOffValues(
+            await makeOffensiveValues({ pokemon: targetPoke, P, gen })
+          ),
         };
         const result = team.map((teamPoke) => {
           return {

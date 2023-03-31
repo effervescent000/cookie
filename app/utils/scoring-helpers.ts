@@ -164,10 +164,15 @@ export const makeTeamDefensiveValues = async ({
   };
 };
 
-export const makeOffensiveValues = async (
-  pokemon: IPokeSkeleton,
-  P: PokeAPIService
-) => {
+export const makeOffensiveValues = async ({
+  pokemon,
+  P,
+  gen,
+}: {
+  pokemon: IPokeSkeleton;
+  P: PokeAPIService;
+  gen: number;
+}) => {
   const thisPokeValues: { [key: string]: number } = {};
   const selectedMoves = await Promise.all(
     Object.values(pokemon.moves)
@@ -180,30 +185,50 @@ export const makeOffensiveValues = async (
     selectedMoves.map(async (move) => await P.getType(move.type.name))
   );
   moveTypes.forEach((move) => {
-    Object.entries(move.damage_relations).forEach(
-      ([damage_level, relatedTypes]) => {
-        if (damage_level.includes("_to")) {
-          relatedTypes.forEach((relatedType: IResourceListItem) => {
-            if (
-              thisPokeValues[relatedType.name] === undefined ||
-              thisPokeValues[relatedType.name] <
-                DAMAGE_RELATION_VALUES[damage_level]
-            ) {
-              thisPokeValues[relatedType.name] =
-                DAMAGE_RELATION_VALUES[damage_level];
-            }
-          });
-        }
+    let relations = move.damage_relations;
+    if (gen < 6) {
+      const foundRelations = move.past_damage_relations.find(
+        ({ generation }) =>
+          GEN_LOOKUP_BY_ROMAN_NUMERAL[
+            generation.name.split("-")[1].toUpperCase()
+          ].value >= gen
+      );
+      if (foundRelations) {
+        relations = foundRelations.damage_relations;
       }
-    );
+    }
+    Object.entries(relations).forEach(([damage_level, relatedTypes]) => {
+      if (damage_level.includes("_to")) {
+        relatedTypes.forEach((relatedType: IResourceListItem) => {
+          if (
+            thisPokeValues[relatedType.name] === undefined ||
+            thisPokeValues[relatedType.name] <
+              DAMAGE_RELATION_VALUES[damage_level]
+          ) {
+            thisPokeValues[relatedType.name] =
+              DAMAGE_RELATION_VALUES[damage_level];
+          }
+        });
+      }
+    });
   });
+  const diff = _.difference(
+    getTypes(gen).map(({ key }) => key),
+    Object.keys(thisPokeValues)
+  );
+  diff.forEach((t) => (thisPokeValues[t] = 1));
   return thisPokeValues;
 };
 
-export const makeTeamOffensiveValues = async (
-  pokemon: IPokeSkeleton[],
-  P: PokeAPIService
-) => {
+export const makeTeamOffensiveValues = async ({
+  pokemon,
+  P,
+  gen,
+}: {
+  pokemon: IPokeSkeleton[];
+  P: PokeAPIService;
+  gen: number;
+}) => {
   const finalValues: { final: number; raw: IValues } = { raw: {}, final: 0 };
   const pokeValues: {
     name: string;
@@ -211,7 +236,9 @@ export const makeTeamOffensiveValues = async (
     id: number;
   }[] = await Promise.all(
     pokemon.map(async (poke) => {
-      const thisPokeValues = scoreOffValues(await makeOffensiveValues(poke, P));
+      const thisPokeValues = scoreOffValues(
+        await makeOffensiveValues({ pokemon: poke, P, gen })
+      );
       return { name: poke.name, values: thisPokeValues, id: poke.id };
     })
   );
