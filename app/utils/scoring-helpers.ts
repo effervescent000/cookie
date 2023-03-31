@@ -2,6 +2,7 @@ import _ from "lodash";
 import sortArray from "sort-array";
 
 import type {
+  IMove,
   IMoveResponse,
   IMoveScores,
   IPokemonFull,
@@ -21,17 +22,20 @@ import {
   roundToPrecision,
 } from "./helpers";
 import { getPokemonTypes } from "./type-helpers";
+import { makeLookup } from "./general-utils";
 
 export const scoreSingleMove = async ({
   pokemon,
   move,
   gen,
+  target,
 }: {
   pokemon: IPokemonFull;
   move: IMoveResponse;
   gen: number;
+  target?: IPokemonFull;
 }) => {
-  const dmg = await calcDamage({ pokemon, move, gen });
+  const dmg = await calcDamage({ pokemon, move, gen, target });
   const score = dmg * (move.pp && move.pp <= 10 ? 1 - 100 / move.pp / 100 : 1);
   return { dmg: roundToPrecision(dmg, 1), score: roundToPrecision(score, 1) };
 };
@@ -41,11 +45,15 @@ export const scoreMoves = async ({
   fullPokemon,
   versionGroup,
   gen,
+  target,
+  onlyKnown,
 }: {
   pokemon: IPokeSkeleton;
   fullPokemon: IPokemonFull;
   versionGroup: string;
   gen: number;
+  target?: IPokemonFull;
+  onlyKnown?: boolean;
 }) => {
   const P = new PokeAPIService();
   const scores: { [key: string]: { dmg: number; score: number } } = {};
@@ -54,25 +62,35 @@ export const scoreMoves = async ({
     Object.values(pokemon.moves).filter((move) => !!move)
   );
 
-  const thisVersionMoves = fullPokemon.moves
-    .map((move) => ({
-      ...move,
-      version_group_details: move.version_group_details.filter(
-        (detail) => detail.version_group.name === versionGroup
-      ),
-    }))
-    .filter(
-      (move) =>
-        move.version_group_details[0] &&
-        move.version_group_details[0].move_learn_method.name !== "machine"
+  let movesToScore: IMove[] = [];
+  if (onlyKnown) {
+    const knownMoves = Object.values(pokemon.moves);
+    movesToScore = fullPokemon.moves.filter((move) =>
+      knownMoves.includes(move.move.name)
     );
+  } else {
+    movesToScore = fullPokemon.moves
+      .map((move) => ({
+        ...move,
+        version_group_details: move.version_group_details.filter(
+          (detail) => detail.version_group.name === versionGroup
+        ),
+      }))
+      .filter(
+        (move) =>
+          move.version_group_details[0] &&
+          move.version_group_details[0].move_learn_method.name !== "machine"
+      );
+  }
+
   const scoredMoves = await Promise.all(
-    thisVersionMoves.map(async (move) => ({
+    movesToScore.map(async (move) => ({
       name: move.move.name,
       score: await scoreSingleMove({
         move: await P.getMove(move.move.name),
         pokemon: fullPokemon,
         gen,
+        target,
       }),
     }))
   );
@@ -85,11 +103,11 @@ export const scoreMoves = async ({
     value: value.score,
   }));
   sortArray(movesToSort, { by: "value", order: "desc" });
-  const movesToScore = [
+  const finalMoves = [
     ...thisPokeMoves.map((move) => ({ name: move, value: scores[move].score })),
     ...movesToSort.slice(0, 4 - thisPokeMoves.length),
   ];
-  const final = Math.round(movesToScore.reduce((x, y) => x + y.value, 0)) / 5;
+  const final = Math.round(finalMoves.reduce((x, y) => x + y.value, 0)) / 5;
   return { final, moves: scores };
 };
 
@@ -358,4 +376,50 @@ export const makeDelta = ({
     (statScores[teamPokemon.id] || 0);
 
   return roundToPrecision(modifiedTotalScore - originalTotalScore, 1);
+};
+
+export const scoreTeamMovesVsTarget = async ({
+  team,
+  target,
+  P,
+  gen,
+  versionGroup,
+}: {
+  team: IPokeSkeleton[];
+  target: IPokemonFull;
+  P: PokeAPIService;
+  gen: number;
+  versionGroup: string;
+}) => {
+  const teamFullPokemon = makeLookup(
+    await P.getPokemonByName(team.map(({ name }) => name)),
+    "name"
+  );
+  const allMovesScored = await Promise.all(
+    team.map(async (attacker) => {
+      const scoreResult = await scoreMoves({
+        pokemon: attacker,
+        fullPokemon: teamFullPokemon[attacker.name],
+        versionGroup,
+        gen,
+        target,
+        onlyKnown: true,
+      });
+      const arrayedResult = Object.entries(scoreResult.moves).map(
+        ([key, value]) => ({ name: key, score: value.score })
+      );
+      sortArray(arrayedResult, { by: "score", order: "desc" });
+
+      return {
+        pokemon: attacker,
+        scores: arrayedResult,
+      };
+    })
+  );
+  sortArray(allMovesScored, {
+    by: "score",
+    computed: { score: (pokemon) => pokemon.scores[0].score },
+    order: "desc",
+  });
+  return allMovesScored;
 };

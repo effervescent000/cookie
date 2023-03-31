@@ -14,6 +14,7 @@ import StatBlock from "./stats-block";
 import TypeWeaknessWrapper from "./type-weakness-wrapper";
 import CatchRateCard from "./catch-rate-card";
 import Button from "~/components/common/button";
+import VersusCard from "./versus-card";
 
 const FocusedCard = () => {
   const [evolutionInfo, setEvolutionInfo] = useState<
@@ -22,6 +23,7 @@ const FocusedCard = () => {
   const [species, setSpecies] = useState<ISpeciesResponse | undefined>(
     undefined
   );
+
   const {
     focusedPokemon: pokemon,
     setFocusedPokemon,
@@ -80,6 +82,7 @@ const FocusedCard = () => {
         {evolutionInfo && <EvolutionCard link={evolutionInfo.chain} />}
         <StatBlock pokemon={pokemon} />
         <TypeWeaknessWrapper pokemon={pokemon} />
+        <VersusCard pokemon={pokemon} gen={gen} />
       </div>
     </div>
   );
