@@ -2,11 +2,11 @@ import { useContext, useEffect, useState } from "react";
 
 import type { IValues } from "~/interfaces";
 
-import { DEFENSIVE_KEY, TYPES } from "~/constants/types-constants";
+import { DEFENSIVE_KEY, getTypes } from "~/constants/types-constants";
 import { PokemonContext } from "~/pokemon-context";
-import { sumValues } from "~/utils/helpers";
 
 import ElementCard from "./element-card";
+import { sumValues } from "~/utils/scoring-helpers";
 
 const ElementalFrame = ({
   title,
@@ -15,7 +15,8 @@ const ElementalFrame = ({
   title: string;
   tableType: string;
 }) => {
-  const { team, teamDefScores, teamOffScores } = useContext(PokemonContext);
+  const { team, teamDefScores, teamOffScores, gen } =
+    useContext(PokemonContext);
   const [values, setValues] = useState<IValues>({});
 
   useEffect(() => {
@@ -43,7 +44,7 @@ const ElementalFrame = ({
         <span>{values && Math.round(sumValues(values))}</span>
       </div>
       <div className="grid grid-cols-6 gap-x-2">
-        {TYPES.map((type) => (
+        {getTypes(gen).map((type) => (
           <ElementCard
             key={type.key}
             type={type}

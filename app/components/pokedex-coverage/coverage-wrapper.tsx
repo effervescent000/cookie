@@ -4,18 +4,18 @@ import _ from "lodash";
 import type { IPokemonFull, IResourceListItem } from "~/interfaces";
 
 import { isFullPokemon } from "~/utils/type-guards";
-import { makeDefensiveValues, scoreDefValues } from "~/utils/helpers";
 import PokeAPIService from "~/utils/pokeapi-service";
 import { PokemonContext } from "~/pokemon-context";
 
 import PokemonMiniCard from "../filter-section/pokemon-mini-card";
+import { makeDefensiveValues, scoreDefValues } from "~/utils/scoring-helpers";
 
 const CoverageWrapper = ({
   allPokemon,
 }: {
   allPokemon: (IPokemonFull | IResourceListItem)[];
 }) => {
-  const { team } = useContext(PokemonContext);
+  const { team, gen } = useContext(PokemonContext);
   const [coverageData, setCoverageData] = useState<{
     count: number;
     uncoveredPokemon: IPokemonFull[];
@@ -51,7 +51,9 @@ const CoverageWrapper = ({
       const defValuesByPoke = await Promise.all(
         readyPokemon.map(async (poke) => ({
           fullPoke: poke,
-          values: scoreDefValues(await makeDefensiveValues(poke, P)),
+          values: scoreDefValues(
+            await makeDefensiveValues({ pokemon: poke, P, gen })
+          ),
         }))
       );
       defValuesByPoke.forEach((poke) => {

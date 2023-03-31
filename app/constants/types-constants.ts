@@ -21,7 +21,7 @@ const ALL_TYPES: IType[] = [
   { key: "fairy", bgColor: "#9B6470", abbr: "FAIR", gen: 6 },
 ];
 
-export const getTypes = (selectedGen: number) =>
+export const getTypes = (selectedGen: number = 9) =>
   ALL_TYPES.filter(({ gen }) => !gen || gen <= selectedGen);
 
 export const OFFENSIVE_KEY = "offensive";

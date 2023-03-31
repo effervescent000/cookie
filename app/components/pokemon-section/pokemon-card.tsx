@@ -7,14 +7,7 @@ import { isFullPokemon } from "~/utils/type-guards";
 
 import { properCase } from "~/utils/text-utils";
 import { PokemonContext } from "~/pokemon-context";
-import {
-  makeDefensiveValues,
-  makeOffensiveValues,
-  scoreDefValues,
-  scoreOffValues,
-  makeDelta,
-  filterMovesByVersionGroup,
-} from "~/utils/helpers";
+import { filterMovesByVersionGroup } from "~/utils/helpers";
 import PokeAPIService from "~/utils/pokeapi-service";
 
 import Select from "../common/select";
@@ -22,6 +15,13 @@ import EditIcons from "./edit-icons";
 import SpriteFrame from "../common/sprite-frame";
 import ScoreCard from "./score-card";
 import EvolutionSelector from "./evolution-selector";
+import {
+  makeDefensiveValues,
+  makeDelta,
+  makeOffensiveValues,
+  scoreDefValues,
+  scoreOffValues,
+} from "~/utils/scoring-helpers";
 
 const PokemonCard = ({
   targetPoke,
@@ -39,6 +39,7 @@ const PokemonCard = ({
     teamOffScores,
     moveScores,
     statScores,
+    gen,
   } = useContext(PokemonContext);
   const [fullPoke, setFullPoke] = useState<IPokemonFull>({} as IPokemonFull);
   const [loading, setLoading] = useState(true);
@@ -99,7 +100,9 @@ const PokemonCard = ({
         const P = new PokeAPIService();
         const thisPokeDefValues = {
           name: targetPoke.name,
-          values: scoreDefValues(await makeDefensiveValues(fullPoke, P)),
+          values: scoreDefValues(
+            await makeDefensiveValues({ pokemon: fullPoke, P, gen })
+          ),
         };
         const thisPokeOffValues = {
           name: targetPoke.name,
@@ -134,6 +137,7 @@ const PokemonCard = ({
       calcDeltas();
   }, [
     fullPoke,
+    gen,
     moveScores,
     statScores,
     targetPoke,
