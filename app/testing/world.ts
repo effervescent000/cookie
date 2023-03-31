@@ -981,3 +981,118 @@ export const fakeSteelType = {
     },
   ],
 };
+
+export const fakePsychicType = {
+  damage_relations: {
+    double_damage_from: [
+      {
+        name: "bug",
+        url: "https://pokeapi.co/api/v2/type/7/",
+      },
+      {
+        name: "ghost",
+        url: "https://pokeapi.co/api/v2/type/8/",
+      },
+      {
+        name: "dark",
+        url: "https://pokeapi.co/api/v2/type/17/",
+      },
+    ],
+    double_damage_to: [
+      {
+        name: "fighting",
+        url: "https://pokeapi.co/api/v2/type/2/",
+      },
+      {
+        name: "poison",
+        url: "https://pokeapi.co/api/v2/type/4/",
+      },
+    ],
+    half_damage_from: [
+      {
+        name: "fighting",
+        url: "https://pokeapi.co/api/v2/type/2/",
+      },
+      {
+        name: "psychic",
+        url: "https://pokeapi.co/api/v2/type/14/",
+      },
+    ],
+    half_damage_to: [
+      {
+        name: "steel",
+        url: "https://pokeapi.co/api/v2/type/9/",
+      },
+      {
+        name: "psychic",
+        url: "https://pokeapi.co/api/v2/type/14/",
+      },
+    ],
+    no_damage_from: [],
+    no_damage_to: [
+      {
+        name: "dark",
+        url: "https://pokeapi.co/api/v2/type/17/",
+      },
+    ],
+  },
+  generation: {
+    name: "generation-i",
+    url: "https://pokeapi.co/api/v2/generation/1/",
+  },
+  id: 14,
+  move_damage_class: {
+    name: "special",
+    url: "https://pokeapi.co/api/v2/move-damage-class/3/",
+  },
+  name: "psychic",
+  past_damage_relations: [
+    {
+      damage_relations: {
+        double_damage_from: [
+          {
+            name: "bug",
+            url: "https://pokeapi.co/api/v2/type/7/",
+          },
+        ],
+        double_damage_to: [
+          {
+            name: "fighting",
+            url: "https://pokeapi.co/api/v2/type/2/",
+          },
+          {
+            name: "poison",
+            url: "https://pokeapi.co/api/v2/type/4/",
+          },
+        ],
+        half_damage_from: [
+          {
+            name: "fighting",
+            url: "https://pokeapi.co/api/v2/type/2/",
+          },
+          {
+            name: "psychic",
+            url: "https://pokeapi.co/api/v2/type/14/",
+          },
+        ],
+        half_damage_to: [
+          {
+            name: "psychic",
+            url: "https://pokeapi.co/api/v2/type/14/",
+          },
+        ],
+        no_damage_from: [
+          {
+            name: "ghost",
+            url: "https://pokeapi.co/api/v2/type/8/",
+          },
+        ],
+        no_damage_to: [],
+      },
+      generation: {
+        name: "generation-i",
+        url: "https://pokeapi.co/api/v2/generation/1/",
+      },
+    },
+  ],
+};

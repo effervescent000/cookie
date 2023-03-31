@@ -22,7 +22,7 @@ import {
 } from "./helpers";
 import { getPokemonTypes } from "./type-helpers";
 
-export const scoreSingleMove = ({
+export const scoreSingleMove = async ({
   pokemon,
   move,
   gen,
@@ -31,7 +31,7 @@ export const scoreSingleMove = ({
   move: IMoveResponse;
   gen: number;
 }) => {
-  const dmg = calcDamage({ pokemon, move, gen });
+  const dmg = await calcDamage({ pokemon, move, gen });
   const score = dmg * (move.pp && move.pp <= 10 ? 1 - 100 / move.pp / 100 : 1);
   return { dmg: roundToPrecision(dmg, 1), score: roundToPrecision(score, 1) };
 };
@@ -66,11 +66,18 @@ export const scoreMoves = async ({
         move.version_group_details[0] &&
         move.version_group_details[0].move_learn_method.name !== "machine"
     );
-  const fullMoves = await Promise.all(
-    thisVersionMoves.map(async (move) => await P.getMove(move.move.name))
+  const scoredMoves = await Promise.all(
+    thisVersionMoves.map(async (move) => ({
+      name: move.move.name,
+      score: await scoreSingleMove({
+        move: await P.getMove(move.move.name),
+        pokemon: fullPokemon,
+        gen,
+      }),
+    }))
   );
-  fullMoves.forEach((move) => {
-    scores[move.name] = scoreSingleMove({ pokemon: fullPokemon, move, gen });
+  scoredMoves.forEach((move) => {
+    scores[move.name] = move.score;
   });
 
   const movesToSort = Object.entries(scores).map(([key, value]) => ({

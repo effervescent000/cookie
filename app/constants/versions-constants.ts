@@ -1,4 +1,4 @@
-import { makeLookup } from "~/utils/helpers";
+import { makeLookup } from "~/utils/general-utils";
 
 export const VERSIONS = [
   {

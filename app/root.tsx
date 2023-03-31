@@ -22,7 +22,7 @@ import type {
 
 import { PokemonContext } from "~/pokemon-context";
 import PokeAPIService from "./utils/pokeapi-service";
-import { makeLookup, scoreTotalStats } from "./utils/helpers";
+import { scoreTotalStats } from "./utils/helpers";
 import usePrevious from "./utils/hooks/use-previous";
 import {
   compileTeamValues,
@@ -31,6 +31,7 @@ import {
   scoreMoves,
   sumCompiledTeamValues,
 } from "./utils/scoring-helpers";
+import { makeLookup } from "./utils/general-utils";
 
 export const links: LinksFunction = () => {
   return [

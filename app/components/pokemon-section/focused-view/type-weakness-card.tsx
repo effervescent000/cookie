@@ -1,6 +1,7 @@
-import TypeLabel from "~/components/common/type-label";
 import { getTypes } from "~/constants/types-constants";
-import { makeLookup } from "~/utils/helpers";
+import { makeLookup } from "~/utils/general-utils";
+
+import TypeLabel from "~/components/common/type-label";
 
 const TypeWeaknessCard = ({
   label,
