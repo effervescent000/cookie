@@ -1,8 +1,26 @@
-import { defaultWaitUntilConfigs, makeDataCy } from "support/utils";
+import {
+  defaultWaitUntilConfigs,
+  extractSearchFromUrl,
+  makeDataCy,
+} from "support/utils";
 
 describe("roster management tests", () => {
   beforeEach(() => {
     cy.visitAndCheck("/");
+    cy.intercept("**/v2/pokemon/*", (req) => {
+      const targetPokemon = extractSearchFromUrl(req.url);
+      req.reply({ fixture: `pokemon/${targetPokemon}.json` });
+    }).as("getPokemon");
+
+    cy.intercept("**/v2/move/*", (req) => {
+      const targetMove = extractSearchFromUrl(req.url);
+      req.reply({ fixture: `moves/${targetMove}.json` });
+    }).as("getMove");
+
+    cy.intercept("**/v2/type/*", (req) => {
+      const targetType = extractSearchFromUrl(req.url);
+      req.reply({ fixture: `types/${targetType}.json` });
+    }).as("getType");
   });
 
   it("can add a pokemon to the bench and team", () => {
