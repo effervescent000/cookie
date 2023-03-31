@@ -17,6 +17,7 @@ const TypeLabel = ({
       className={`rounded-md py-0.5 px-1 text-center text-white ${
         full && "w-full"
       }`}
+      data-cy="type-label"
     >
       {mini ? type.abbr || properCase(type.key) : properCase(type.key)}
     </div>

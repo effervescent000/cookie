@@ -8,3 +8,20 @@ export const parseAllValues = (obj: { [key: string]: string }) =>
 export const extractSearchFromUrl = (url: string) => url.match(/\/(\w+-?)+$/);
 
 export const defaultWaitUntilConfigs = { timeout: 10000, interval: 500 };
+
+export const makeIntercepts = () => {
+  cy.intercept("**/v2/pokemon/*", (req) => {
+    const targetPokemon = extractSearchFromUrl(req.url);
+    req.reply({ fixture: `pokemon/${targetPokemon}.json` });
+  }).as("getPokemon");
+
+  cy.intercept("**/v2/move/*", (req) => {
+    const targetMove = extractSearchFromUrl(req.url);
+    req.reply({ fixture: `moves/${targetMove}.json` });
+  }).as("getMove");
+
+  cy.intercept("**/v2/type/*", (req) => {
+    const targetType = extractSearchFromUrl(req.url);
+    req.reply({ fixture: `types/${targetType}.json` });
+  }).as("getType");
+};

@@ -5,6 +5,8 @@ import type { IEvolutionResponse, ISpeciesResponse, IType } from "~/interfaces";
 import { PokemonContext } from "~/pokemon-context";
 import { properCase } from "~/utils/text-utils";
 import PokeAPIService from "~/utils/pokeapi-service";
+import { getTypes } from "~/constants/types-constants";
+import { getPokemonTypes } from "~/utils/type-helpers";
 
 import TypeLabel from "~/components/common/type-label";
 import EvolutionCard from "./evolution-card";
@@ -12,7 +14,6 @@ import StatBlock from "./stats-block";
 import TypeWeaknessWrapper from "./type-weakness-wrapper";
 import CatchRateCard from "./catch-rate-card";
 import Button from "~/components/common/button";
-import { getTypes } from "~/constants/types-constants";
 
 const FocusedCard = () => {
   const [evolutionInfo, setEvolutionInfo] = useState<
@@ -27,7 +28,8 @@ const FocusedCard = () => {
     gen,
   } = useContext(PokemonContext);
 
-  const types = getTypes(gen);
+  const typeList = getTypes(gen);
+  const thisPokemonTypes = pokemon ? getPokemonTypes(pokemon, gen) : [];
 
   useEffect(() => {
     const P = new PokeAPIService();
@@ -39,7 +41,6 @@ const FocusedCard = () => {
         const evolutionResult = await P.getEvolutionDetails(
           speciesResult.evolution_chain.url
         );
-
         setEvolutionInfo(evolutionResult);
       }
     };
@@ -66,10 +67,10 @@ const FocusedCard = () => {
           <div className="flex">
             <div>{properCase(pokemon.species.name)}</div>
             <div className="flex">
-              {pokemon.types.map(({ type: { name } }) => (
+              {thisPokemonTypes.map(({ type: { name } }) => (
                 <TypeLabel
                   key={name}
-                  type={types.find(({ key }) => key === name) as IType}
+                  type={typeList.find(({ key }) => key === name) as IType}
                 />
               ))}
             </div>

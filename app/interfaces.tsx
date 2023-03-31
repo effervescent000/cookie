@@ -30,6 +30,10 @@ export interface IPokemonFull {
   moves: IMove[];
   name: string;
   order: number;
+  past_types: {
+    generation: IResourceListItem;
+    types: { slot: number; type: IResourceListItem }[];
+  }[];
   species: IResourceListItem;
   sprites: {
     front_default: string;
