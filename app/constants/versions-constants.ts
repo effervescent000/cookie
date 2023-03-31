@@ -65,4 +65,6 @@ export const VERSIONS = [
   { name: "IX", children: [{ name: "S/V", key: "scarlet-violet" }] },
 ].map((gen, i) => ({ ...gen, value: i + 1 }));
 
-export const GEN_LOOKUP = makeLookup(VERSIONS, "value");
+export const GEN_LOOKUP_BY_INT = makeLookup(VERSIONS, "value");
+
+export const GEN_LOOKUP_BY_ROMAN_NUMERAL = makeLookup(VERSIONS, "name");

@@ -63,15 +63,21 @@ export interface IType {
   abbr?: string;
 }
 
+export interface IDamageRelations {
+  double_damage_from: IResourceListItem[];
+  double_damage_to: IResourceListItem[];
+  half_damage_from: IResourceListItem[];
+  half_damage_to: IResourceListItem[];
+  no_damage_from: IResourceListItem[];
+  no_damage_to: IResourceListItem[];
+}
+
 export interface ITypeResponse {
-  damage_relations: {
-    double_damage_from: IResourceListItem[];
-    double_damage_to: IResourceListItem[];
-    half_damage_from: IResourceListItem[];
-    half_damage_to: IResourceListItem[];
-    no_damage_from: IResourceListItem[];
-    no_damage_to: IResourceListItem[];
-  };
+  damage_relations: IDamageRelations;
+  past_damage_relations: {
+    damage_relations: IDamageRelations;
+    generation: IResourceListItem;
+  }[];
 }
 
 export interface IMoveResponse {

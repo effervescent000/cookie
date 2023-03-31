@@ -77,7 +77,11 @@ export default function App() {
   useEffect(() => {
     const P = new PokeAPIService();
     const getTeamDefScores = async () => {
-      const currentScores = await makeTeamDefensiveValues(team, P);
+      const currentScores = await makeTeamDefensiveValues({
+        pokemon: team,
+        P,
+        gen,
+      });
       setTeamDefScores({
         raw: currentScores.raw,
         final: sumCompiledTeamValues(compileTeamValues(currentScores.raw)),
@@ -96,7 +100,7 @@ export default function App() {
 
     getTeamDefScores();
     getTeamOffScores();
-  }, [team]);
+  }, [gen, team]);
 
   useEffect(() => {
     const getMoveScores = async () => {
