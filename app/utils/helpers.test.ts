@@ -1,4 +1,9 @@
-import { fakeConfusion, fakeGothita, fakePound } from "~/testing/world";
+import {
+  fakeConfusion,
+  fakeGothita,
+  fakePound,
+  fakeMisdreavus,
+} from "~/testing/world";
 import {
   calcCritRate,
   calcDamage,
@@ -11,19 +16,35 @@ test("roundToPrecision works", () => {
   expect(roundToPrecision(3.611111, 2)).toBe(3.61);
 });
 
-test("calcDamage works", () => {
-  expect(
-    roundToPrecision(
-      calcDamage({ pokemon: fakeGothita, move: fakePound, gen: 7 }),
-      2
-    )
-  ).toBe(3.58);
-  expect(
-    roundToPrecision(
-      calcDamage({ pokemon: fakeGothita, move: fakeConfusion, gen: 7 }),
-      2
-    )
-  ).toBe(8.2);
+describe("calcDamage tests", () => {
+  it("calculates damage correctly", () => {
+    expect(
+      roundToPrecision(
+        calcDamage({ pokemon: fakeGothita, move: fakePound, gen: 7 }),
+        2
+      )
+    ).toBe(3.58);
+    expect(
+      roundToPrecision(
+        calcDamage({ pokemon: fakeGothita, move: fakeConfusion, gen: 7 }),
+        2
+      )
+    ).toBe(8.2);
+  });
+
+  it("calculates damage with a target pokemon", () => {
+    expect(
+      roundToPrecision(
+        calcDamage({
+          pokemon: fakeGothita,
+          move: fakeConfusion,
+          gen: 7,
+          target: fakeGothita,
+        }),
+        2
+      )
+    ).toBe(4.29);
+  });
 });
 
 test("diminishReturns works", () => {

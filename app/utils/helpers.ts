@@ -45,10 +45,12 @@ export const calcDamage = ({
   pokemon,
   move,
   gen,
+  target,
 }: {
   pokemon: IPokemonFull;
   move: IMoveResponse;
   gen: number;
+  target?: IPokemonFull;
 }) => {
   try {
     const damage = move.power
@@ -61,7 +63,14 @@ export const calcDamage = ({
             pokemon,
             move.damage_class.name === "physical" ? "attack" : "special-attack"
           ) || 0)) /
-          DEFENSE /
+          ((target &&
+            getStat(
+              target,
+              move.damage_class.name === "physical"
+                ? "defense"
+                : "special-defense"
+            )) ||
+            DEFENSE) /
           50 +
           2) *
         (1 +
