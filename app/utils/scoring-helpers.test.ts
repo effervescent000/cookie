@@ -10,9 +10,13 @@ import {
   fakeGhostType,
   fakeGothita,
   fakeHydroPump,
+  fakeIronHead,
   fakeMisdreavus,
+  fakeMisdreavusSkeleton,
+  fakeNightShade,
   fakePound,
   fakeRegisteel,
+  fakeRegisteelSkeleton,
   fakeSteelType,
 } from "~/testing/world";
 import PokeAPIService from "./pokeapi-service";
@@ -20,6 +24,7 @@ import {
   compileTeamValues,
   makeDefensiveValues,
   makeDelta,
+  makeOffensiveValues,
   scoreSingleMove,
 } from "./scoring-helpers";
 
@@ -192,6 +197,96 @@ describe("makeDefensiveValues works", () => {
           ghost: 0.5,
           dark: 0.5,
           poison: 0,
+        },
+        selectedGen
+      )
+    );
+  });
+});
+
+describe("makeOffensiveValues works", () => {
+  beforeEach(() => {
+    fetchMock.resetMocks();
+  });
+  it("compiles type-matchups correctly for modern games", async () => {
+    const selectedGen = 6;
+    fetchMock.mockIf(/v2\/\w+\//, (req) => {
+      if (req.url.includes("move")) {
+        return JSON.stringify(fakeNightShade);
+      }
+      return JSON.stringify(fakeGhostType);
+    });
+    const P = new PokeAPIService();
+    expect(
+      await makeOffensiveValues({
+        pokemon: fakeMisdreavusSkeleton,
+        P,
+        gen: selectedGen,
+      })
+    ).toStrictEqual(
+      fillOutValues(
+        {
+          ghost: 2,
+          psychic: 2,
+          dark: 0.5,
+          normal: 0,
+        },
+        selectedGen
+      )
+    );
+  });
+
+  it("offensive scoring handles gen I", async () => {
+    const selectedGen = 1;
+    fetchMock.mockIf(/v2\/\w+\//, (req) => {
+      if (req.url.includes("move")) {
+        return JSON.stringify(fakeNightShade);
+      }
+      return JSON.stringify(fakeGhostType);
+    });
+    const P = new PokeAPIService();
+    expect(
+      await makeOffensiveValues({
+        pokemon: fakeMisdreavusSkeleton,
+        P,
+        gen: selectedGen,
+      })
+    ).toStrictEqual(
+      fillOutValues(
+        {
+          ghost: 2,
+          normal: 0,
+          psychic: 0,
+        },
+        selectedGen
+      )
+    );
+  });
+
+  it("defensive scoring handles intermediate gens", async () => {
+    const selectedGen = 2;
+    fetchMock.mockIf(/v2\/\w+\//, (req) => {
+      if (req.url.includes("move")) {
+        return JSON.stringify(fakeIronHead);
+      }
+      return JSON.stringify(fakeSteelType);
+    });
+    const P = new PokeAPIService();
+    expect(
+      await makeOffensiveValues({
+        pokemon: fakeRegisteelSkeleton,
+        P,
+        gen: selectedGen,
+      })
+    ).toStrictEqual(
+      fillOutValues(
+        {
+          rock: 2,
+          ice: 2,
+          steel: 0.5,
+          fire: 0.5,
+          water: 0.5,
+          electric: 0.5,
         },
         selectedGen
       )

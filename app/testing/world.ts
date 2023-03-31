@@ -306,6 +306,18 @@ export const fakeAlakazamSkeleton = {
   moves: { 1: "", 2: "", 3: "", 4: "" },
 };
 
+export const fakeMisdreavusSkeleton = {
+  id: 2,
+  name: "misdreavus",
+  moves: { 1: "night-shade", 2: "", 3: "", 4: "" },
+};
+
+export const fakeRegisteelSkeleton = {
+  id: 2,
+  name: "registeel",
+  moves: { 1: "iron-head", 2: "", 3: "", 4: "" },
+};
+
 // *******************************
 // MOVES
 // *******************************
@@ -443,6 +455,101 @@ export const fakeHydroPump = {
     url: "https://pokeapi.co/api/v2/type/11/",
   },
 } as IMoveResponse;
+
+export const fakeNightShade = {
+  accuracy: 100,
+  damage_class: {
+    name: "special",
+    url: "https://pokeapi.co/api/v2/move-damage-class/3/",
+  },
+  effect_chance: null,
+  effect_changes: [],
+  generation: {
+    name: "generation-i",
+    url: "https://pokeapi.co/api/v2/generation/1/",
+  },
+  id: 101,
+  machines: [],
+  meta: {
+    ailment: {
+      name: "none",
+      url: "https://pokeapi.co/api/v2/move-ailment/0/",
+    },
+    ailment_chance: 0,
+    category: {
+      name: "damage",
+      url: "https://pokeapi.co/api/v2/move-category/0/",
+    },
+    crit_rate: 0,
+    drain: 0,
+    flinch_chance: 0,
+    healing: 0,
+    max_hits: null,
+    max_turns: null,
+    min_hits: null,
+    min_turns: null,
+    stat_chance: 0,
+  },
+  name: "night-shade",
+  past_values: [],
+  power: null,
+  pp: 15,
+  priority: 0,
+  stat_changes: [],
+  type: {
+    name: "ghost",
+    url: "https://pokeapi.co/api/v2/type/8/",
+  },
+};
+
+export const fakeIronHead = {
+  accuracy: 100,
+  damage_class: {
+    name: "physical",
+    url: "https://pokeapi.co/api/v2/move-damage-class/2/",
+  },
+  effect_chance: 30,
+  effect_changes: [],
+  generation: {
+    name: "generation-iv",
+    url: "https://pokeapi.co/api/v2/generation/4/",
+  },
+  id: 442,
+  meta: {
+    ailment: {
+      name: "none",
+      url: "https://pokeapi.co/api/v2/move-ailment/0/",
+    },
+    ailment_chance: 0,
+    category: {
+      name: "damage",
+      url: "https://pokeapi.co/api/v2/move-category/0/",
+    },
+    crit_rate: 0,
+    drain: 0,
+    flinch_chance: 30,
+    healing: 0,
+    max_hits: null,
+    max_turns: null,
+    min_hits: null,
+    min_turns: null,
+    stat_chance: 0,
+  },
+  name: "iron-head",
+  past_values: [],
+  power: 80,
+  pp: 15,
+  priority: 0,
+  stat_changes: [],
+  target: {
+    name: "selected-pokemon",
+    url: "https://pokeapi.co/api/v2/move-target/10/",
+  },
+  type: {
+    name: "steel",
+    url: "https://pokeapi.co/api/v2/type/9/",
+  },
+};
 
 // *******************************
 // TYPES
