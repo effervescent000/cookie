@@ -22,16 +22,15 @@ import type {
 
 import { PokemonContext } from "~/pokemon-context";
 import PokeAPIService from "./utils/pokeapi-service";
+import { makeLookup, scoreTotalStats } from "./utils/helpers";
+import usePrevious from "./utils/hooks/use-previous";
 import {
   compileTeamValues,
-  makeLookup,
   makeTeamDefensiveValues,
   makeTeamOffensiveValues,
   scoreMoves,
-  scoreTotalStats,
   sumCompiledTeamValues,
-} from "./utils/helpers";
-import usePrevious from "./utils/hooks/use-previous";
+} from "./utils/scoring-helpers";
 
 export const links: LinksFunction = () => {
   return [
@@ -77,7 +76,11 @@ export default function App() {
   useEffect(() => {
     const P = new PokeAPIService();
     const getTeamDefScores = async () => {
-      const currentScores = await makeTeamDefensiveValues(team, P);
+      const currentScores = await makeTeamDefensiveValues({
+        pokemon: team,
+        P,
+        gen,
+      });
       setTeamDefScores({
         raw: currentScores.raw,
         final: sumCompiledTeamValues(compileTeamValues(currentScores.raw)),
@@ -96,7 +99,7 @@ export default function App() {
 
     getTeamDefScores();
     getTeamOffScores();
-  }, [team]);
+  }, [gen, team]);
 
   useEffect(() => {
     const getMoveScores = async () => {

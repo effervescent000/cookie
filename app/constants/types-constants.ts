@@ -1,11 +1,7 @@
 import type { IType } from "~/interfaces";
 
-export const TYPES: IType[] = [
-  {
-    key: "normal",
-    abbr: "NRML",
-    bgColor: "#6D6D4E",
-  },
+const ALL_TYPES: IType[] = [
+  { key: "normal", abbr: "NRML", bgColor: "#6D6D4E" },
   { key: "fighting", bgColor: "#7D1F1A", abbr: "FGHT" },
   { key: "flying", bgColor: "#6D5E9C", abbr: "FLY" },
   { key: "poison", bgColor: "#682A68", abbr: "PSN" },
@@ -13,7 +9,7 @@ export const TYPES: IType[] = [
   { key: "rock", bgColor: "#786824", abbr: "ROCK" },
   { key: "bug", bgColor: "#6D7815", abbr: "BUG" },
   { key: "ghost", bgColor: "#493963", abbr: "GHST" },
-  { key: "steel", bgColor: "#787887", abbr: "STL" },
+  { key: "steel", bgColor: "#787887", abbr: "STL", gen: 2 },
   { key: "fire", bgColor: "#9C531F", abbr: "FIRE" },
   { key: "water", bgColor: "#445E9C", abbr: "WTR" },
   { key: "grass", bgColor: "#4E8234", abbr: "GRS" },
@@ -21,14 +17,12 @@ export const TYPES: IType[] = [
   { key: "psychic", bgColor: "#A13959", abbr: "PSY" },
   { key: "ice", bgColor: "#638D8D", abbr: "ICE" },
   { key: "dragon", bgColor: "#4924A1", abbr: "DRGN" },
-  { key: "dark", bgColor: "#49392F", abbr: "DARK" },
-  { key: "fairy", bgColor: "#9B6470", abbr: "FAIR" },
+  { key: "dark", bgColor: "#49392F", abbr: "DARK", gen: 2 },
+  { key: "fairy", bgColor: "#9B6470", abbr: "FAIR", gen: 6 },
 ];
 
-export const TYPE_LOOKUP: { [key: string]: IType } = TYPES.reduce(
-  (acc, cur) => ({ ...acc, [cur.key]: cur }),
-  {}
-);
+export const getTypes = (selectedGen: number = 9) =>
+  ALL_TYPES.filter(({ gen }) => !gen || gen <= selectedGen);
 
 export const OFFENSIVE_KEY = "offensive";
 export const DEFENSIVE_KEY = "defensive";

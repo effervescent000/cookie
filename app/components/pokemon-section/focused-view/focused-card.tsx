@@ -3,7 +3,6 @@ import { useContext, useState, useEffect } from "react";
 import type { IEvolutionResponse, ISpeciesResponse, IType } from "~/interfaces";
 
 import { PokemonContext } from "~/pokemon-context";
-import { TYPES } from "~/constants/types-constants";
 import { properCase } from "~/utils/text-utils";
 import PokeAPIService from "~/utils/pokeapi-service";
 
@@ -13,6 +12,7 @@ import StatBlock from "./stats-block";
 import TypeWeaknessWrapper from "./type-weakness-wrapper";
 import CatchRateCard from "./catch-rate-card";
 import Button from "~/components/common/button";
+import { getTypes } from "~/constants/types-constants";
 
 const FocusedCard = () => {
   const [evolutionInfo, setEvolutionInfo] = useState<
@@ -21,8 +21,13 @@ const FocusedCard = () => {
   const [species, setSpecies] = useState<ISpeciesResponse | undefined>(
     undefined
   );
-  const { focusedPokemon: pokemon, setFocusedPokemon } =
-    useContext(PokemonContext);
+  const {
+    focusedPokemon: pokemon,
+    setFocusedPokemon,
+    gen,
+  } = useContext(PokemonContext);
+
+  const types = getTypes(gen);
 
   useEffect(() => {
     const P = new PokeAPIService();
@@ -64,7 +69,7 @@ const FocusedCard = () => {
               {pokemon.types.map(({ type: { name } }) => (
                 <TypeLabel
                   key={name}
-                  type={TYPES.find(({ key }) => key === name) as IType}
+                  type={types.find(({ key }) => key === name) as IType}
                 />
               ))}
             </div>
