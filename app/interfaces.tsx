@@ -4,9 +4,9 @@ export interface IOptions {
 }
 
 interface IAbility {
-  ability: {
-    name: string;
-  };
+  ability: IResourceListItem;
+  is_hidden?: boolean;
+  slot?: number;
 }
 
 export interface IMove {
@@ -61,6 +61,7 @@ export interface IType {
   color?: string;
   bgColor?: string;
   abbr?: string;
+  gen?: number;
 }
 
 export interface IDamageRelations {

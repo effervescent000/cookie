@@ -12,11 +12,8 @@ import type {
 } from "~/interfaces";
 
 import PokeAPIService from "./pokeapi-service";
-import {
-  DAMAGE_RELATION_VALUES,
-  TYPE_LOOKUP,
-} from "~/constants/types-constants";
-import { GEN_LOOKUP_BY_INT } from "~/constants/versions-constants";
+import { DAMAGE_RELATION_VALUES, getTypes } from "~/constants/types-constants";
+import { GEN_LOOKUP_BY_ROMAN_NUMERAL } from "~/constants/versions-constants";
 import {
   calcDamage,
   diminishReturns,
@@ -103,15 +100,14 @@ export const makeDefensiveValues = async ({
     const typeResponse = await P.getType(typeName);
     let relations = typeResponse.damage_relations;
     if (gen < 6) {
-      const genLookupObj = GEN_LOOKUP_BY_INT[gen];
-      if (genLookupObj) {
-        const foundRelations = typeResponse.past_damage_relations.find(
-          ({ generation }) =>
-            generation.name.split("-")[1].toUpperCase() === genLookupObj.name
-        );
-        if (foundRelations) {
-          relations = foundRelations.damage_relations;
-        }
+      const foundRelations = typeResponse.past_damage_relations.find(
+        ({ generation }) =>
+          GEN_LOOKUP_BY_ROMAN_NUMERAL[
+            generation.name.split("-")[1].toUpperCase()
+          ].value >= gen
+      );
+      if (foundRelations) {
+        relations = foundRelations.damage_relations;
       }
     }
     Object.entries(relations).forEach(([damage_level, relatedTypes]) => {
@@ -125,7 +121,7 @@ export const makeDefensiveValues = async ({
     });
   }
   const diff = _.difference(
-    Object.keys(TYPE_LOOKUP),
+    getTypes(gen).map(({ key }) => key),
     Object.keys(thisPokeValues)
   );
   diff.forEach((t) => (thisPokeValues[t] = 1));
