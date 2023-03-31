@@ -20,6 +20,7 @@ import {
   filterKey,
   roundToPrecision,
 } from "./helpers";
+import { getPokemonTypes } from "./type-helpers";
 
 export const scoreSingleMove = ({
   pokemon,
@@ -95,7 +96,7 @@ export const makeDefensiveValues = async ({
   gen: number;
 }) => {
   const thisPokeValues: { [key: string]: number } = {};
-  for (const typeObj of pokemon.types) {
+  for (const typeObj of getPokemonTypes(pokemon, gen)) {
     const typeName = typeObj.type.name;
     const typeResponse = await P.getType(typeName);
     let relations = typeResponse.damage_relations;

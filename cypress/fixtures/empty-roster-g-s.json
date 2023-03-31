@@ -1,0 +1,14 @@
+{
+  "activeProfileId": 1,
+  "profile-1": {
+    "name": "",
+    "values": {
+      "team": [],
+      "bench": [],
+      "gen": 2,
+      "versionGroup": "gold-silver",
+      "pokemonIdCounter": 0
+    }
+  },
+  "profileIdCounter": 2
+}
