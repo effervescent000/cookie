@@ -112,19 +112,29 @@ test("makeDelta works", () => {
   ).toBe(25 - 14);
 });
 
-test("scoreSingleMove works", () => {
-  expect(
-    scoreSingleMove({ pokemon: fakeGothita, move: fakePound, gen: 7 })
-  ).toEqual({ dmg: 3.6, score: 3.6 });
-  expect(
-    scoreSingleMove({ pokemon: fakeGothita, move: fakeConfusion, gen: 7 })
-  ).toEqual({ dmg: 8.2, score: 8.2 });
-});
+describe("test scoreSingleMove", () => {
+  test("scoreSingleMove works", async () => {
+    expect(
+      await scoreSingleMove({ pokemon: fakeGothita, move: fakePound, gen: 7 })
+    ).toEqual({ dmg: 3.6, score: 3.6 });
+    expect(
+      await scoreSingleMove({
+        pokemon: fakeGothita,
+        move: fakeConfusion,
+        gen: 7,
+      })
+    ).toEqual({ dmg: 8.2, score: 8.2 });
+  });
 
-test("deduct points from low PP moves", () => {
-  expect(
-    scoreSingleMove({ pokemon: fakeGothita, move: fakeHydroPump, gen: 7 })
-  ).toEqual({ dmg: 7.6, score: 6.1 });
+  test("deduct points from low PP moves", async () => {
+    expect(
+      await scoreSingleMove({
+        pokemon: fakeGothita,
+        move: fakeHydroPump,
+        gen: 7,
+      })
+    ).toEqual({ dmg: 7.6, score: 6.1 });
+  });
 });
 
 describe("makeDefensiveValues works", () => {

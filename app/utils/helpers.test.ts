@@ -1,29 +1,57 @@
-import { fakeConfusion, fakeGothita, fakePound } from "~/testing/world";
+import {
+  fakeConfusion,
+  fakeGothita,
+  fakePound,
+  fakePsychicType,
+} from "~/testing/world";
 import {
   calcCritRate,
   calcDamage,
   diminishReturns,
   roundToPrecision,
 } from "./helpers";
+import PokeAPIService from "./pokeapi-service";
 
 test("roundToPrecision works", () => {
   expect(roundToPrecision(3.611111, 1)).toBe(3.6);
   expect(roundToPrecision(3.611111, 2)).toBe(3.61);
 });
 
-test("calcDamage works", () => {
-  expect(
-    roundToPrecision(
-      calcDamage({ pokemon: fakeGothita, move: fakePound, gen: 7 }),
-      2
-    )
-  ).toBe(3.58);
-  expect(
-    roundToPrecision(
-      calcDamage({ pokemon: fakeGothita, move: fakeConfusion, gen: 7 }),
-      2
-    )
-  ).toBe(8.2);
+describe("calcDamage tests", () => {
+  beforeEach(() => {
+    fetchMock.resetMocks();
+  });
+  const P = new PokeAPIService();
+  it("calculates damage correctly", async () => {
+    expect(
+      roundToPrecision(
+        await calcDamage({ pokemon: fakeGothita, move: fakePound, gen: 7 }),
+        2
+      )
+    ).toBe(3.58);
+    expect(
+      roundToPrecision(
+        await calcDamage({ pokemon: fakeGothita, move: fakeConfusion, gen: 7 }),
+        2
+      )
+    ).toBe(8.2);
+  });
+
+  it("calculates damage with a target pokemon", async () => {
+    fetchMock.mockResponse(JSON.stringify(fakePsychicType));
+    expect(
+      roundToPrecision(
+        await calcDamage({
+          pokemon: fakeGothita,
+          move: fakeConfusion,
+          gen: 7,
+          target: fakeGothita,
+          P,
+        }),
+        2
+      )
+    ).toBe(4.29);
+  });
 });
 
 test("diminishReturns works", () => {

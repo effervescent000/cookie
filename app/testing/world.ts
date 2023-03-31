@@ -7,6 +7,14 @@ import type { IMoveResponse, IPokemonFull } from "~/interfaces";
 export const fakeGothita = {
   stats: [
     {
+      base_stat: 45,
+      effort: 0,
+      stat: {
+        name: "hp",
+        url: "https://pokeapi.co/api/v2/stat/1/",
+      },
+    },
+    {
       base_stat: 30,
       effort: 0,
       stat: {
@@ -15,11 +23,35 @@ export const fakeGothita = {
       },
     },
     {
+      base_stat: 50,
+      effort: 0,
+      stat: {
+        name: "defense",
+        url: "https://pokeapi.co/api/v2/stat/3/",
+      },
+    },
+    {
       base_stat: 55,
       effort: 0,
       stat: {
         name: "special-attack",
         url: "https://pokeapi.co/api/v2/stat/4/",
+      },
+    },
+    {
+      base_stat: 65,
+      effort: 1,
+      stat: {
+        name: "special-defense",
+        url: "https://pokeapi.co/api/v2/stat/5/",
+      },
+    },
+    {
+      base_stat: 45,
+      effort: 0,
+      stat: {
+        name: "speed",
+        url: "https://pokeapi.co/api/v2/stat/6/",
       },
     },
   ],
@@ -945,6 +977,121 @@ export const fakeSteelType = {
       generation: {
         name: "generation-v",
         url: "https://pokeapi.co/api/v2/generation/5/",
+      },
+    },
+  ],
+};
+
+export const fakePsychicType = {
+  damage_relations: {
+    double_damage_from: [
+      {
+        name: "bug",
+        url: "https://pokeapi.co/api/v2/type/7/",
+      },
+      {
+        name: "ghost",
+        url: "https://pokeapi.co/api/v2/type/8/",
+      },
+      {
+        name: "dark",
+        url: "https://pokeapi.co/api/v2/type/17/",
+      },
+    ],
+    double_damage_to: [
+      {
+        name: "fighting",
+        url: "https://pokeapi.co/api/v2/type/2/",
+      },
+      {
+        name: "poison",
+        url: "https://pokeapi.co/api/v2/type/4/",
+      },
+    ],
+    half_damage_from: [
+      {
+        name: "fighting",
+        url: "https://pokeapi.co/api/v2/type/2/",
+      },
+      {
+        name: "psychic",
+        url: "https://pokeapi.co/api/v2/type/14/",
+      },
+    ],
+    half_damage_to: [
+      {
+        name: "steel",
+        url: "https://pokeapi.co/api/v2/type/9/",
+      },
+      {
+        name: "psychic",
+        url: "https://pokeapi.co/api/v2/type/14/",
+      },
+    ],
+    no_damage_from: [],
+    no_damage_to: [
+      {
+        name: "dark",
+        url: "https://pokeapi.co/api/v2/type/17/",
+      },
+    ],
+  },
+  generation: {
+    name: "generation-i",
+    url: "https://pokeapi.co/api/v2/generation/1/",
+  },
+  id: 14,
+  move_damage_class: {
+    name: "special",
+    url: "https://pokeapi.co/api/v2/move-damage-class/3/",
+  },
+  name: "psychic",
+  past_damage_relations: [
+    {
+      damage_relations: {
+        double_damage_from: [
+          {
+            name: "bug",
+            url: "https://pokeapi.co/api/v2/type/7/",
+          },
+        ],
+        double_damage_to: [
+          {
+            name: "fighting",
+            url: "https://pokeapi.co/api/v2/type/2/",
+          },
+          {
+            name: "poison",
+            url: "https://pokeapi.co/api/v2/type/4/",
+          },
+        ],
+        half_damage_from: [
+          {
+            name: "fighting",
+            url: "https://pokeapi.co/api/v2/type/2/",
+          },
+          {
+            name: "psychic",
+            url: "https://pokeapi.co/api/v2/type/14/",
+          },
+        ],
+        half_damage_to: [
+          {
+            name: "psychic",
+            url: "https://pokeapi.co/api/v2/type/14/",
+          },
+        ],
+        no_damage_from: [
+          {
+            name: "ghost",
+            url: "https://pokeapi.co/api/v2/type/8/",
+          },
+        ],
+        no_damage_to: [],
+      },
+      generation: {
+        name: "generation-i",
+        url: "https://pokeapi.co/api/v2/generation/1/",
       },
     },
   ],

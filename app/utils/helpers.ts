@@ -1,4 +1,8 @@
 import type { IMove, IMoveResponse, IPokemonFull } from "~/interfaces";
+import type PokeAPIService from "./pokeapi-service";
+
+import { makeDefensiveValues } from "./scoring-helpers";
+import { getPokemonTypes } from "./type-helpers";
 
 export const makeTotalsStats = (pokemon: IPokemonFull) =>
   pokemon.stats.reduce((total, acc) => total + acc.base_stat, 0);
@@ -25,33 +29,27 @@ export const roundToPrecision = (value: number, numDigits: number) => {
   return Math.round(value * modifier) / modifier;
 };
 
-export const makeLookup = (
-  list: { [key: string]: any }[],
-  key: string,
-  pluckKey?: string
-) =>
-  list.reduce(
-    (acc, cur) => ({ ...acc, [cur[key]]: pluckKey ? cur[pluckKey] : cur }),
-    {} as { [key: string]: any }
-  );
-
 const getStat = (pokemon: IPokemonFull, stat: string) =>
   pokemon.stats.find(({ stat: { name } }) => name === stat)?.base_stat;
 
 const LEVEL = 5;
 const DEFENSE = 70;
 
-export const calcDamage = ({
+export const calcDamage = async ({
   pokemon,
   move,
   gen,
+  target,
+  P,
 }: {
   pokemon: IPokemonFull;
   move: IMoveResponse;
   gen: number;
+  target?: IPokemonFull;
+  P?: PokeAPIService;
 }) => {
   try {
-    const damage = move.power
+    const baseDamage = move.power
       ? ((((2 * LEVEL) / 5 + 2) *
           (move.power *
             (move.meta?.min_hits && move.meta?.max_hits
@@ -61,19 +59,37 @@ export const calcDamage = ({
             pokemon,
             move.damage_class.name === "physical" ? "attack" : "special-attack"
           ) || 0)) /
-          DEFENSE /
+          ((target &&
+            getStat(
+              target,
+              move.damage_class.name === "physical"
+                ? "defense"
+                : "special-defense"
+            )) ||
+            DEFENSE) /
           50 +
           2) *
         (1 +
           calcCritRate({ critStage: move.meta?.crit_rate || 0, gen }) * 1.5) *
-        (move.accuracy ? Math.min(move.accuracy, 100) / 100 : 1) *
-        (pokemon.types
-          .map(({ type: { name } }) => name)
-          .includes(move.type.name)
-          ? 1.5
-          : 1)
+        (move.accuracy ? Math.min(move.accuracy, 100) / 100 : 1)
       : 0;
-    return damage;
+
+    const defensiveMultiplier =
+      target && P
+        ? (await makeDefensiveValues({ pokemon: target, gen, P }))[
+            move.type.name
+          ]
+        : 1;
+
+    const damageWithModifiers =
+      baseDamage *
+      (getPokemonTypes(pokemon, gen)
+        .map(({ type: { name } }) => name)
+        .includes(move.type.name)
+        ? 1.5
+        : 1) *
+      defensiveMultiplier;
+    return damageWithModifiers;
   } catch (error) {
     console.log(`move ${move.name} is malformed, error: ${error}`);
     return 0;
