@@ -29,13 +29,15 @@ export const scoreSingleMove = async ({
   move,
   gen,
   target,
+  P,
 }: {
   pokemon: IPokemonFull;
   move: IMoveResponse;
   gen: number;
   target?: IPokemonFull;
+  P?: PokeAPIService;
 }) => {
-  const dmg = await calcDamage({ pokemon, move, gen, target });
+  const dmg = await calcDamage({ pokemon, move, gen, target, P });
   const score = dmg * (move.pp && move.pp <= 10 ? 1 - 100 / move.pp / 100 : 1);
   return { dmg: roundToPrecision(dmg, 1), score: roundToPrecision(score, 1) };
 };
@@ -91,6 +93,7 @@ export const scoreMoves = async ({
         pokemon: fullPokemon,
         gen,
         target,
+        P,
       }),
     }))
   );

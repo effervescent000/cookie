@@ -5,6 +5,85 @@ import type { IMoveResponse, IPokemonFull } from "~/interfaces";
 // *******************************
 
 export const fakeGothita = {
+  abilities: [
+    {
+      ability: {
+        name: "frisk",
+        url: "https://pokeapi.co/api/v2/ability/119/",
+      },
+      is_hidden: false,
+      slot: 1,
+    },
+    {
+      ability: {
+        name: "competitive",
+        url: "https://pokeapi.co/api/v2/ability/172/",
+      },
+      is_hidden: false,
+      slot: 2,
+    },
+    {
+      ability: {
+        name: "shadow-tag",
+        url: "https://pokeapi.co/api/v2/ability/23/",
+      },
+      is_hidden: true,
+      slot: 3,
+    },
+  ],
+  base_experience: 58,
+  forms: [
+    {
+      name: "gothita",
+      url: "https://pokeapi.co/api/v2/pokemon-form/574/",
+    },
+  ],
+  height: 4,
+  id: 574,
+  is_default: true,
+  location_area_encounters: "https://pokeapi.co/api/v2/pokemon/574/encounters",
+  name: "gothita",
+  order: 696,
+  past_types: [],
+  species: {
+    name: "gothita",
+    url: "https://pokeapi.co/api/v2/pokemon-species/574/",
+  },
+  sprites: {
+    back_default:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/574.png",
+    back_female: null,
+    back_shiny:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/574.png",
+    back_shiny_female: null,
+    front_default:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/574.png",
+    front_female: null,
+    front_shiny:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/574.png",
+    front_shiny_female: null,
+    other: {
+      dream_world: {
+        front_default:
+          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/574.svg",
+        front_female: null,
+      },
+      home: {
+        front_default:
+          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/574.png",
+        front_female: null,
+        front_shiny:
+          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/574.png",
+        front_shiny_female: null,
+      },
+      "official-artwork": {
+        front_default:
+          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/574.png",
+        front_shiny:
+          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/574.png",
+      },
+    },
+  },
   stats: [
     {
       base_stat: 45,
@@ -64,7 +143,8 @@ export const fakeGothita = {
       },
     },
   ],
-} as IPokemonFull;
+  weight: 58,
+} as unknown as IPokemonFull;
 
 export const fakeMisdreavus = {
   id: 200,
