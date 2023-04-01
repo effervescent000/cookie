@@ -39,7 +39,7 @@ const VersusCard = ({
   }, [gen, pokemon, team, versionGroup]);
 
   return (
-    <div>
+    <div data-cy="versus-card">
       {versusValues.slice(0, 2).map(({ pokemon, scores }) =>
         scores.length ? (
           <div key={pokemon.name}>

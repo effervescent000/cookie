@@ -24,4 +24,8 @@ export const makeIntercepts = () => {
     const targetType = extractSearchFromUrl(req.url);
     req.reply({ fixture: `types/${targetType}.json` });
   }).as("getType");
+
+  cy.intercept("**/v2/pokemon", (req) => {
+    req.reply();
+  });
 };
