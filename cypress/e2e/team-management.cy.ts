@@ -36,11 +36,10 @@ describe("roster management tests", () => {
   it("can select moves that previous evolutions could learn", () => {
     cy.addLocalStorage("jolteon-in-roster-s-m");
     cy.waitUntil(
-      () => cy.get(makeDataCy("poke-card-jolteon")).as("jolteon"),
+      () => cy.get(makeDataCy("poke-card-jolteon")),
       defaultWaitUntilConfigs
-    );
-    cy.get("@jolteon")
-      .find(makeDataCy("move-0"))
+    )
+      .then((jolteonCard) => cy.wrap(jolteonCard).find(makeDataCy("move-0")))
       .as("jolteonMoves")
       .contains("Bite");
     cy.get("@jolteonMoves")

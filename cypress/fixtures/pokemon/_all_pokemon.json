@@ -1,0 +1,23 @@
+{
+  "count": 1281,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "name": "abra",
+      "url": "https://pokeapi.co/api/v2/pokemon/63/"
+    },
+    {
+      "name": "kadabra",
+      "url": "https://pokeapi.co/api/v2/pokemon/64/"
+    },
+    {
+      "name": "alakazam",
+      "url": "https://pokeapi.co/api/v2/pokemon/65/"
+    },
+    {
+      "name": "jolteon",
+      "url": "https://pokeapi.co/api/v2/pokemon/135/"
+    }
+  ]
+}
