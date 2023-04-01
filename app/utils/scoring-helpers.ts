@@ -408,10 +408,22 @@ export const scoreTeamMovesVsTarget = async ({
         target,
         onlyKnown: true,
       });
+      const attackerDefenses = await makeDefensiveValues({
+        pokemon: teamFullPokemon[attacker.name],
+        P,
+        gen,
+      });
+      const attackerVulnerability = getPokemonTypes(target, gen)
+        .map(({ type: { name } }) => name)
+        .reduce((x, y) => x * (attackerDefenses[y] || 1), 1);
       const arrayedResult = Object.entries(scoreResult.moves).map(
-        ([key, value]) => ({ name: key, score: value.score })
+        ([key, value]) => ({
+          name: key,
+          score:
+            value.score /
+            (attackerVulnerability === 0 ? 0.25 : attackerVulnerability),
+        })
       );
-      sortArray(arrayedResult, { by: "score", order: "desc" });
 
       return {
         pokemon: attacker,
@@ -421,7 +433,9 @@ export const scoreTeamMovesVsTarget = async ({
   );
   sortArray(allMovesScored, {
     by: "score",
-    computed: { score: (pokemon) => pokemon.scores[0].score },
+    computed: {
+      score: (pokemon) => pokemon.scores[0].score,
+    },
     order: "desc",
   });
   return allMovesScored;

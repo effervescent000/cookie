@@ -4,6 +4,7 @@ import { getTypes } from "~/constants/types-constants";
 import type { IMoveScores, ITeamTypeScores } from "~/interfaces";
 
 import {
+  fakeAbraFull,
   fakeAbraSkeleton,
   fakeAlakazamSkeleton,
   fakeConfusion,
@@ -11,10 +12,11 @@ import {
   fakeGothita,
   fakeHydroPump,
   fakeIronHead,
-  fakeMisdreavus,
+  fakeMisdreavusFull,
   fakeMisdreavusSkeleton,
   fakeNightShade,
   fakePound,
+  fakePsychicType,
   fakeRegisteel,
   fakeRegisteelSkeleton,
   fakeSteelType,
@@ -26,6 +28,7 @@ import {
   makeDelta,
   makeOffensiveValues,
   scoreSingleMove,
+  scoreTeamMovesVsTarget,
 } from "./scoring-helpers";
 
 const fillOutValues = (values: { [type: string]: number }, gen: number) => {
@@ -144,7 +147,7 @@ describe("test scoreSingleMove", () => {
         pokemon: fakeGothita,
         move: fakePound,
         gen: 2,
-        target: fakeMisdreavus,
+        target: fakeMisdreavusFull,
         P,
       })
     ).toEqual({ dmg: 0, score: 0 });
@@ -159,7 +162,7 @@ describe("makeDefensiveValues works", () => {
     fetchMock.mockResponseOnce(JSON.stringify(fakeGhostType));
     const P = new PokeAPIService();
     expect(
-      await makeDefensiveValues({ pokemon: fakeMisdreavus, P, gen: 6 })
+      await makeDefensiveValues({ pokemon: fakeMisdreavusFull, P, gen: 6 })
     ).toStrictEqual(
       fillOutValues(
         {
@@ -179,7 +182,7 @@ describe("makeDefensiveValues works", () => {
     fetchMock.mockResponseOnce(JSON.stringify(fakeGhostType));
     const P = new PokeAPIService();
     expect(
-      await makeDefensiveValues({ pokemon: fakeMisdreavus, P, gen: 1 })
+      await makeDefensiveValues({ pokemon: fakeMisdreavusFull, P, gen: 1 })
     ).toStrictEqual(
       fillOutValues(
         {
@@ -287,7 +290,7 @@ describe("makeOffensiveValues works", () => {
     );
   });
 
-  it("defensive scoring handles intermediate gens", async () => {
+  it("offensive scoring handles intermediate gens", async () => {
     const selectedGen = 2;
     fetchMock.mockIf(/v2\/\w+\//, (req) => {
       if (req.url.includes("move")) {
@@ -315,5 +318,41 @@ describe("makeOffensiveValues works", () => {
         selectedGen
       )
     );
+  });
+});
+
+describe("test scoreTeamMovesVsTarget", () => {
+  beforeEach(() => {
+    fetchMock.resetMocks();
+  });
+  it("lowers score for attackers that are vulnerable to their target", async () => {
+    fetchMock.mockIf(/v2\/\w+\//, (req) => {
+      if (req.url.includes("pokemon")) {
+        return JSON.stringify(fakeAbraFull);
+      }
+      if (req.url.includes("move")) {
+        return JSON.stringify(fakeConfusion);
+      }
+      if (req.url.includes("type")) {
+        if (req.url.includes("psychic")) return JSON.stringify(fakePsychicType);
+        if (req.url.includes("ghost")) return JSON.stringify(fakeGhostType);
+      }
+      return "";
+    });
+    const P = new PokeAPIService();
+    expect(
+      await scoreTeamMovesVsTarget({
+        team: [fakeAbraSkeleton],
+        target: fakeMisdreavusFull,
+        P,
+        gen: 7,
+        versionGroup: "sword-shield",
+      })
+    ).toEqual([
+      {
+        pokemon: fakeAbraSkeleton,
+        scores: [{ name: "confusion", score: 5.55 }],
+      },
+    ]);
   });
 });

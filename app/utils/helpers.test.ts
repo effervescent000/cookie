@@ -2,7 +2,7 @@ import {
   fakeConfusion,
   fakeGhostType,
   fakeGothita,
-  fakeMisdreavus,
+  fakeMisdreavusFull,
   fakePound,
   fakePsychicType,
 } from "~/testing/world";
@@ -62,7 +62,7 @@ describe("calcDamage tests", () => {
         pokemon: fakeGothita,
         move: fakePound,
         gen: 2,
-        target: fakeMisdreavus,
+        target: fakeMisdreavusFull,
         P,
       })
     ).toBe(0);
