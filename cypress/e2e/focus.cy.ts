@@ -4,6 +4,7 @@ describe("focus frame tests", () => {
   beforeEach(() => {
     cy.visitAndCheck("/");
   });
+
   it("opens and closes focus frame", () => {
     cy.addLocalStorage("empty-roster-s-s");
     cy.get(makeDataCy("mini-card-abra")).as("abra");
