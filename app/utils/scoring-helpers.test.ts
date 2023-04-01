@@ -135,6 +135,20 @@ describe("test scoreSingleMove", () => {
       })
     ).toEqual({ dmg: 7.6, score: 6.1 });
   });
+
+  it("handles a type modifiers/0 multipliers correctly", async () => {
+    fetchMock.mockResponseOnce(JSON.stringify(fakeGhostType));
+    const P = new PokeAPIService();
+    expect(
+      await scoreSingleMove({
+        pokemon: fakeGothita,
+        move: fakePound,
+        gen: 2,
+        target: fakeMisdreavus,
+        P,
+      })
+    ).toEqual({ dmg: 0, score: 0 });
+  });
 });
 
 describe("makeDefensiveValues works", () => {

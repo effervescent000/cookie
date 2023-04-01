@@ -1,6 +1,8 @@
 import {
   fakeConfusion,
+  fakeGhostType,
   fakeGothita,
+  fakeMisdreavus,
   fakePound,
   fakePsychicType,
 } from "~/testing/world";
@@ -51,6 +53,19 @@ describe("calcDamage tests", () => {
         2
       )
     ).toBe(4.29);
+  });
+
+  it("handles damage modifiers correctly", async () => {
+    fetchMock.mockResponse(JSON.stringify(fakeGhostType));
+    expect(
+      await calcDamage({
+        pokemon: fakeGothita,
+        move: fakePound,
+        gen: 2,
+        target: fakeMisdreavus,
+        P,
+      })
+    ).toBe(0);
   });
 });
 

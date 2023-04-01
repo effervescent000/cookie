@@ -42,7 +42,8 @@ const VersusCard = ({
     <div>
       {versusValues.slice(0, 2).map(({ pokemon, scores }) => (
         <div key={pokemon.name}>
-          Use {properCase(pokemon.name)} with {properCase(scores[0].name)}
+          Use {properCase(pokemon.name)} with {properCase(scores[0].name)} (
+          {scores[0].score} pts)
         </div>
       ))}
     </div>
