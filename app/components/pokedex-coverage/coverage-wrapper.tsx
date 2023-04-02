@@ -8,7 +8,7 @@ import PokeAPIService from "~/utils/pokeapi-service";
 import { PokemonContext } from "~/pokemon-context";
 
 import PokemonMiniCard from "../filter-section/pokemon-mini-card";
-import { makeDefensiveValues, scoreDefValues } from "~/utils/scoring-helpers";
+import { makeDefensiveValues, scoreValues } from "~/utils/scoring-helpers";
 
 const CoverageWrapper = ({
   allPokemon,
@@ -51,7 +51,7 @@ const CoverageWrapper = ({
       const defValuesByPoke = await Promise.all(
         readyPokemon.map(async (poke) => ({
           fullPoke: poke,
-          values: scoreDefValues(
+          values: scoreValues(
             await makeDefensiveValues({ pokemon: poke, P, gen })
           ),
         }))
