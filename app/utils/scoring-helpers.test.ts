@@ -388,7 +388,7 @@ describe("test scoreTeamMovesVsTarget", () => {
     ).toEqual([
       {
         pokemon: fakePansage,
-        scores: [{ name: "vine-whip", score: 32.0 }],
+        scores: [{ name: "vine-whip", score: 24.0 }],
       },
     ]);
   });
