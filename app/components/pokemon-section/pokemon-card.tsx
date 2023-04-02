@@ -177,9 +177,19 @@ const PokemonCard = ({
     <div className="flex" data-cy={`poke-card-${targetPoke.name}`}>
       <div>
         <div>
-          <span>{properCase(targetPoke.name)}</span>
+          <span
+            className={`${
+              targetPoke.name.length >= 12
+                ? targetPoke.name.length >= 20
+                  ? "text-xs"
+                  : "text-sm"
+                : ""
+            }`}
+          >
+            {properCase(targetPoke.name)}
+          </span>
         </div>
-        <div className="">
+        <div>
           <SpriteFrame pokemon={fullPoke} />
           <div className="flex items-end justify-between">
             <ScoreCard
