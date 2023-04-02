@@ -35,7 +35,10 @@ export default function Index() {
   useEffect(() => {
     const checkedResults = allPokemon.map((poke) => {
       if (!isFullPokemon(poke)) return { value: poke, include: true };
-      const moves = poke.moves.slice(0, Math.round(poke.moves.length * 0.2));
+      const moves = poke.moves.slice(
+        0,
+        Math.max(Math.round(poke.moves.length * 0.2), 5)
+      );
       const checkedMoves = moves.map((move) => {
         return !!move.version_group_details.find(
           ({ version_group }) => versionGroup === version_group.name
