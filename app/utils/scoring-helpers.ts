@@ -427,6 +427,7 @@ export const scoreTeamMovesVsTarget = async ({
           ),
         })
       );
+      sortArray(arrayedResult, { by: "score", order: "desc" });
 
       return {
         pokemon: attacker,
