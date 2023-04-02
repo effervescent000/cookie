@@ -381,6 +381,12 @@ export const makeDelta = ({
   return roundToPrecision(modifiedTotalScore - originalTotalScore, 1);
 };
 
+const getAttackerScoreMod = (attackerVulnerability: number) => {
+  if (attackerVulnerability === 0) return 0.25;
+  if (attackerVulnerability >= 1) return attackerVulnerability;
+  return attackerVulnerability + (1 - attackerVulnerability) / 3;
+};
+
 export const scoreTeamMovesVsTarget = async ({
   team,
   target,
@@ -421,8 +427,7 @@ export const scoreTeamMovesVsTarget = async ({
         ([key, value]) => ({
           name: key,
           score: roundToPrecision(
-            value.score /
-              (attackerVulnerability === 0 ? 0.25 : attackerVulnerability),
+            value.score / getAttackerScoreMod(attackerVulnerability),
             1
           ),
         })
