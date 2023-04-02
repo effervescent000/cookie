@@ -8,10 +8,10 @@ export const DEF_SCORING_VALUES = {
 };
 
 export const OFF_SCORING_VALUES = {
-  0: 0,
+  0: -1,
   0.25: 0,
   0.5: 0,
   1: 0.5,
-  2: 1,
-  4: 2,
+  2: 2,
+  4: 4,
 };

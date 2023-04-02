@@ -296,7 +296,6 @@ export const makeTeamOffensiveValues = async ({
 export const scoreValues = ({
   values,
   scores,
-  inflate = false,
 }: {
   values: {
     [key: string]: number;
@@ -304,19 +303,13 @@ export const scoreValues = ({
   scores: {
     [key: number]: number;
   };
-  inflate?: boolean;
 }): { [key: string]: number } => {
   const scoredValues = Object.entries(values).reduce(
     (acc, [key, value]) => ({ ...acc, [key]: scores[value] }),
     { final: 0 }
   );
 
-  const finalValue = Object.values(scoredValues).reduce((x, y) => x + y, 0);
-
-  scoredValues.final =
-    inflate && finalValue >= 0
-      ? finalValue + (10 - Math.min(10, finalValue)) / 4
-      : finalValue;
+  scoredValues.final = Object.values(scoredValues).reduce((x, y) => x + y, 0);
 
   return scoredValues;
 };

@@ -395,14 +395,4 @@ describe("scoreValues scores values", () => {
       final: 1,
     });
   });
-  it("handles increasing values", () => {
-    const values = { bug: 0.5, psychic: 0.5, water: 2 };
-    const scores = DEF_SCORING_VALUES;
-    expect(scoreValues({ values, scores, inflate: true })).toEqual({
-      bug: 1,
-      psychic: 1,
-      water: -1,
-      final: 3.25,
-    });
-  });
 });

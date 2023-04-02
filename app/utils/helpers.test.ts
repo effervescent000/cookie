@@ -90,9 +90,9 @@ describe("calcDamage tests", () => {
 test("diminishReturns works", () => {
   expect(diminishReturns(1)).toBe(1);
   expect(diminishReturns(-1)).toBe(-1);
-  expect(diminishReturns(3)).toBe(3);
+  expect(diminishReturns(4)).toBe(4);
   expect(diminishReturns(-3)).toBe(-3);
-  expect(Math.round(diminishReturns(4) * 10) / 10).toBe(3.6);
+  expect(roundToPrecision(diminishReturns(5), 1)).toBe(4.5);
   expect(Math.round(diminishReturns(-4) * 10) / 10).toBe(-4.3);
 });
 

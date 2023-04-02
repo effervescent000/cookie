@@ -104,12 +104,6 @@ const PokemonCard = ({
             scores: DEF_SCORING_VALUES,
           }),
         };
-        // const thisPokeOffValues = {
-        //   name: targetPoke.name,
-        //   values: scoreValues({values:
-        //     await makeOffensiveValues({ pokemon: targetPoke, P, gen }), scores: OFF_SCORING_VALUES}
-        //   ),
-        // };
         const result = team.map((teamPoke) => {
           return {
             id: teamPoke.id,
@@ -129,8 +123,7 @@ const PokemonCard = ({
     };
 
     if (
-      Object.keys(teamOffScores).length &&
-      Object.keys(teamDefScores).length &&
+      Object.keys(teamDefScores.raw).length &&
       Object.keys(moveScores).length &&
       Object.keys(statScores).length
     )
