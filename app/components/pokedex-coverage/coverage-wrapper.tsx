@@ -9,6 +9,7 @@ import { PokemonContext } from "~/pokemon-context";
 
 import PokemonMiniCard from "../filter-section/pokemon-mini-card";
 import { makeDefensiveValues, scoreValues } from "~/utils/scoring-helpers";
+import { DEF_SCORING_VALUES } from "~/constants/scoring-constants";
 
 const CoverageWrapper = ({
   allPokemon,
@@ -51,9 +52,10 @@ const CoverageWrapper = ({
       const defValuesByPoke = await Promise.all(
         readyPokemon.map(async (poke) => ({
           fullPoke: poke,
-          values: scoreValues(
-            await makeDefensiveValues({ pokemon: poke, P, gen })
-          ),
+          values: scoreValues({
+            values: await makeDefensiveValues({ pokemon: poke, P, gen }),
+            scores: DEF_SCORING_VALUES,
+          }),
         }))
       );
       defValuesByPoke.forEach((poke) => {
@@ -72,7 +74,8 @@ const CoverageWrapper = ({
     };
 
     makeCoverageData();
-  }, [team, readyPokemon]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [team, readyPokemon, gen]);
 
   return (
     <div className="max-h-96 w-40 overflow-auto border border-light-blue">
