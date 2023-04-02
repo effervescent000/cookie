@@ -10,16 +10,22 @@ import {
   fakeConfusion,
   fakeGhostType,
   fakeGothita,
+  fakeGrassType,
   fakeHydroPump,
   fakeIronHead,
   fakeMisdreavusFull,
   fakeMisdreavusSkeleton,
   fakeNightShade,
+  fakePansage,
+  fakePansageFull,
   fakePound,
   fakePsychicType,
   fakeRegisteel,
   fakeRegisteelSkeleton,
+  fakeSimipourFull,
   fakeSteelType,
+  fakeVineWhip,
+  fakeWaterType,
 } from "~/testing/world";
 import PokeAPIService from "./pokeapi-service";
 import {
@@ -351,7 +357,38 @@ describe("test scoreTeamMovesVsTarget", () => {
     ).toEqual([
       {
         pokemon: fakeAbraSkeleton,
-        scores: [{ name: "confusion", score: 5.55 }],
+        scores: [{ name: "confusion", score: 5.6 }],
+      },
+    ]);
+  });
+
+  it("raises score slightly if attacker is less vulnerable", async () => {
+    fetchMock.mockIf(/v2\/\w+\//, (req) => {
+      if (req.url.includes("pokemon")) {
+        return JSON.stringify(fakePansageFull);
+      }
+      if (req.url.includes("move")) {
+        return JSON.stringify(fakeVineWhip);
+      }
+      if (req.url.includes("type")) {
+        if (req.url.includes("grass")) return JSON.stringify(fakeGrassType);
+        if (req.url.includes("water")) return JSON.stringify(fakeWaterType);
+      }
+      return "";
+    });
+    const P = new PokeAPIService();
+    expect(
+      await scoreTeamMovesVsTarget({
+        team: [fakePansage],
+        target: fakeSimipourFull,
+        P,
+        gen: 7,
+        versionGroup: "sword-shield",
+      })
+    ).toEqual([
+      {
+        pokemon: fakePansage,
+        scores: [{ name: "vine-whip", score: 32.0 }],
       },
     ]);
   });

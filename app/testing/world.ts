@@ -1005,7 +1005,7 @@ export const fakeAbraFull = {
   weight: 195,
 } as unknown as IPokemonFull;
 
-export const fakeRegisteel: IPokemonFull = {
+export const fakeRegisteel = {
   forms: [
     {
       name: "registeel",
@@ -1081,6 +1081,383 @@ export const fakeRegisteel: IPokemonFull = {
   ],
 } as unknown as IPokemonFull;
 
+export const fakePansageFull = {
+  abilities: [
+    {
+      ability: {
+        name: "gluttony",
+        url: "https://pokeapi.co/api/v2/ability/82/",
+      },
+      is_hidden: false,
+      slot: 1,
+    },
+    {
+      ability: {
+        name: "overgrow",
+        url: "https://pokeapi.co/api/v2/ability/65/",
+      },
+      is_hidden: true,
+      slot: 3,
+    },
+  ],
+  base_experience: 63,
+  height: 6,
+  id: 511,
+  is_default: true,
+  location_area_encounters: "https://pokeapi.co/api/v2/pokemon/511/encounters",
+  moves: [
+    {
+      move: {
+        name: "scratch",
+        url: "https://pokeapi.co/api/v2/move/10/",
+      },
+      version_group_details: [
+        {
+          level_learned_at: 1,
+          move_learn_method: {
+            name: "level-up",
+            url: "https://pokeapi.co/api/v2/move-learn-method/1/",
+          },
+          version_group: {
+            name: "black-white",
+            url: "https://pokeapi.co/api/v2/version-group/11/",
+          },
+        },
+        {
+          level_learned_at: 1,
+          move_learn_method: {
+            name: "level-up",
+            url: "https://pokeapi.co/api/v2/move-learn-method/1/",
+          },
+          version_group: {
+            name: "black-2-white-2",
+            url: "https://pokeapi.co/api/v2/version-group/14/",
+          },
+        },
+        {
+          level_learned_at: 1,
+          move_learn_method: {
+            name: "level-up",
+            url: "https://pokeapi.co/api/v2/move-learn-method/1/",
+          },
+          version_group: {
+            name: "x-y",
+            url: "https://pokeapi.co/api/v2/version-group/15/",
+          },
+        },
+        {
+          level_learned_at: 1,
+          move_learn_method: {
+            name: "level-up",
+            url: "https://pokeapi.co/api/v2/move-learn-method/1/",
+          },
+          version_group: {
+            name: "omega-ruby-alpha-sapphire",
+            url: "https://pokeapi.co/api/v2/version-group/16/",
+          },
+        },
+        {
+          level_learned_at: 1,
+          move_learn_method: {
+            name: "level-up",
+            url: "https://pokeapi.co/api/v2/move-learn-method/1/",
+          },
+          version_group: {
+            name: "sun-moon",
+            url: "https://pokeapi.co/api/v2/version-group/17/",
+          },
+        },
+        {
+          level_learned_at: 1,
+          move_learn_method: {
+            name: "level-up",
+            url: "https://pokeapi.co/api/v2/move-learn-method/1/",
+          },
+          version_group: {
+            name: "ultra-sun-ultra-moon",
+            url: "https://pokeapi.co/api/v2/version-group/18/",
+          },
+        },
+      ],
+    },
+    {
+      move: {
+        name: "vine-whip",
+        url: "https://pokeapi.co/api/v2/move/22/",
+      },
+      version_group_details: [
+        {
+          level_learned_at: 10,
+          move_learn_method: {
+            name: "level-up",
+            url: "https://pokeapi.co/api/v2/move-learn-method/1/",
+          },
+          version_group: {
+            name: "black-white",
+            url: "https://pokeapi.co/api/v2/version-group/11/",
+          },
+        },
+        {
+          level_learned_at: 10,
+          move_learn_method: {
+            name: "level-up",
+            url: "https://pokeapi.co/api/v2/move-learn-method/1/",
+          },
+          version_group: {
+            name: "black-2-white-2",
+            url: "https://pokeapi.co/api/v2/version-group/14/",
+          },
+        },
+        {
+          level_learned_at: 10,
+          move_learn_method: {
+            name: "level-up",
+            url: "https://pokeapi.co/api/v2/move-learn-method/1/",
+          },
+          version_group: {
+            name: "x-y",
+            url: "https://pokeapi.co/api/v2/version-group/15/",
+          },
+        },
+        {
+          level_learned_at: 10,
+          move_learn_method: {
+            name: "level-up",
+            url: "https://pokeapi.co/api/v2/move-learn-method/1/",
+          },
+          version_group: {
+            name: "omega-ruby-alpha-sapphire",
+            url: "https://pokeapi.co/api/v2/version-group/16/",
+          },
+        },
+        {
+          level_learned_at: 10,
+          move_learn_method: {
+            name: "level-up",
+            url: "https://pokeapi.co/api/v2/move-learn-method/1/",
+          },
+          version_group: {
+            name: "sun-moon",
+            url: "https://pokeapi.co/api/v2/version-group/17/",
+          },
+        },
+        {
+          level_learned_at: 10,
+          move_learn_method: {
+            name: "level-up",
+            url: "https://pokeapi.co/api/v2/move-learn-method/1/",
+          },
+          version_group: {
+            name: "ultra-sun-ultra-moon",
+            url: "https://pokeapi.co/api/v2/version-group/18/",
+          },
+        },
+      ],
+    },
+  ],
+  name: "pansage",
+  order: 626,
+  past_types: [],
+  species: {
+    name: "pansage",
+    url: "https://pokeapi.co/api/v2/pokemon-species/511/",
+  },
+  sprites: {
+    back_default:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/511.png",
+    back_female: null,
+    back_shiny:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/511.png",
+    back_shiny_female: null,
+    front_default:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/511.png",
+    front_female: null,
+    front_shiny:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/511.png",
+    front_shiny_female: null,
+    other: {
+      dream_world: {
+        front_default:
+          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/511.svg",
+        front_female: null,
+      },
+      home: {
+        front_default:
+          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/511.png",
+        front_female: null,
+        front_shiny:
+          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/511.png",
+        front_shiny_female: null,
+      },
+      "official-artwork": {
+        front_default:
+          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/511.png",
+        front_shiny:
+          "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/511.png",
+      },
+    },
+  },
+  stats: [
+    {
+      base_stat: 50,
+      effort: 0,
+      stat: {
+        name: "hp",
+        url: "https://pokeapi.co/api/v2/stat/1/",
+      },
+    },
+    {
+      base_stat: 53,
+      effort: 0,
+      stat: {
+        name: "attack",
+        url: "https://pokeapi.co/api/v2/stat/2/",
+      },
+    },
+    {
+      base_stat: 48,
+      effort: 0,
+      stat: {
+        name: "defense",
+        url: "https://pokeapi.co/api/v2/stat/3/",
+      },
+    },
+    {
+      base_stat: 53,
+      effort: 0,
+      stat: {
+        name: "special-attack",
+        url: "https://pokeapi.co/api/v2/stat/4/",
+      },
+    },
+    {
+      base_stat: 48,
+      effort: 0,
+      stat: {
+        name: "special-defense",
+        url: "https://pokeapi.co/api/v2/stat/5/",
+      },
+    },
+    {
+      base_stat: 64,
+      effort: 1,
+      stat: {
+        name: "speed",
+        url: "https://pokeapi.co/api/v2/stat/6/",
+      },
+    },
+  ],
+  types: [
+    {
+      slot: 1,
+      type: {
+        name: "grass",
+        url: "https://pokeapi.co/api/v2/type/12/",
+      },
+    },
+  ],
+  weight: 105,
+} as IPokemonFull;
+
+export const fakeSimipourFull = {
+  abilities: [
+    {
+      ability: {
+        name: "gluttony",
+        url: "https://pokeapi.co/api/v2/ability/82/",
+      },
+      is_hidden: false,
+      slot: 1,
+    },
+    {
+      ability: {
+        name: "torrent",
+        url: "https://pokeapi.co/api/v2/ability/67/",
+      },
+      is_hidden: true,
+      slot: 3,
+    },
+  ],
+  base_experience: 174,
+  forms: [
+    {
+      name: "simipour",
+      url: "https://pokeapi.co/api/v2/pokemon-form/516/",
+    },
+  ],
+  height: 10,
+  id: 516,
+  is_default: true,
+  location_area_encounters: "https://pokeapi.co/api/v2/pokemon/516/encounters",
+  name: "simipour",
+  order: 631,
+  past_types: [],
+  species: {
+    name: "simipour",
+    url: "https://pokeapi.co/api/v2/pokemon-species/516/",
+  },
+  stats: [
+    {
+      base_stat: 75,
+      effort: 0,
+      stat: {
+        name: "hp",
+        url: "https://pokeapi.co/api/v2/stat/1/",
+      },
+    },
+    {
+      base_stat: 98,
+      effort: 0,
+      stat: {
+        name: "attack",
+        url: "https://pokeapi.co/api/v2/stat/2/",
+      },
+    },
+    {
+      base_stat: 63,
+      effort: 0,
+      stat: {
+        name: "defense",
+        url: "https://pokeapi.co/api/v2/stat/3/",
+      },
+    },
+    {
+      base_stat: 98,
+      effort: 0,
+      stat: {
+        name: "special-attack",
+        url: "https://pokeapi.co/api/v2/stat/4/",
+      },
+    },
+    {
+      base_stat: 63,
+      effort: 0,
+      stat: {
+        name: "special-defense",
+        url: "https://pokeapi.co/api/v2/stat/5/",
+      },
+    },
+    {
+      base_stat: 101,
+      effort: 2,
+      stat: {
+        name: "speed",
+        url: "https://pokeapi.co/api/v2/stat/6/",
+      },
+    },
+  ],
+  types: [
+    {
+      slot: 1,
+      type: {
+        name: "water",
+        url: "https://pokeapi.co/api/v2/type/11/",
+      },
+    },
+  ],
+  weight: 290,
+} as unknown as IPokemonFull;
+
 // *******************************
 // POKEMON SKELETONS
 // *******************************
@@ -1113,6 +1490,12 @@ export const fakeRegisteelSkeleton = {
   id: 2,
   name: "registeel",
   moves: { 1: "iron-head", 2: "", 3: "", 4: "" },
+};
+
+export const fakePansage = {
+  id: 3,
+  name: "pansage",
+  moves: { 1: "vine-whip", 2: "", 3: "", 4: "" },
 };
 
 // *******************************
@@ -1345,6 +1728,81 @@ export const fakeIronHead = {
   type: {
     name: "steel",
     url: "https://pokeapi.co/api/v2/type/9/",
+  },
+};
+
+export const fakeVineWhip = {
+  accuracy: 100,
+  damage_class: {
+    name: "physical",
+    url: "https://pokeapi.co/api/v2/move-damage-class/2/",
+  },
+  effect_chance: null,
+  effect_changes: [],
+  generation: {
+    name: "generation-i",
+    url: "https://pokeapi.co/api/v2/generation/1/",
+  },
+  id: 22,
+  machines: [],
+  meta: {
+    ailment: {
+      name: "none",
+      url: "https://pokeapi.co/api/v2/move-ailment/0/",
+    },
+    ailment_chance: 0,
+    category: {
+      name: "damage",
+      url: "https://pokeapi.co/api/v2/move-category/0/",
+    },
+    crit_rate: 0,
+    drain: 0,
+    flinch_chance: 0,
+    healing: 0,
+    max_hits: null,
+    max_turns: null,
+    min_hits: null,
+    min_turns: null,
+    stat_chance: 0,
+  },
+  name: "vine-whip",
+  past_values: [
+    {
+      accuracy: null,
+      effect_chance: null,
+      effect_entries: [],
+      power: null,
+      pp: 10,
+      type: null,
+      version_group: {
+        name: "diamond-pearl",
+        url: "https://pokeapi.co/api/v2/version-group/8/",
+      },
+    },
+    {
+      accuracy: null,
+      effect_chance: null,
+      effect_entries: [],
+      power: 35,
+      pp: 15,
+      type: null,
+      version_group: {
+        name: "x-y",
+        url: "https://pokeapi.co/api/v2/version-group/15/",
+      },
+    },
+  ],
+  power: 45,
+  pp: 25,
+  priority: 0,
+  stat_changes: [],
+  target: {
+    name: "selected-pokemon",
+    url: "https://pokeapi.co/api/v2/move-target/10/",
+  },
+  type: {
+    name: "grass",
+    url: "https://pokeapi.co/api/v2/type/12/",
   },
 };
 
@@ -1860,4 +2318,180 @@ export const fakePsychicType = {
       },
     },
   ],
+};
+
+export const fakeGrassType = {
+  damage_relations: {
+    double_damage_from: [
+      {
+        name: "flying",
+        url: "https://pokeapi.co/api/v2/type/3/",
+      },
+      {
+        name: "poison",
+        url: "https://pokeapi.co/api/v2/type/4/",
+      },
+      {
+        name: "bug",
+        url: "https://pokeapi.co/api/v2/type/7/",
+      },
+      {
+        name: "fire",
+        url: "https://pokeapi.co/api/v2/type/10/",
+      },
+      {
+        name: "ice",
+        url: "https://pokeapi.co/api/v2/type/15/",
+      },
+    ],
+    double_damage_to: [
+      {
+        name: "ground",
+        url: "https://pokeapi.co/api/v2/type/5/",
+      },
+      {
+        name: "rock",
+        url: "https://pokeapi.co/api/v2/type/6/",
+      },
+      {
+        name: "water",
+        url: "https://pokeapi.co/api/v2/type/11/",
+      },
+    ],
+    half_damage_from: [
+      {
+        name: "ground",
+        url: "https://pokeapi.co/api/v2/type/5/",
+      },
+      {
+        name: "water",
+        url: "https://pokeapi.co/api/v2/type/11/",
+      },
+      {
+        name: "grass",
+        url: "https://pokeapi.co/api/v2/type/12/",
+      },
+      {
+        name: "electric",
+        url: "https://pokeapi.co/api/v2/type/13/",
+      },
+    ],
+    half_damage_to: [
+      {
+        name: "flying",
+        url: "https://pokeapi.co/api/v2/type/3/",
+      },
+      {
+        name: "poison",
+        url: "https://pokeapi.co/api/v2/type/4/",
+      },
+      {
+        name: "bug",
+        url: "https://pokeapi.co/api/v2/type/7/",
+      },
+      {
+        name: "steel",
+        url: "https://pokeapi.co/api/v2/type/9/",
+      },
+      {
+        name: "fire",
+        url: "https://pokeapi.co/api/v2/type/10/",
+      },
+      {
+        name: "grass",
+        url: "https://pokeapi.co/api/v2/type/12/",
+      },
+      {
+        name: "dragon",
+        url: "https://pokeapi.co/api/v2/type/16/",
+      },
+    ],
+    no_damage_from: [],
+    no_damage_to: [],
+  },
+  generation: {
+    name: "generation-i",
+    url: "https://pokeapi.co/api/v2/generation/1/",
+  },
+  id: 12,
+  move_damage_class: {
+    name: "special",
+    url: "https://pokeapi.co/api/v2/move-damage-class/3/",
+  },
+  name: "grass",
+  past_damage_relations: [],
+};
+
+export const fakeWaterType = {
+  damage_relations: {
+    double_damage_from: [
+      {
+        name: "grass",
+        url: "https://pokeapi.co/api/v2/type/12/",
+      },
+      {
+        name: "electric",
+        url: "https://pokeapi.co/api/v2/type/13/",
+      },
+    ],
+    double_damage_to: [
+      {
+        name: "ground",
+        url: "https://pokeapi.co/api/v2/type/5/",
+      },
+      {
+        name: "rock",
+        url: "https://pokeapi.co/api/v2/type/6/",
+      },
+      {
+        name: "fire",
+        url: "https://pokeapi.co/api/v2/type/10/",
+      },
+    ],
+    half_damage_from: [
+      {
+        name: "steel",
+        url: "https://pokeapi.co/api/v2/type/9/",
+      },
+      {
+        name: "fire",
+        url: "https://pokeapi.co/api/v2/type/10/",
+      },
+      {
+        name: "water",
+        url: "https://pokeapi.co/api/v2/type/11/",
+      },
+      {
+        name: "ice",
+        url: "https://pokeapi.co/api/v2/type/15/",
+      },
+    ],
+    half_damage_to: [
+      {
+        name: "water",
+        url: "https://pokeapi.co/api/v2/type/11/",
+      },
+      {
+        name: "grass",
+        url: "https://pokeapi.co/api/v2/type/12/",
+      },
+      {
+        name: "dragon",
+        url: "https://pokeapi.co/api/v2/type/16/",
+      },
+    ],
+    no_damage_from: [],
+    no_damage_to: [],
+  },
+  generation: {
+    name: "generation-i",
+    url: "https://pokeapi.co/api/v2/generation/1/",
+  },
+  id: 11,
+  move_damage_class: {
+    name: "special",
+    url: "https://pokeapi.co/api/v2/move-damage-class/3/",
+  },
+  name: "water",
+  past_damage_relations: [],
 };

@@ -2,9 +2,12 @@ import {
   fakeConfusion,
   fakeGhostType,
   fakeGothita,
+  fakeGrassType,
   fakeMisdreavusFull,
+  fakePansageFull,
   fakePound,
   fakePsychicType,
+  fakeVineWhip,
 } from "~/testing/world";
 import {
   calcCritRate,
@@ -55,7 +58,7 @@ describe("calcDamage tests", () => {
     ).toBe(4.29);
   });
 
-  it("handles damage modifiers correctly", async () => {
+  it("handles damage x0 multipliers correctly", async () => {
     fetchMock.mockResponse(JSON.stringify(fakeGhostType));
     expect(
       await calcDamage({
@@ -66,6 +69,21 @@ describe("calcDamage tests", () => {
         P,
       })
     ).toBe(0);
+  });
+
+  it("handles STAB", async () => {
+    fetchMock.mockResponse(JSON.stringify(fakeGrassType));
+    expect(
+      roundToPrecision(
+        await calcDamage({
+          pokemon: fakePansageFull,
+          move: fakeVineWhip,
+          gen: 7,
+          P,
+        }),
+        1
+      )
+    ).toBe(7.5);
   });
 });
 
