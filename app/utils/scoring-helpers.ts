@@ -416,14 +416,18 @@ export const scoreTeamMovesVsTarget = async ({
       const attackerVulnerability = getPokemonTypes(target, gen)
         .map(({ type: { name } }) => name)
         .reduce((x, y) => x * (attackerDefenses[y] || 1), 1);
+
       const arrayedResult = Object.entries(scoreResult.moves).map(
         ([key, value]) => ({
           name: key,
-          score:
+          score: roundToPrecision(
             value.score /
-            (attackerVulnerability === 0 ? 0.25 : attackerVulnerability),
+              (attackerVulnerability === 0 ? 0.25 : attackerVulnerability),
+            1
+          ),
         })
       );
+      sortArray(arrayedResult, { by: "score", order: "desc" });
 
       return {
         pokemon: attacker,
