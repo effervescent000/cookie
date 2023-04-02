@@ -18,10 +18,9 @@ import EvolutionSelector from "./evolution-selector";
 import {
   makeDefensiveValues,
   makeDelta,
-  makeOffensiveValues,
-  scoreDefValues,
-  scoreOffValues,
+  scoreValues,
 } from "~/utils/scoring-helpers";
+import { DEF_SCORING_VALUES } from "~/constants/scoring-constants";
 
 const PokemonCard = ({
   targetPoke,
@@ -100,24 +99,17 @@ const PokemonCard = ({
         const P = new PokeAPIService();
         const thisPokeDefValues = {
           name: targetPoke.name,
-          values: scoreDefValues(
-            await makeDefensiveValues({ pokemon: fullPoke, P, gen })
-          ),
-        };
-        const thisPokeOffValues = {
-          name: targetPoke.name,
-          values: scoreOffValues(
-            await makeOffensiveValues({ pokemon: targetPoke, P, gen })
-          ),
+          values: scoreValues({
+            values: await makeDefensiveValues({ pokemon: fullPoke, P, gen }),
+            scores: DEF_SCORING_VALUES,
+          }),
         };
         const result = team.map((teamPoke) => {
           return {
             id: teamPoke.id,
             delta: makeDelta({
               teamDefScores,
-              teamOffScores,
               scoringPokeDefValues: thisPokeDefValues,
-              scoringPokeOffValues: thisPokeOffValues,
               teamPokemon: teamPoke,
               scoringPokemon: targetPoke,
               moveScores,
@@ -131,8 +123,7 @@ const PokemonCard = ({
     };
 
     if (
-      Object.keys(teamOffScores).length &&
-      Object.keys(teamDefScores).length &&
+      Object.keys(teamDefScores.raw).length &&
       Object.keys(moveScores).length &&
       Object.keys(statScores).length
     )

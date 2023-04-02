@@ -23,6 +23,10 @@ import {
 } from "./helpers";
 import { getPokemonTypes } from "./type-helpers";
 import { makeLookup } from "./general-utils";
+import {
+  DEF_SCORING_VALUES,
+  OFF_SCORING_VALUES,
+} from "~/constants/scoring-constants";
 
 export const scoreSingleMove = async ({
   pokemon,
@@ -170,9 +174,10 @@ export const makeTeamDefensiveValues = async ({
   const processedValues: IValues = {};
   const pokeValues = await Promise.all(
     fullPokes.map(async (pokemon) => {
-      const thisPokeValues = scoreDefValues(
-        await makeDefensiveValues({ pokemon, P, gen })
-      );
+      const thisPokeValues = scoreValues({
+        values: await makeDefensiveValues({ pokemon, P, gen }),
+        scores: DEF_SCORING_VALUES,
+      });
       return { name: pokemon.name, values: thisPokeValues, id: pokemon.id };
     })
   );
@@ -265,9 +270,10 @@ export const makeTeamOffensiveValues = async ({
     id: number;
   }[] = await Promise.all(
     pokemon.map(async (poke) => {
-      const thisPokeValues = scoreOffValues(
-        await makeOffensiveValues({ pokemon: poke, P, gen })
-      );
+      const thisPokeValues = scoreValues({
+        values: await makeOffensiveValues({ pokemon: poke, P, gen }),
+        scores: OFF_SCORING_VALUES,
+      });
       return { name: poke.name, values: thisPokeValues, id: poke.id };
     })
   );
@@ -287,38 +293,25 @@ export const makeTeamOffensiveValues = async ({
   };
 };
 
-export const scoreDefValues = (values: {
-  [key: string]: number;
-}): { [key: string]: number } => {
-  const scores: { [key: number]: number } = {
-    0: 2,
-    0.25: 1.5,
-    0.5: 1,
-    1: 0,
-    2: -1,
-    4: -2,
+export const scoreValues = ({
+  values,
+  scores,
+}: {
+  values: {
+    [key: string]: number;
   };
-  return Object.entries(values).reduce(
+  scores: {
+    [key: number]: number;
+  };
+}): { [key: string]: number } => {
+  const scoredValues = Object.entries(values).reduce(
     (acc, [key, value]) => ({ ...acc, [key]: scores[value] }),
-    {}
+    { final: 0 }
   );
-};
 
-export const scoreOffValues = (values: {
-  [key: string]: number;
-}): { [key: string]: number } => {
-  const scores: { [key: number]: number } = {
-    0: 0,
-    0.25: 0,
-    0.5: 0,
-    1: 0.5,
-    2: 1,
-    4: 2,
-  };
-  return Object.entries(values).reduce(
-    (acc, [key, value]) => ({ ...acc, [key]: scores[value] }),
-    {}
-  );
+  scoredValues.final = Object.values(scoredValues).reduce((x, y) => x + y, 0);
+
+  return scoredValues;
 };
 
 export const sumValues = (values: IValues) =>
@@ -336,6 +329,7 @@ export const compileTeamValues = (teamValues: {
       finalValues[key] = (finalValues[key] || 0) + value;
     });
   });
+
   return finalValues;
 };
 
@@ -344,8 +338,6 @@ export const sumCompiledTeamValues = (values: { [key: string]: number }) =>
 
 export const makeDelta = ({
   teamDefScores,
-  teamOffScores,
-  scoringPokeOffValues,
   scoringPokeDefValues,
   teamPokemon,
   scoringPokemon,
@@ -353,8 +345,6 @@ export const makeDelta = ({
   statScores,
 }: {
   teamDefScores: ITeamTypeScores;
-  teamOffScores: ITeamTypeScores;
-  scoringPokeOffValues: { name: string; values: { [key: string]: number } };
   scoringPokeDefValues: { name: string; values: { [key: string]: number } };
   teamPokemon: IPokeSkeleton;
   scoringPokemon: IPokeSkeleton;
@@ -363,17 +353,13 @@ export const makeDelta = ({
 }): number => {
   const modifiedTeamDefScores = filterKey(teamDefScores.raw, teamPokemon.name);
   modifiedTeamDefScores[scoringPokemon.name] = scoringPokeDefValues;
-  const modifiedTeamOffScores = filterKey(teamOffScores.raw, teamPokemon.name);
-  modifiedTeamOffScores[scoringPokemon.name] = scoringPokeOffValues;
 
   const modifiedTotalScore =
     sumCompiledTeamValues(compileTeamValues(modifiedTeamDefScores)) +
-    sumCompiledTeamValues(compileTeamValues(modifiedTeamOffScores)) +
     (_.get(moveScores, `[${scoringPokemon.id}].final`) || 0) +
     (statScores[scoringPokemon.id] || 0);
 
   const originalTotalScore =
-    teamOffScores.final +
     teamDefScores.final +
     (_.get(moveScores, `[${teamPokemon.id}].final`) || 0) +
     (statScores[teamPokemon.id] || 0);

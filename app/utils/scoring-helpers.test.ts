@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { DEF_SCORING_VALUES } from "~/constants/scoring-constants";
 import { getTypes } from "~/constants/types-constants";
 
 import type { IMoveScores, ITeamTypeScores } from "~/interfaces";
@@ -35,6 +36,7 @@ import {
   makeOffensiveValues,
   scoreSingleMove,
   scoreTeamMovesVsTarget,
+  scoreValues,
 } from "./scoring-helpers";
 
 const fillOutValues = (values: { [type: string]: number }, gen: number) => {
@@ -46,24 +48,18 @@ const fillOutValues = (values: { [type: string]: number }, gen: number) => {
   return completedValues;
 };
 
-test("compileValues works", () => {
-  expect(
-    compileTeamValues({
-      abra: { values: { grass: -1, psychic: -1 } },
-      kadabra: { values: { grass: -1, psychic: 1 } },
-    })
-  ).toEqual({ grass: -2, psychic: 0 });
+describe("compileTeamValues tests", () => {
+  test("compileValues works", () => {
+    expect(
+      compileTeamValues({
+        abra: { values: { grass: -1, psychic: -1 } },
+        kadabra: { values: { grass: -1, psychic: 1 } },
+      })
+    ).toEqual({ grass: -2, psychic: 0 });
+  });
 });
 
 test("makeDelta works", () => {
-  const fakeTeamOffValues: ITeamTypeScores = {
-    final: 4,
-    raw: {
-      abra: { values: { psychic: 1, water: 1, ground: -1 } },
-      kadabra: { values: { psychic: 1, flying: 1, rock: 1 } },
-    },
-    processed: {},
-  };
   const fakeTeamDefValues: ITeamTypeScores = {
     final: 4,
     raw: {
@@ -98,10 +94,6 @@ test("makeDelta works", () => {
     [id: number]: number | undefined;
   } = { 0: 3, 1: 5, 2: 7 };
 
-  const fakeScoringOffValues = {
-    name: "alakazam",
-    values: { psychic: 1, ground: 1, grass: 1, dark: 1 },
-  };
   const fakeScoringDefValues = {
     name: "alakazam",
     values: { psychic: 1, ground: 1, grass: 1 },
@@ -110,15 +102,13 @@ test("makeDelta works", () => {
   expect(
     makeDelta({
       teamDefScores: fakeTeamDefValues,
-      teamOffScores: fakeTeamOffValues,
       scoringPokeDefValues: fakeScoringDefValues,
-      scoringPokeOffValues: fakeScoringOffValues,
       teamPokemon: fakeAbraSkeleton,
       scoringPokemon: fakeAlakazamSkeleton,
       moveScores: fakeMoveScores,
       statScores: fakeStatScores,
     })
-  ).toBe(25 - 14);
+  ).toBe(8);
 });
 
 describe("test scoreSingleMove", () => {
@@ -391,5 +381,18 @@ describe("test scoreTeamMovesVsTarget", () => {
         scores: [{ name: "vine-whip", score: 24.0 }],
       },
     ]);
+  });
+});
+
+describe("scoreValues scores values", () => {
+  it("does the thing in a basic case", () => {
+    const values = { bug: 0.5, psychic: 0.5, water: 2 };
+    const scores = DEF_SCORING_VALUES;
+    expect(scoreValues({ values, scores })).toEqual({
+      bug: 1,
+      psychic: 1,
+      water: -1,
+      final: 1,
+    });
   });
 });
