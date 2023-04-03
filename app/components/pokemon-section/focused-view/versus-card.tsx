@@ -10,9 +10,11 @@ import { properCase } from "~/utils/text-utils";
 const VersusCard = ({
   pokemon,
   gen,
+  hidden,
 }: {
   pokemon: IPokemonFull;
   gen: number;
+  hidden?: boolean;
 }) => {
   const [versusValues, setVersusValues] = useState<
     { pokemon: IPokeSkeleton; scores: { [key: string]: any } }[]
@@ -40,16 +42,17 @@ const VersusCard = ({
 
   return (
     <div data-cy="versus-card">
-      {versusValues.slice(0, 2).map(({ pokemon, scores }) =>
-        scores.length ? (
-          <div key={pokemon.name}>
-            Use {properCase(pokemon.name)} with {properCase(scores[0].name)} (
-            {scores[0].score} pts)
-          </div>
-        ) : (
-          ""
-        )
-      )}
+      {hidden &&
+        versusValues.slice(0, 2).map(({ pokemon, scores }) =>
+          scores.length ? (
+            <div key={pokemon.name}>
+              Use {properCase(pokemon.name)} with {properCase(scores[0].name)} (
+              {scores[0].score} pts)
+            </div>
+          ) : (
+            ""
+          )
+        )}
     </div>
   );
 };
