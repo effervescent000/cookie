@@ -1,26 +1,26 @@
-import { useMemo, useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import _ from "lodash";
 import sortArray from "sort-array";
 
-import type { IMove, IPokemonFull, IPokeSkeleton } from "~/interfaces";
+import type { IPokemonFull, IPokeSkeleton } from "~/interfaces";
 import { isFullPokemon } from "~/utils/type-guards";
 
 import { properCase } from "~/utils/text-utils";
 import { PokemonContext } from "~/pokemon-context";
-import { filterMovesByVersionGroup } from "~/utils/helpers";
-import PokeAPIService from "~/utils/pokeapi-service";
-
-import Select from "../common/select";
-import EditIcons from "./edit-icons";
-import SpriteFrame from "../common/sprite-frame";
-import ScoreCard from "./score-card";
-import EvolutionSelector from "./evolution-selector";
 import {
   makeDefensiveValues,
   makeDelta,
   scoreValues,
 } from "~/utils/scoring-helpers";
 import { DEF_SCORING_VALUES } from "~/constants/scoring-constants";
+import PokeAPIService from "~/utils/pokeapi-service";
+
+import EditIcons from "./edit-icons";
+import SpriteFrame from "../common/sprite-frame";
+import ScoreCard from "./score-card";
+import EvolutionSelector from "./evolution-selector";
+import MoveSelectWrapper from "./focused-view/versus-card/move-select-wrapper";
+import { useMoveList } from "~/utils/hooks/use-move-list";
 
 const PokemonCard = ({
   targetPoke,
@@ -42,49 +42,18 @@ const PokemonCard = ({
   } = useContext(PokemonContext);
   const [fullPoke, setFullPoke] = useState<IPokemonFull>({} as IPokemonFull);
   const [loading, setLoading] = useState(true);
-  const [prevEvoMoves, setPrevEvoMoves] = useState<IMove[]>([]);
   const [deltas, setDeltas] = useState<{ id: number; delta: number }[]>([]);
+  const moveList = useMoveList({
+    fullPokemon: fullPoke,
+    versionGroup,
+    targetPoke,
+    moveScores,
+  });
 
   useEffect(() => {
     const P = new PokeAPIService();
-    const getPrevEvoMoves = async (pokemon: IPokemonFull): Promise<IMove[]> => {
-      const species = await P.getSpecies(pokemon.species.name);
-      if (species.evolves_from_species) {
-        const parentSpecies = await P.getSpecies(
-          species.evolves_from_species.name
-        );
-        // we dont have a way to tell from the API which varieties evolve to/from which, so
-        // we're forced to just check moves for all the varieties
-        const parentSpeciesVarieties = await P.getPokemonByName(
-          parentSpecies.varieties.map(
-            ({ pokemon: parentVariety }) => parentVariety.name
-          )
-        );
-        const immediateParentMoves = _.uniqBy(
-          _.flatten(
-            parentSpeciesVarieties.map((parent) =>
-              filterMovesByVersionGroup(parent.moves, versionGroup)
-            )
-          ),
-          "move.name"
-        );
-        return [
-          ...immediateParentMoves,
-          ..._.flatten(
-            await Promise.all(
-              parentSpeciesVarieties.map(
-                async (parent) => await getPrevEvoMoves(parent)
-              )
-            )
-          ),
-        ];
-      }
-      return [];
-    };
-
     const getFullPoke = async () => {
       const result = (await P.getPokemonByName([targetPoke.name]))[0];
-      setPrevEvoMoves(await getPrevEvoMoves(result));
       setFullPoke(result);
       setLoading(false);
     };
@@ -138,22 +107,6 @@ const PokemonCard = ({
     teamDefScores,
     teamOffScores,
   ]);
-
-  const moveList = useMemo(() => {
-    const { moves } = fullPoke;
-    if (!moves) return [];
-    const filteredMoves = _.uniqBy(
-      [...prevEvoMoves, ...filterMovesByVersionGroup(moves, versionGroup)],
-      "move.name"
-    ).map(({ move: { name } }) => ({
-      name: `${properCase(name)} (${
-        _.get(moveScores, `[${targetPoke.id}].moves[${name}].score`) || "---"
-      })`,
-      value: name,
-    }));
-    sortArray(filteredMoves, { by: "value" });
-    return filteredMoves;
-  }, [fullPoke, moveScores, prevEvoMoves, targetPoke.id, versionGroup]);
 
   const mergeMove = (value: string, moveIndex: number) => {
     if (currentLocation === "team") {
@@ -231,17 +184,12 @@ const PokemonCard = ({
           />
         </div>
       </div>
-      <div className="grid grid-cols-1">
-        {_.range(4).map((i) => (
-          <Select
-            key={`${targetPoke.id}-${i}`}
-            options={moveList}
-            callback={(value) => mergeMove(value, i)}
-            selection={targetPoke.moves[i]}
-            dataCy={`move-${i}`}
-          />
-        ))}
-      </div>
+      <MoveSelectWrapper
+        moveList={moveList}
+        merge={mergeMove}
+        existingMoves={targetPoke.moves}
+        classes="grid-cols-1"
+      />
     </div>
   );
 };
