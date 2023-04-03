@@ -48,12 +48,14 @@ describe("roster management tests", () => {
   it("contains moves that previous evolutions could learn", () => {
     cy.addLocalStorage("jolteon-in-roster-s-m");
     cy.waitUntil(
-      () => cy.get(makeDataCy("poke-card-jolteon")),
+      () =>
+        cy
+          .get(makeDataCy("poke-card-jolteon"))
+          .find(makeDataCy("move-0"))
+          .find("option")
+          .filter(":contains('Confide')")
+          .should("have.length", 1),
       defaultWaitUntilConfigs
-    )
-      .then((jolteonCard) => cy.wrap(jolteonCard).find(makeDataCy("move-0")))
-      .find("option")
-      .filter(":contains('Confide')")
-      .should("have.length", 1);
+    );
   });
 });
