@@ -8,19 +8,19 @@ import { isFullPokemon } from "~/utils/type-guards";
 import { properCase } from "~/utils/text-utils";
 import { PokemonContext } from "~/pokemon-context";
 import { filterMovesByVersionGroup } from "~/utils/helpers";
-import PokeAPIService from "~/utils/pokeapi-service";
-
-import Select from "../common/select";
-import EditIcons from "./edit-icons";
-import SpriteFrame from "../common/sprite-frame";
-import ScoreCard from "./score-card";
-import EvolutionSelector from "./evolution-selector";
 import {
   makeDefensiveValues,
   makeDelta,
   scoreValues,
 } from "~/utils/scoring-helpers";
 import { DEF_SCORING_VALUES } from "~/constants/scoring-constants";
+import PokeAPIService from "~/utils/pokeapi-service";
+
+import EditIcons from "./edit-icons";
+import SpriteFrame from "../common/sprite-frame";
+import ScoreCard from "./score-card";
+import EvolutionSelector from "./evolution-selector";
+import MoveSelectWrapper from "./focused-view/versus-card/move-select-wrapper";
 
 const PokemonCard = ({
   targetPoke,
@@ -231,17 +231,12 @@ const PokemonCard = ({
           />
         </div>
       </div>
-      <div className="grid grid-cols-1">
-        {_.range(4).map((i) => (
-          <Select
-            key={`${targetPoke.id}-${i}`}
-            options={moveList}
-            callback={(value) => mergeMove(value, i)}
-            selection={targetPoke.moves[i]}
-            dataCy={`move-${i}`}
-          />
-        ))}
-      </div>
+      <MoveSelectWrapper
+        moveList={moveList}
+        merge={mergeMove}
+        existingMoves={targetPoke.moves}
+        classes="grid-cols-1"
+      />
     </div>
   );
 };

@@ -7,7 +7,7 @@ import PokeAPIService from "~/utils/pokeapi-service";
 import { scoreTeamMovesVsTarget } from "~/utils/scoring-helpers";
 import { properCase } from "~/utils/text-utils";
 
-const VersusCard = ({
+const VersusWrapper = ({
   pokemon,
   gen,
   hidden,
@@ -57,4 +57,4 @@ const VersusCard = ({
   );
 };
 
-export default VersusCard;
+export default VersusWrapper;

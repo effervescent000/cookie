@@ -1,3 +1,4 @@
+import { getMoveSlot, getPokemonCard } from "support/constants";
 import {
   defaultWaitUntilConfigs,
   makeDataCy,
@@ -33,7 +34,18 @@ describe("roster management tests", () => {
       .should("not.exist");
   });
 
-  it("can select moves that previous evolutions could learn", () => {
+  it("can select a move", () => {
+    cy.addLocalStorage("single-pokemon-in-team-s-s");
+    cy.waitUntil(() => cy.get(getPokemonCard("abra"))).then((abra) => {
+      cy.wrap(abra)
+        .find(getMoveSlot(0))
+        .as("moveSlot")
+        .select("body-slam")
+        .should("have.value", "body-slam");
+    });
+  });
+
+  it("contains moves that previous evolutions could learn", () => {
     cy.addLocalStorage("jolteon-in-roster-s-m");
     cy.waitUntil(
       () => cy.get(makeDataCy("poke-card-jolteon")),
