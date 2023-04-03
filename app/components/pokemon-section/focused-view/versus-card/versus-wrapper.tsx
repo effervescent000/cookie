@@ -1,8 +1,9 @@
 import { useContext, useState, useEffect } from "react";
 
-import type { IPokemonFull, IPokeSkeleton } from "~/interfaces";
+import type { IMoveResponse, IPokemonFull, IPokeSkeleton } from "~/interfaces";
 
 import { PokemonContext } from "~/pokemon-context";
+import { makeLookup } from "~/utils/general-utils";
 import { useMoveList } from "~/utils/hooks/use-move-list";
 import PokeAPIService from "~/utils/pokeapi-service";
 import { scoreTeamMovesVsTarget } from "~/utils/scoring-helpers";
@@ -28,6 +29,10 @@ const VersusWrapper = ({
     name: pokemon.name,
     moves: { 0: "", 1: "", 2: "", 3: "" },
   });
+  const [fullMoves, setFullMoves] = useState<{ [key: string]: IMoveResponse }>(
+    {}
+  );
+
   const moveList = useMoveList({
     fullPokemon: pokemon,
     versionGroup,
@@ -35,12 +40,35 @@ const VersusWrapper = ({
   });
 
   useEffect(() => {
+    const P = new PokeAPIService();
+    const getFullMoves = async () => {
+      const results = await Promise.all(
+        Object.values(skeleton.moves)
+          .filter((move) => !!move)
+          .map(async (move) => await P.getMove(move))
+      );
+      setFullMoves(makeLookup(results, "name"));
+    };
+
+    getFullMoves();
+  }, [skeleton.moves]);
+
+  useEffect(() => {
+    setSkeleton({
+      id: -1,
+      name: pokemon.name,
+      moves: { 0: "", 1: "", 2: "", 3: "" },
+    });
+  }, [pokemon.name]);
+
+  useEffect(() => {
     const getVersusValues = async () => {
       const P = new PokeAPIService();
       if (pokemon && team.length) {
         const result = await scoreTeamMovesVsTarget({
           team,
-          target: pokemon,
+          targetFull: pokemon,
+          targetMoves: fullMoves,
           P,
           gen,
           versionGroup,
@@ -50,7 +78,7 @@ const VersusWrapper = ({
     };
 
     getVersusValues();
-  }, [gen, pokemon, team, versionGroup]);
+  }, [fullMoves, gen, pokemon, team, versionGroup]);
 
   const mergeMove = (move: string, i: number) => {
     setSkeleton({ ...skeleton, moves: { ...skeleton.moves, [i]: move } });

@@ -375,13 +375,15 @@ const getAttackerScoreMod = (attackerVulnerability: number) => {
 
 export const scoreTeamMovesVsTarget = async ({
   team,
-  target,
+  targetFull,
+  targetMoves,
   P,
   gen,
   versionGroup,
 }: {
   team: IPokeSkeleton[];
-  target: IPokemonFull;
+  targetFull: IPokemonFull;
+  targetMoves?: { [move: string]: IMoveResponse };
   P: PokeAPIService;
   gen: number;
   versionGroup: string;
@@ -390,6 +392,7 @@ export const scoreTeamMovesVsTarget = async ({
     await P.getPokemonByName(team.map(({ name }) => name)),
     "name"
   );
+
   const allMovesScored = await Promise.all(
     team.map(async (attacker) => {
       const scoreResult = await scoreMoves({
@@ -397,7 +400,7 @@ export const scoreTeamMovesVsTarget = async ({
         fullPokemon: teamFullPokemon[attacker.name],
         versionGroup,
         gen,
-        target,
+        target: targetFull,
         onlyKnown: true,
       });
       const attackerDefenses = await makeDefensiveValues({
@@ -405,15 +408,41 @@ export const scoreTeamMovesVsTarget = async ({
         P,
         gen,
       });
-      const attackerVulnerability = getPokemonTypes(target, gen)
+
+      const knownMovesLength = targetMoves
+        ? Object.keys(targetMoves).length
+        : 0;
+
+      const attackerVulnerability = getPokemonTypes(targetFull, gen)
         .map(({ type: { name } }) => name)
         .reduce((x, y) => x * (attackerDefenses[y] || 1), 1);
+
+      const attackerScoreMod = getAttackerScoreMod(attackerVulnerability);
+
+      const targetDamage = targetMoves
+        ? await Promise.all(
+            Object.values(targetMoves).map(
+              async (move) =>
+                (await calcDamage({
+                  pokemon: targetFull,
+                  move,
+                  gen,
+                  target: teamFullPokemon[attacker.name],
+                  P,
+                })) / 4
+            )
+          )
+        : [];
 
       const arrayedResult = Object.entries(scoreResult.moves).map(
         ([key, value]) => ({
           name: key,
           score: roundToPrecision(
-            value.score / getAttackerScoreMod(attackerVulnerability),
+            targetDamage.length > 0 && knownMovesLength > 0
+              ? targetDamage.reduce((x, y) => x - y, value.score) /
+                  (attackerScoreMod -
+                    (attackerScoreMod - 1) * ((4 - knownMovesLength) / 4))
+              : value.score / attackerScoreMod,
             1
           ),
         })
