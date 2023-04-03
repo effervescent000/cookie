@@ -54,6 +54,14 @@ const VersusWrapper = ({
   }, [skeleton.moves]);
 
   useEffect(() => {
+    setSkeleton({
+      id: -1,
+      name: pokemon.name,
+      moves: { 0: "", 1: "", 2: "", 3: "" },
+    });
+  }, [pokemon.name]);
+
+  useEffect(() => {
     const getVersusValues = async () => {
       const P = new PokeAPIService();
       if (pokemon && team.length) {
