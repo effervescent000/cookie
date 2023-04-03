@@ -4,6 +4,7 @@ import {
   getMiniCard,
   getMoveSlot,
   getPokemonCard,
+  SHOW_GUIDANCE,
   VERSUS_CARD,
 } from "support/constants";
 import { makeIntercepts } from "support/utils";
@@ -18,6 +19,7 @@ describe("tests re: versus card and its functionality", () => {
     cy.addLocalStorage("empty-roster-s-s");
     cy.get(getMiniCard("abra")).find(EXPAND).click();
     cy.waitUntil(() => cy.get(FOCUS_FRAME).as("focusFrame"));
+    cy.get(SHOW_GUIDANCE).click();
     cy.get("@focusFrame")
       .find(VERSUS_CARD)
       .should("exist")
@@ -28,6 +30,7 @@ describe("tests re: versus card and its functionality", () => {
     cy.addLocalStorage("single-pokemon-in-team-s-s");
     cy.get(getMiniCard("abra")).find(EXPAND).click();
     cy.waitUntil(() => cy.get(FOCUS_FRAME).as("focusFrame"));
+    cy.get(SHOW_GUIDANCE).click();
     cy.get("@focusFrame")
       .find(VERSUS_CARD)
       .should("exist")
@@ -38,9 +41,21 @@ describe("tests re: versus card and its functionality", () => {
     cy.addLocalStorage("single-pokemon-in-team-s-s");
     cy.waitUntil(() => cy.get(getPokemonCard("abra")).as("abraInTeam"));
     cy.get("@abraInTeam").find(getMoveSlot(0)).select("confusion");
-
     cy.get(getMiniCard("abra")).find(EXPAND).click();
     cy.waitUntil(() => cy.get(FOCUS_FRAME).as("focusFrame"));
+    cy.get(SHOW_GUIDANCE).click();
     cy.get("@focusFrame").find(VERSUS_CARD).should("exist").and("be.visible");
+  });
+
+  it("hides when show guidance is turned off", () => {
+    cy.addLocalStorage("single-pokemon-in-team-s-s");
+    cy.waitUntil(() => cy.get(getPokemonCard("abra")).as("abraInTeam"));
+    cy.get("@abraInTeam").find(getMoveSlot(0)).select("confusion");
+    cy.get(getMiniCard("abra")).find(EXPAND).click();
+    cy.waitUntil(() => cy.get(FOCUS_FRAME).as("focusFrame"));
+    cy.get("@focusFrame")
+      .find(VERSUS_CARD)
+      .should("exist")
+      .and("not.be.visible");
   });
 });

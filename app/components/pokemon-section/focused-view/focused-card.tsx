@@ -15,6 +15,7 @@ import TypeWeaknessWrapper from "./type-weakness-wrapper";
 import CatchRateCard from "./catch-rate-card";
 import Button from "~/components/common/button";
 import VersusCard from "./versus-card";
+import Checkbox from "~/components/common/checkbox";
 
 const FocusedCard = () => {
   const [evolutionInfo, setEvolutionInfo] = useState<
@@ -23,6 +24,7 @@ const FocusedCard = () => {
   const [species, setSpecies] = useState<ISpeciesResponse | undefined>(
     undefined
   );
+  const [showGuidance, setShowGuidance] = useState(false);
 
   const {
     focusedPokemon: pokemon,
@@ -55,7 +57,13 @@ const FocusedCard = () => {
   return (
     <div data-cy="focus-frame">
       <div className="flex justify-between">
-        <div />
+        <Checkbox
+          value={showGuidance}
+          callback={() => setShowGuidance(!showGuidance)}
+          dataCy="guidance-checkbox"
+        >
+          Show guidance?
+        </Checkbox>
         <Button
           dataCy="close-focus-btn"
           onClick={() => setFocusedPokemon(undefined)}
@@ -82,7 +90,7 @@ const FocusedCard = () => {
         {evolutionInfo && <EvolutionCard link={evolutionInfo.chain} />}
         <StatBlock pokemon={pokemon} />
         <TypeWeaknessWrapper pokemon={pokemon} />
-        <VersusCard pokemon={pokemon} gen={gen} />
+        <VersusCard pokemon={pokemon} gen={gen} hidden={showGuidance} />
       </div>
     </div>
   );
