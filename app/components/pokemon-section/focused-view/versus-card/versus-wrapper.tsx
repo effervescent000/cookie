@@ -3,9 +3,11 @@ import { useContext, useState, useEffect } from "react";
 import type { IPokemonFull, IPokeSkeleton } from "~/interfaces";
 
 import { PokemonContext } from "~/pokemon-context";
+import { useMoveList } from "~/utils/hooks/use-move-list";
 import PokeAPIService from "~/utils/pokeapi-service";
 import { scoreTeamMovesVsTarget } from "~/utils/scoring-helpers";
 import { properCase } from "~/utils/text-utils";
+import MoveSelectWrapper from "./move-select-wrapper";
 
 const VersusWrapper = ({
   pokemon,
@@ -16,11 +18,21 @@ const VersusWrapper = ({
   gen: number;
   show?: boolean;
 }) => {
+  const { team, versionGroup } = useContext(PokemonContext);
+
   const [versusValues, setVersusValues] = useState<
     { pokemon: IPokeSkeleton; scores: { [key: string]: any } }[]
   >([]);
-
-  const { team, versionGroup } = useContext(PokemonContext);
+  const [skeleton, setSkeleton] = useState<IPokeSkeleton>({
+    id: -1,
+    name: pokemon.name,
+    moves: { 0: "", 1: "", 2: "", 3: "" },
+  });
+  const moveList = useMoveList({
+    fullPokemon: pokemon,
+    versionGroup,
+    targetPoke: skeleton,
+  });
 
   useEffect(() => {
     const getVersusValues = async () => {
@@ -40,19 +52,35 @@ const VersusWrapper = ({
     getVersusValues();
   }, [gen, pokemon, team, versionGroup]);
 
+  const mergeMove = (move: string, i: number) => {
+    setSkeleton({ ...skeleton, moves: { ...skeleton.moves, [i]: move } });
+  };
+
+  const shouldBeVisible = () => {
+    return show && versusValues.length > 0;
+  };
+
   return (
     <div data-cy="versus-card">
-      {show &&
-        versusValues.slice(0, 2).map(({ pokemon, scores }) =>
-          scores.length ? (
-            <div key={pokemon.name}>
-              Use {properCase(pokemon.name)} with {properCase(scores[0].name)} (
-              {scores[0].score} pts)
-            </div>
-          ) : (
-            ""
-          )
-        )}
+      {shouldBeVisible() && (
+        <>
+          <MoveSelectWrapper
+            moveList={moveList}
+            existingMoves={skeleton.moves}
+            merge={mergeMove}
+          />
+          {versusValues.slice(0, 2).map(({ pokemon, scores }) =>
+            scores.length ? (
+              <div key={pokemon.name}>
+                Use {properCase(pokemon.name)} with {properCase(scores[0].name)}{" "}
+                ({scores[0].score} pts)
+              </div>
+            ) : (
+              ""
+            )
+          )}
+        </>
+      )}
     </div>
   );
 };
