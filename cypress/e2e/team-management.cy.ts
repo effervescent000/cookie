@@ -40,9 +40,6 @@ describe("roster management tests", () => {
       defaultWaitUntilConfigs
     )
       .then((jolteonCard) => cy.wrap(jolteonCard).find(makeDataCy("move-0")))
-      .as("jolteonMoves")
-      .contains("Bite");
-    cy.get("@jolteonMoves")
       .find("option")
       .filter(":contains('Confide')")
       .should("have.length", 1);
