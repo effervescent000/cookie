@@ -10,11 +10,11 @@ import { properCase } from "~/utils/text-utils";
 const VersusWrapper = ({
   pokemon,
   gen,
-  hidden,
+  show,
 }: {
   pokemon: IPokemonFull;
   gen: number;
-  hidden?: boolean;
+  show?: boolean;
 }) => {
   const [versusValues, setVersusValues] = useState<
     { pokemon: IPokeSkeleton; scores: { [key: string]: any } }[]
@@ -42,7 +42,7 @@ const VersusWrapper = ({
 
   return (
     <div data-cy="versus-card">
-      {hidden &&
+      {show &&
         versusValues.slice(0, 2).map(({ pokemon, scores }) =>
           scores.length ? (
             <div key={pokemon.name}>

@@ -90,7 +90,7 @@ const FocusedCard = () => {
         {evolutionInfo && <EvolutionCard link={evolutionInfo.chain} />}
         <StatBlock pokemon={pokemon} />
         <TypeWeaknessWrapper pokemon={pokemon} />
-        <VersusWrapper pokemon={pokemon} gen={gen} hidden={showGuidance} />
+        <VersusWrapper pokemon={pokemon} gen={gen} show={showGuidance} />
       </div>
     </div>
   );
