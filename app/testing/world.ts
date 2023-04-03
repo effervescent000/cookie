@@ -1636,19 +1636,19 @@ export const fakeHydroPump = {
   },
 } as IMoveResponse;
 
-export const fakeNightShade = {
+export const fakeAstonish = {
   accuracy: 100,
   damage_class: {
-    name: "special",
-    url: "https://pokeapi.co/api/v2/move-damage-class/3/",
+    name: "physical",
+    url: "https://pokeapi.co/api/v2/move-damage-class/2/",
   },
-  effect_chance: null,
+  effect_chance: 30,
   effect_changes: [],
   generation: {
-    name: "generation-i",
-    url: "https://pokeapi.co/api/v2/generation/1/",
+    name: "generation-iii",
+    url: "https://pokeapi.co/api/v2/generation/3/",
   },
-  id: 101,
+  id: 310,
   machines: [],
   meta: {
     ailment: {
@@ -1662,7 +1662,7 @@ export const fakeNightShade = {
     },
     crit_rate: 0,
     drain: 0,
-    flinch_chance: 0,
+    flinch_chance: 30,
     healing: 0,
     max_hits: null,
     max_turns: null,
@@ -1670,12 +1670,19 @@ export const fakeNightShade = {
     min_turns: null,
     stat_chance: 0,
   },
-  name: "night-shade",
+  name: "astonish",
   past_values: [],
-  power: null,
+  power: 30,
   pp: 15,
   priority: 0,
   stat_changes: [],
+  super_contest_effect: {
+    url: "https://pokeapi.co/api/v2/super-contest-effect/5/",
+  },
+  target: {
+    name: "selected-pokemon",
+    url: "https://pokeapi.co/api/v2/move-target/10/",
+  },
   type: {
     name: "ghost",
     url: "https://pokeapi.co/api/v2/type/8/",

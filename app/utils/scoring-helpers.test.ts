@@ -8,6 +8,7 @@ import {
   fakeAbraFull,
   fakeAbraSkeleton,
   fakeAlakazamSkeleton,
+  fakeAstonish,
   fakeConfusion,
   fakeGhostType,
   fakeGothita,
@@ -16,7 +17,6 @@ import {
   fakeIronHead,
   fakeMisdreavusFull,
   fakeMisdreavusSkeleton,
-  fakeNightShade,
   fakePansage,
   fakePansageFull,
   fakePound,
@@ -235,7 +235,7 @@ describe("makeOffensiveValues works", () => {
     const selectedGen = 6;
     fetchMock.mockIf(/v2\/\w+\//, (req) => {
       if (req.url.includes("move")) {
-        return JSON.stringify(fakeNightShade);
+        return JSON.stringify(fakeAstonish);
       }
       return JSON.stringify(fakeGhostType);
     });
@@ -263,7 +263,7 @@ describe("makeOffensiveValues works", () => {
     const selectedGen = 1;
     fetchMock.mockIf(/v2\/\w+\//, (req) => {
       if (req.url.includes("move")) {
-        return JSON.stringify(fakeNightShade);
+        return JSON.stringify(fakeAstonish);
       }
       return JSON.stringify(fakeGhostType);
     });
@@ -339,7 +339,7 @@ describe("test scoreTeamMovesVsTarget", () => {
     expect(
       await scoreTeamMovesVsTarget({
         team: [fakeAbraSkeleton],
-        target: fakeMisdreavusFull,
+        targetFull: fakeMisdreavusFull,
         P,
         gen: 7,
         versionGroup: "sword-shield",
@@ -352,7 +352,7 @@ describe("test scoreTeamMovesVsTarget", () => {
     ]);
   });
 
-  it("raises score slightly if attacker is less vulnerable", async () => {
+  it("raises score if attacker is less vulnerable", async () => {
     fetchMock.mockIf(/v2\/\w+\//, (req) => {
       if (req.url.includes("pokemon")) {
         return JSON.stringify(fakePansageFull);
@@ -370,7 +370,7 @@ describe("test scoreTeamMovesVsTarget", () => {
     expect(
       await scoreTeamMovesVsTarget({
         team: [fakePansage],
-        target: fakeSimipourFull,
+        targetFull: fakeSimipourFull,
         P,
         gen: 7,
         versionGroup: "sword-shield",
@@ -379,6 +379,38 @@ describe("test scoreTeamMovesVsTarget", () => {
       {
         pokemon: fakePansage,
         scores: [{ name: "vine-whip", score: 24.0 }],
+      },
+    ]);
+  });
+
+  it("works with target moves", async () => {
+    fetchMock.mockIf(/v2\/\w+\//, (req) => {
+      if (req.url.includes("pokemon")) {
+        return JSON.stringify(fakeAbraFull);
+      }
+      if (req.url.includes("move")) {
+        return JSON.stringify(fakeConfusion);
+      }
+      if (req.url.includes("type")) {
+        if (req.url.includes("psychic")) return JSON.stringify(fakePsychicType);
+        if (req.url.includes("ghost")) return JSON.stringify(fakeGhostType);
+      }
+      return "";
+    });
+    const P = new PokeAPIService();
+    expect(
+      await scoreTeamMovesVsTarget({
+        team: [fakeAbraSkeleton],
+        targetFull: fakeMisdreavusFull,
+        targetMoves: { astonish: fakeAstonish },
+        P,
+        gen: 7,
+        versionGroup: "sword-shield",
+      })
+    ).toEqual([
+      {
+        pokemon: fakeAbraSkeleton,
+        scores: [{ name: "confusion", score: 1.5 }],
       },
     ]);
   });
