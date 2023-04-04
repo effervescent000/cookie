@@ -7,6 +7,7 @@ import type { IMoveScores, ITeamTypeScores } from "~/interfaces";
 import {
   fakeAbraFull,
   fakeAbraSkeleton,
+  fakeAgility,
   fakeAlakazamSkeleton,
   fakeAstonish,
   fakeConfusion,
@@ -413,6 +414,42 @@ describe("test scoreTeamMovesVsTarget", () => {
         scores: [{ name: "confusion", score: 1.5 }],
       },
     ]);
+  });
+  it("decreases the static typing vuln modifier the more moves are known", async () => {
+    // for this, we are going to pass in a single known move that doesn't do damage.
+    // the output of this should NEVER be lower than the result with no known moves.
+    fetchMock.mockIf(/v2\/\w+\//, (req) => {
+      if (req.url.includes("pokemon")) {
+        return JSON.stringify(fakeAbraFull);
+      }
+      if (req.url.includes("move")) {
+        return JSON.stringify(fakeConfusion);
+      }
+      if (req.url.includes("type")) {
+        if (req.url.includes("psychic")) return JSON.stringify(fakePsychicType);
+        if (req.url.includes("ghost")) return JSON.stringify(fakeGhostType);
+      }
+      return "";
+    });
+    const P = new PokeAPIService();
+    const resultWithNoMoves = await scoreTeamMovesVsTarget({
+      team: [fakeAbraSkeleton],
+      targetFull: fakeMisdreavusFull,
+      P,
+      gen: 7,
+      versionGroup: "sword-shield",
+    });
+    const resultWithNonDamagingMove = await scoreTeamMovesVsTarget({
+      team: [fakeAbraSkeleton],
+      targetFull: fakeMisdreavusFull,
+      targetMoves: { agility: fakeAgility },
+      P,
+      gen: 7,
+      versionGroup: "sword-shield",
+    });
+    expect(resultWithNoMoves[0].scores[0].score).toBeLessThan(
+      resultWithNonDamagingMove[0].scores[0].score
+    );
   });
 });
 

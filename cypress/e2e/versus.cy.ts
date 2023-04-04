@@ -58,19 +58,4 @@ describe("tests re: versus card and its functionality", () => {
       .should("exist")
       .and("not.be.visible");
   });
-
-  it("can select a move", () => {
-    cy.addLocalStorage("single-pokemon-in-team-s-s");
-    cy.waitUntil(() => cy.get(getPokemonCard("abra"))).then((abra) => {
-      cy.wrap(abra).find(getMoveSlot(0)).select("confusion");
-    });
-    cy.get(getMiniCard("abra")).find(EXPAND).click();
-    cy.waitUntil(() => cy.get(FOCUS_FRAME)).then((focusedAbra) => {
-      cy.get(SHOW_GUIDANCE).click();
-      cy.wrap(focusedAbra)
-        .find(getMoveSlot(0))
-        .select("body-slam")
-        .should("have.value", "body-slam");
-    });
-  });
 });

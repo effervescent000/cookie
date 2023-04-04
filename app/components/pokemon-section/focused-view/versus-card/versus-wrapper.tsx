@@ -7,8 +7,8 @@ import { makeLookup } from "~/utils/general-utils";
 import { useMoveList } from "~/utils/hooks/use-move-list";
 import PokeAPIService from "~/utils/pokeapi-service";
 import { scoreTeamMovesVsTarget } from "~/utils/scoring-helpers";
-import { properCase } from "~/utils/text-utils";
 import MoveSelectWrapper from "./move-select-wrapper";
+import VersusLabel from "./versus-label";
 
 const VersusWrapper = ({
   pokemon,
@@ -22,7 +22,7 @@ const VersusWrapper = ({
   const { team, versionGroup } = useContext(PokemonContext);
 
   const [versusValues, setVersusValues] = useState<
-    { pokemon: IPokeSkeleton; scores: { [key: string]: any } }[]
+    { pokemon: IPokeSkeleton; scores: { [key: string]: any }[] }[]
   >([]);
   const [skeleton, setSkeleton] = useState<IPokeSkeleton>({
     id: -1,
@@ -32,6 +32,7 @@ const VersusWrapper = ({
   const [fullMoves, setFullMoves] = useState<{ [key: string]: IMoveResponse }>(
     {}
   );
+  const [timeStamp, setTimeStamp] = useState(0);
 
   const moveList = useMoveList({
     fullPokemon: pokemon,
@@ -41,16 +42,25 @@ const VersusWrapper = ({
 
   useEffect(() => {
     const P = new PokeAPIService();
+    const now = Date.now();
+    setTimeStamp(now);
     const getFullMoves = async () => {
-      const results = await Promise.all(
-        Object.values(skeleton.moves)
-          .filter((move) => !!move)
-          .map(async (move) => await P.getMove(move))
-      );
-      setFullMoves(makeLookup(results, "name"));
+      const results = {
+        data: await Promise.all(
+          Object.values(skeleton.moves)
+            .filter((move) => !!move)
+            .map(async (move) => await P.getMove(move))
+        ),
+        time: now,
+      };
+      // setFullMoves(makeLookup(results, "name"));
+      if (results.time === timeStamp) {
+        setFullMoves(makeLookup(results.data, "name"));
+      }
     };
 
     getFullMoves();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skeleton.moves]);
 
   useEffect(() => {
@@ -97,16 +107,15 @@ const VersusWrapper = ({
             existingMoves={skeleton.moves}
             merge={mergeMove}
           />
-          {versusValues.slice(0, 2).map(({ pokemon, scores }) =>
-            scores.length ? (
-              <div key={pokemon.name}>
-                Use {properCase(pokemon.name)} with {properCase(scores[0].name)}{" "}
-                ({scores[0].score} pts)
-              </div>
-            ) : (
-              ""
-            )
-          )}
+          {versusValues
+            .slice(0, 2)
+            .map((score, i) =>
+              score?.scores.length ? (
+                <VersusLabel dataCy={`score-${i}`} key={i} score={score} />
+              ) : (
+                ""
+              )
+            )}
         </>
       )}
     </div>

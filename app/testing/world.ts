@@ -1813,6 +1813,70 @@ export const fakeVineWhip = {
   },
 };
 
+export const fakeAgility = {
+  accuracy: null,
+  damage_class: {
+    name: "status",
+    url: "https://pokeapi.co/api/v2/move-damage-class/1/",
+  },
+  effect_chance: null,
+  effect_changes: [],
+  generation: {
+    name: "generation-i",
+    url: "https://pokeapi.co/api/v2/generation/1/",
+  },
+  id: 97,
+  machines: [
+    {
+      machine: {
+        url: "https://pokeapi.co/api/v2/machine/1601/",
+      },
+      version_group: {
+        name: "sword-shield",
+        url: "https://pokeapi.co/api/v2/version-group/20/",
+      },
+    },
+  ],
+  meta: {
+    ailment: {
+      name: "none",
+      url: "https://pokeapi.co/api/v2/move-ailment/0/",
+    },
+    ailment_chance: 0,
+    category: {
+      name: "net-good-stats",
+      url: "https://pokeapi.co/api/v2/move-category/2/",
+    },
+    crit_rate: 0,
+    drain: 0,
+    flinch_chance: 0,
+    healing: 0,
+    max_hits: null,
+    max_turns: null,
+    min_hits: null,
+    min_turns: null,
+    stat_chance: 0,
+  },
+  name: "agility",
+  past_values: [],
+  power: null,
+  pp: 30,
+  priority: 0,
+  stat_changes: [
+    {
+      change: 2,
+      stat: {
+        name: "speed",
+        url: "https://pokeapi.co/api/v2/stat/6/",
+      },
+    },
+  ],
+  type: {
+    name: "psychic",
+    url: "https://pokeapi.co/api/v2/type/14/",
+  },
+};
+
 // *******************************
 // TYPES
 // *******************************

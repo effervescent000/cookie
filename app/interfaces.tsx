@@ -88,7 +88,7 @@ export interface ITypeResponse {
 export interface IMoveResponse {
   name: string;
   type: IResourceListItem;
-  accuracy: number;
+  accuracy: number | null;
   meta: {
     crit_rate: number | null;
     flinch_chance: number | null;
