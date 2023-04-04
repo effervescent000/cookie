@@ -7,7 +7,7 @@ import { makeLookup } from "~/utils/general-utils";
 import { useMoveList } from "~/utils/hooks/use-move-list";
 import PokeAPIService from "~/utils/pokeapi-service";
 import { scoreTeamMovesVsTarget } from "~/utils/scoring-helpers";
-import MoveSelectWrapper from "./move-select-wrapper";
+import MoveSelectWrapper from "../../../common/move-select-wrapper";
 import VersusLabel from "./versus-label";
 
 const VersusWrapper = ({

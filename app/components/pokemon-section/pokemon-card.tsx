@@ -19,7 +19,7 @@ import EditIcons from "./edit-icons";
 import SpriteFrame from "../common/sprite-frame";
 import ScoreCard from "./score-card";
 import EvolutionSelector from "./evolution-selector";
-import MoveSelectWrapper from "./focused-view/versus-card/move-select-wrapper";
+import MoveSelectWrapper from "../common/move-select-wrapper";
 import { useMoveList } from "~/utils/hooks/use-move-list";
 
 const PokemonCard = ({
