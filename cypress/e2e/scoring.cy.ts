@@ -1,4 +1,4 @@
-import { makeDataCy } from "support/utils";
+import { defaultWaitUntilConfigs, makeDataCy } from "support/utils";
 
 const abraCard = "poke-card-abra";
 
@@ -49,18 +49,19 @@ describe("Tests for move functionality", () => {
   it("only recalculates for the changed pokemon", () => {
     cy.addLocalStorage("two-pokemon-in-team-s-s");
     // wait until the move score is settled before proceeding
-
-    cy.waitUntil(() =>
-      cy
-        .get(makeDataCy("poke-card-abra"))
-        .find(makeDataCy("move-score-card"))
-        .find("svg")
-        .should("not.exist")
-        .then(() => {
-          cy.get(makeDataCy("poke-card-alakazam"))
-            .find(makeDataCy("move-score-card"))
-            .should("not.have.descendants", "svg");
-        })
+    cy.waitUntil(
+      () =>
+        cy
+          .get(makeDataCy("poke-card-abra"))
+          .find(makeDataCy("move-score-card"))
+          .find("svg")
+          .should("not.exist")
+          .then(() => {
+            cy.get(makeDataCy("poke-card-alakazam"))
+              .find(makeDataCy("move-score-card"))
+              .should("not.have.descendants", "svg");
+          }),
+      defaultWaitUntilConfigs
     );
   });
 });

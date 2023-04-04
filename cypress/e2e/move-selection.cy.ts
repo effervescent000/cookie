@@ -1,4 +1,11 @@
-import { getMoveSlot, getPokemonCard } from "support/constants";
+import {
+  EXPAND,
+  FOCUS_FRAME,
+  getMiniCard,
+  getMoveSlot,
+  getPokemonCard,
+  SHOW_GUIDANCE,
+} from "support/constants";
 import {
   defaultWaitUntilConfigs,
   makeDataCy,
@@ -49,5 +56,11 @@ describe("tests re: working with moves", () => {
     cy.wait(50);
     cy.get("@custom-move-input").should("have.value", "blizzard");
     cy.get("@moveSelect").should("have.value", "_other");
+  });
+
+  it("can use custom moves with guidance on", () => {
+    cy.addLocalStorage("two-pokemon-in-team-with-moves-s-s");
+    cy.get(getMiniCard("abra")).find(EXPAND).click();
+    cy.get(FOCUS_FRAME).find(SHOW_GUIDANCE).click();
   });
 });

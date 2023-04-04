@@ -1,0 +1,30 @@
+{
+  "activeProfileId": 1,
+  "profile-1": {
+    "name": "",
+    "values": {
+      "team": [
+        {
+          "name": "abra",
+          "moves": {
+            "0": "confusion",
+            "1": "_other:blizzard",
+            "2": "",
+            "3": ""
+          },
+          "id": 0
+        },
+        {
+          "name": "alakazam",
+          "moves": { "0": "psychic", "1": "", "2": "", "3": "" },
+          "id": 1
+        }
+      ],
+      "bench": [],
+      "gen": 8,
+      "versionGroup": "sword-shield",
+      "pokemonIdCounter": 0
+    }
+  },
+  "profileIdCounter": 2
+}
