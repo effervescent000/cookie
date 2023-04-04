@@ -14,10 +14,12 @@ import tailwindStylesheetUrl from "./styles/tailwind.css";
 import reactTooltipStylesheetUrl from "react-tooltip/dist/react-tooltip.css";
 
 import type {
+  IMoveResponse,
   IMoveScores,
   IPokemonFull,
   IPokeSkeleton,
   IProfile,
+  IResourceListItem,
 } from "./interfaces";
 
 import { PokemonContext } from "~/pokemon-context";
@@ -32,6 +34,8 @@ import {
   sumCompiledTeamValues,
 } from "./utils/scoring-helpers";
 import { makeLookup } from "./utils/general-utils";
+import { isFullMove } from "./utils/type-guards";
+import { getGeneration } from "./utils/text-utils";
 
 export const links: LinksFunction = () => {
   return [
@@ -73,6 +77,9 @@ export default function App() {
   const [statScores, setStatScores] = useState<{
     [id: number]: number | undefined;
   }>({});
+  const [allMoves, setAllMoves] = useState<
+    (IResourceListItem | IMoveResponse)[]
+  >([]);
 
   useEffect(() => {
     const P = new PokeAPIService();
@@ -178,6 +185,19 @@ export default function App() {
     getStatScores();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [team, bench, versionGroup]);
+
+  useEffect(() => {
+    const P = new PokeAPIService();
+    const getAllMovesList = async () => {
+      const result = await P.getAllMoves();
+      const filteredMoves = result.filter(
+        (move) => !isFullMove(move) || getGeneration(move.generation) <= gen
+      );
+      setAllMoves(filteredMoves);
+    };
+
+    getAllMovesList();
+  }, [gen]);
 
   const getActiveProfile = () => {
     return JSON.parse(
@@ -328,6 +348,7 @@ export default function App() {
         addNewProfile,
         moveScores,
         statScores,
+        allMoves,
       }}
     >
       <html lang="en" className="h-full">

@@ -1,4 +1,5 @@
-import type { IOptions } from "~/interfaces";
+import { GEN_LOOKUP_BY_ROMAN_NUMERAL } from "~/constants/versions-constants";
+import type { IOptions, IResourceListItem } from "~/interfaces";
 
 export const properCase = (str: string) =>
   str
@@ -16,3 +17,7 @@ export const sortObject = (a: any, b: any, key: string = "name") => {
   if (a[key] > b[key]) return 1;
   return 0;
 };
+
+export const getGeneration = (generation: IResourceListItem) =>
+  GEN_LOOKUP_BY_ROMAN_NUMERAL[generation.name.split("-")[1].toUpperCase()]
+    .value;

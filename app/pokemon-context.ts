@@ -1,9 +1,11 @@
 import { createContext } from "react";
 
 import type {
+  IMoveResponse,
   IMoveScores,
   IPokemonFull,
   IPokeSkeleton,
+  IResourceListItem,
   ITeamTypeScores,
   IValues,
 } from "./interfaces";
@@ -39,6 +41,7 @@ export const PokemonContext = createContext<{
   addNewProfile: () => void;
   moveScores: IMoveScores;
   statScores: { [id: number]: number | undefined };
+  allMoves: (IResourceListItem | IMoveResponse)[];
 }>({
   gen: 0,
   setGen: (target) => {},
@@ -62,4 +65,5 @@ export const PokemonContext = createContext<{
   addNewProfile: () => {},
   moveScores: {},
   statScores: {},
+  allMoves: [],
 });
