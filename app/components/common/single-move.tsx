@@ -18,7 +18,7 @@ const SingleMove = ({
   merge: (move: string, i: number) => void;
   slot: number;
   classes?: string;
-  allMoves: (IResourceListItem | IMoveResponse)[];
+  allMoves: string[];
 }) => {
   const isCustomMove = thisMove.includes(CUSTOM_MOVE_KEY);
   const moveName = isCustomMove ? thisMove.split(":")[1] || "" : thisMove;
@@ -38,7 +38,7 @@ const SingleMove = ({
           value={moveName}
           placeholder="Other move"
           callback={(value) => merge(`${CUSTOM_MOVE_KEY}:${value}`, slot)}
-          options={allMoves.map(({ name }) => name)}
+          options={allMoves}
           dataCy="custom-move-input"
         />
       ) : (

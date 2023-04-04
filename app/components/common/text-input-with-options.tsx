@@ -18,7 +18,7 @@ const TextInputWithOptions = ({
   dataCy?: string;
 }) => {
   return (
-    <div>
+    <div className="relative">
       <span>{label}</span>
       <input
         type="text"
@@ -28,7 +28,7 @@ const TextInputWithOptions = ({
         data-cy={dataCy}
       />
       {value && value.trim().length > 0 && (
-        <ul>
+        <ul className="absolute text-sm">
           {options
             .filter((opt) =>
               opt.replace("-", " ").includes(value.toLowerCase())
