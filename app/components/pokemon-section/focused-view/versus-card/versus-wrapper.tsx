@@ -97,9 +97,9 @@ const VersusWrapper = ({
             existingMoves={skeleton.moves}
             merge={mergeMove}
           />
-          {versusValues.slice(0, 2).map(({ pokemon, scores }) =>
+          {versusValues.slice(0, 2).map(({ pokemon, scores }, i) =>
             scores.length ? (
-              <div key={pokemon.name}>
+              <div key={pokemon.name} data-cy={`score-${i}`}>
                 Use {properCase(pokemon.name)} with {properCase(scores[0].name)}{" "}
                 ({scores[0].score} pts)
               </div>
