@@ -1483,7 +1483,7 @@ export const fakeAlakazamSkeleton = {
 export const fakeMisdreavusSkeleton = {
   id: 2,
   name: "misdreavus",
-  moves: { 1: "night-shade", 2: "", 3: "", 4: "" },
+  moves: { 1: "astonish", 2: "", 3: "", 4: "" },
 };
 
 export const fakeRegisteelSkeleton = {
@@ -1519,7 +1519,7 @@ export const fakePound = {
     name: "normal",
     url: "https://pokeapi.co/api/v2/type/1/",
   },
-} as IMoveResponse;
+} as unknown as IMoveResponse;
 
 export const fakeConfusion = {
   accuracy: 100,

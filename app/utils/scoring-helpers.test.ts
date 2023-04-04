@@ -246,6 +246,7 @@ describe("makeOffensiveValues works", () => {
         pokemon: fakeMisdreavusSkeleton,
         P,
         gen: selectedGen,
+        allMoves: ["astonish"],
       })
     ).toStrictEqual(
       fillOutValues(
@@ -274,6 +275,7 @@ describe("makeOffensiveValues works", () => {
         pokemon: fakeMisdreavusSkeleton,
         P,
         gen: selectedGen,
+        allMoves: ["astonish"],
       })
     ).toStrictEqual(
       fillOutValues(
@@ -301,6 +303,7 @@ describe("makeOffensiveValues works", () => {
         pokemon: fakeRegisteelSkeleton,
         P,
         gen: selectedGen,
+        allMoves: ["iron-head"],
       })
     ).toStrictEqual(
       fillOutValues(
@@ -344,6 +347,7 @@ describe("test scoreTeamMovesVsTarget", () => {
         P,
         gen: 7,
         versionGroup: "sword-shield",
+        allMoves: ["confusion"],
       })
     ).toEqual([
       {
@@ -375,6 +379,7 @@ describe("test scoreTeamMovesVsTarget", () => {
         P,
         gen: 7,
         versionGroup: "sword-shield",
+        allMoves: ["vine-whip"],
       })
     ).toEqual([
       {
@@ -407,6 +412,7 @@ describe("test scoreTeamMovesVsTarget", () => {
         P,
         gen: 7,
         versionGroup: "sword-shield",
+        allMoves: ["confusion", "astonish"],
       })
     ).toEqual([
       {
@@ -438,6 +444,7 @@ describe("test scoreTeamMovesVsTarget", () => {
       P,
       gen: 7,
       versionGroup: "sword-shield",
+      allMoves: ["confusion", "astonish", "agility"],
     });
     const resultWithNonDamagingMove = await scoreTeamMovesVsTarget({
       team: [fakeAbraSkeleton],
@@ -446,6 +453,7 @@ describe("test scoreTeamMovesVsTarget", () => {
       P,
       gen: 7,
       versionGroup: "sword-shield",
+      allMoves: ["confusion", "astonish", "agility"],
     });
     expect(resultWithNoMoves[0].scores[0].score).toBeLessThan(
       resultWithNonDamagingMove[0].scores[0].score

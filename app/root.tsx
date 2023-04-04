@@ -32,6 +32,8 @@ import {
   sumCompiledTeamValues,
 } from "./utils/scoring-helpers";
 import { makeLookup } from "./utils/general-utils";
+import { isFullMove } from "./utils/type-guards";
+import { getGeneration } from "./utils/text-utils";
 
 export const links: LinksFunction = () => {
   return [
@@ -73,6 +75,7 @@ export default function App() {
   const [statScores, setStatScores] = useState<{
     [id: number]: number | undefined;
   }>({});
+  const [allMoves, setAllMoves] = useState<string[]>([]);
 
   useEffect(() => {
     const P = new PokeAPIService();
@@ -94,6 +97,7 @@ export default function App() {
         pokemon: team,
         P,
         gen,
+        allMoves,
       });
       setTeamOffScores({
         raw: currentScores.raw,
@@ -104,7 +108,7 @@ export default function App() {
 
     getTeamDefScores();
     getTeamOffScores();
-  }, [gen, team]);
+  }, [allMoves, gen, team]);
 
   useEffect(() => {
     const getMoveScores = async () => {
@@ -131,6 +135,7 @@ export default function App() {
                   fullPokemon,
                   versionGroup,
                   gen,
+                  allMoves,
                 }),
               };
             }
@@ -177,7 +182,20 @@ export default function App() {
     getMoveScores();
     getStatScores();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [team, bench, versionGroup]);
+  }, [team, bench, versionGroup, gen, allMoves]);
+
+  useEffect(() => {
+    const P = new PokeAPIService();
+    const getAllMovesList = async () => {
+      const result = await P.getAllMoves();
+      const filteredMoves = result.filter(
+        (move) => !isFullMove(move) || getGeneration(move.generation) <= gen
+      );
+      setAllMoves(filteredMoves.map(({ name }) => name));
+    };
+
+    getAllMovesList();
+  }, [gen]);
 
   const getActiveProfile = () => {
     return JSON.parse(
@@ -328,6 +346,7 @@ export default function App() {
         addNewProfile,
         moveScores,
         statScores,
+        allMoves,
       }}
     >
       <html lang="en" className="h-full">

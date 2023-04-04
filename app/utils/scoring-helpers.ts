@@ -27,6 +27,7 @@ import {
   DEF_SCORING_VALUES,
   OFF_SCORING_VALUES,
 } from "~/constants/scoring-constants";
+import { getMoveName } from "./text-utils";
 
 export const scoreSingleMove = async ({
   pokemon,
@@ -53,6 +54,7 @@ export const scoreMoves = async ({
   gen,
   target,
   onlyKnown,
+  allMoves,
 }: {
   pokemon: IPokeSkeleton;
   fullPokemon: IPokemonFull;
@@ -60,12 +62,15 @@ export const scoreMoves = async ({
   gen: number;
   target?: IPokemonFull;
   onlyKnown?: boolean;
+  allMoves: string[];
 }) => {
   const P = new PokeAPIService();
   const scores: { [key: string]: { dmg: number; score: number } } = {};
 
   const thisPokeMoves = _.uniq(
-    Object.values(pokemon.moves).filter((move) => !!move)
+    Object.values(pokemon.moves).filter(
+      (move) => !!move && allMoves.includes(move)
+    )
   );
 
   let movesToScore: IMove[] = [];
@@ -202,17 +207,19 @@ export const makeOffensiveValues = async ({
   pokemon,
   P,
   gen,
+  allMoves,
 }: {
   pokemon: IPokeSkeleton;
   P: PokeAPIService;
   gen: number;
+  allMoves: string[];
 }) => {
   const thisPokeValues: { [key: string]: number } = {};
   const selectedMoves = await Promise.all(
     Object.values(pokemon.moves)
-      .filter((move) => !!move)
+      .filter((move) => !!move && allMoves.includes(getMoveName(move)))
       .map(async (move) => {
-        return await P.getMove(move);
+        return await P.getMove(getMoveName(move));
       })
   );
   const moveTypes = await Promise.all(
@@ -258,10 +265,12 @@ export const makeTeamOffensiveValues = async ({
   pokemon,
   P,
   gen,
+  allMoves,
 }: {
   pokemon: IPokeSkeleton[];
   P: PokeAPIService;
   gen: number;
+  allMoves: string[];
 }) => {
   const finalValues: { final: number; raw: IValues } = { raw: {}, final: 0 };
   const pokeValues: {
@@ -271,7 +280,7 @@ export const makeTeamOffensiveValues = async ({
   }[] = await Promise.all(
     pokemon.map(async (poke) => {
       const thisPokeValues = scoreValues({
-        values: await makeOffensiveValues({ pokemon: poke, P, gen }),
+        values: await makeOffensiveValues({ pokemon: poke, P, gen, allMoves }),
         scores: OFF_SCORING_VALUES,
       });
       return { name: poke.name, values: thisPokeValues, id: poke.id };
@@ -380,6 +389,7 @@ export const scoreTeamMovesVsTarget = async ({
   P,
   gen,
   versionGroup,
+  allMoves,
 }: {
   team: IPokeSkeleton[];
   targetFull: IPokemonFull;
@@ -387,6 +397,7 @@ export const scoreTeamMovesVsTarget = async ({
   P: PokeAPIService;
   gen: number;
   versionGroup: string;
+  allMoves: string[];
 }) => {
   const teamFullPokemon = makeLookup(
     await P.getPokemonByName(team.map(({ name }) => name)),
@@ -402,6 +413,7 @@ export const scoreTeamMovesVsTarget = async ({
         gen,
         target: targetFull,
         onlyKnown: true,
+        allMoves,
       });
       const attackerDefenses = await makeDefensiveValues({
         pokemon: teamFullPokemon[attacker.name],

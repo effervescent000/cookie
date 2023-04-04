@@ -86,18 +86,19 @@ export interface ITypeResponse {
 }
 
 export interface IMoveResponse {
-  name: string;
-  type: IResourceListItem;
   accuracy: number | null;
+  damage_class: IResourceListItem;
+  generation: IResourceListItem;
   meta: {
     crit_rate: number | null;
     flinch_chance: number | null;
     max_hits: number | null;
     min_hits: number | null;
   } | null;
+  name: string;
   power: number | null;
   pp: number | null;
-  damage_class: IResourceListItem;
+  type: IResourceListItem;
 }
 
 export interface IValues {

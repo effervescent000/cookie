@@ -93,6 +93,7 @@ export const useMoveList = ({
         value: name,
       }));
       sortArray(filteredMoves, { by: "value" });
+      filteredMoves.push({ name: "Other", value: "_other" });
       setMoveList(filteredMoves);
     }
   }, [fullPokemon, moveScores, prevEvoMoves, targetPoke.id, versionGroup]);

@@ -14,13 +14,13 @@ import {
 } from "~/utils/scoring-helpers";
 import { DEF_SCORING_VALUES } from "~/constants/scoring-constants";
 import PokeAPIService from "~/utils/pokeapi-service";
+import { useMoveList } from "~/utils/hooks/use-move-list";
 
 import EditIcons from "./edit-icons";
 import SpriteFrame from "../common/sprite-frame";
 import ScoreCard from "./score-card";
 import EvolutionSelector from "./evolution-selector";
-import MoveSelectWrapper from "./focused-view/versus-card/move-select-wrapper";
-import { useMoveList } from "~/utils/hooks/use-move-list";
+import MoveSelectWrapper from "../common/move-select-wrapper";
 
 const PokemonCard = ({
   targetPoke,

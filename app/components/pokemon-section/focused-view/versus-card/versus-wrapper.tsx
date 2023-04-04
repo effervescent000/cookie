@@ -7,7 +7,8 @@ import { makeLookup } from "~/utils/general-utils";
 import { useMoveList } from "~/utils/hooks/use-move-list";
 import PokeAPIService from "~/utils/pokeapi-service";
 import { scoreTeamMovesVsTarget } from "~/utils/scoring-helpers";
-import MoveSelectWrapper from "./move-select-wrapper";
+import { getMoveName } from "~/utils/text-utils";
+import MoveSelectWrapper from "../../../common/move-select-wrapper";
 import VersusLabel from "./versus-label";
 
 const VersusWrapper = ({
@@ -19,7 +20,7 @@ const VersusWrapper = ({
   gen: number;
   show?: boolean;
 }) => {
-  const { team, versionGroup } = useContext(PokemonContext);
+  const { team, versionGroup, allMoves } = useContext(PokemonContext);
 
   const [versusValues, setVersusValues] = useState<
     { pokemon: IPokeSkeleton; scores: { [key: string]: any }[] }[]
@@ -48,12 +49,11 @@ const VersusWrapper = ({
       const results = {
         data: await Promise.all(
           Object.values(skeleton.moves)
-            .filter((move) => !!move)
-            .map(async (move) => await P.getMove(move))
+            .filter((move) => !!move && allMoves.includes(getMoveName(move)))
+            .map(async (move) => await P.getMove(getMoveName(move)))
         ),
         time: now,
       };
-      // setFullMoves(makeLookup(results, "name"));
       if (results.time === timeStamp) {
         setFullMoves(makeLookup(results.data, "name"));
       }
@@ -82,13 +82,14 @@ const VersusWrapper = ({
           P,
           gen,
           versionGroup,
+          allMoves,
         });
         setVersusValues(result);
       }
     };
 
     getVersusValues();
-  }, [fullMoves, gen, pokemon, team, versionGroup]);
+  }, [allMoves, fullMoves, gen, pokemon, team, versionGroup]);
 
   const mergeMove = (move: string, i: number) => {
     setSkeleton({ ...skeleton, moves: { ...skeleton.moves, [i]: move } });

@@ -1,3 +1,4 @@
+import sortArray from "sort-array";
 import type {
   IEvolutionResponse,
   IMoveResponse,
@@ -8,7 +9,7 @@ import type {
   IVersionGroupResponse,
 } from "~/interfaces";
 
-import { properCase, sortObject, sortObjectByValue } from "./text-utils";
+import { sortObject } from "./text-utils";
 
 const cacheName = "pokecache";
 const ROOT_URL = "https://pokeapi.co/api/v2";
@@ -19,7 +20,7 @@ const mergePokesIntoResourceList = async (
   if ("caches" in window) {
     const cache = await caches.open(cacheName);
     const pokemon = await Promise.all(
-      newPokes.map(async (miniPoke: IResourceListItem) => {
+      newPokes.map(async (miniPoke) => {
         const foundPoke = await cache.match(
           `${ROOT_URL}/pokemon/${miniPoke.name}`
         );
@@ -32,6 +33,27 @@ const mergePokesIntoResourceList = async (
   const pokemon = [...newPokes];
   pokemon.sort(sortObject);
   return pokemon;
+};
+
+const mergeMovesIntoResourceList = async (
+  newMoves: IResourceListItem[]
+): Promise<(IResourceListItem | IMoveResponse)[]> => {
+  if ("caches" in window) {
+    const cache = await caches.open(cacheName);
+    const moves = await Promise.all(
+      newMoves.map(async (miniMove) => {
+        const foundMove = await cache.match(
+          `${ROOT_URL}/move/${miniMove.name}`
+        );
+        return foundMove?.json() || miniMove;
+      })
+    );
+    sortArray(moves, { by: "name" });
+    return moves;
+  }
+  const moves = [...newMoves];
+  sortArray(moves, { by: "name" });
+  return moves;
 };
 
 class PokeAPIService {
@@ -61,16 +83,6 @@ class PokeAPIService {
     }
   }
 
-  async getPokemonByRegion(region: string) {
-    const response = await this.makeGetRequest(`pokedex/${region}`);
-    const pokemon = response.pokemon_entries.map((p: any) => {
-      const pokeName = p.pokemon_species.name;
-      return { name: properCase(pokeName), value: pokeName };
-    });
-    pokemon.sort(sortObjectByValue);
-    return pokemon;
-  }
-
   async getAllPokemon() {
     const response = await this.makeGetRequest("pokemon?limit=1300");
 
@@ -94,18 +106,15 @@ class PokeAPIService {
     return results;
   }
 
-  async getPokemonByType(type: string) {
-    const response = await this.makeGetRequest(`type/${type.toLowerCase()}`);
-    const result = response.pokemon.map(
-      ({ pokemon }: { pokemon: IResourceListItem }) => pokemon
-    );
-    const pokemon = await mergePokesIntoResourceList(result);
-    return pokemon;
-  }
-
   async getType(type: string): Promise<ITypeResponse> {
     const response = await this.makeGetRequest(`type/${type.toLowerCase()}`);
     return response;
+  }
+
+  async getAllMoves() {
+    const response = await this.makeGetRequest("move?limit=1000");
+    const mergedMoves = await mergeMovesIntoResourceList(response.results);
+    return mergedMoves;
   }
 
   async getMove(move: string): Promise<IMoveResponse> {
