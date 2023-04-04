@@ -22,4 +22,4 @@ export const getGeneration = (generation: IResourceListItem) =>
   GEN_LOOKUP_BY_ROMAN_NUMERAL[generation.name.split("-")[1].toUpperCase()]
     .value;
 
-export const getMoveName = (move: string) => move.replace("_other:", "");
+export const getMoveName = (move: string) => move.replace(/_other:?/, "");
