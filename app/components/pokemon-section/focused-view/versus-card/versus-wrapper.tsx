@@ -7,8 +7,8 @@ import { makeLookup } from "~/utils/general-utils";
 import { useMoveList } from "~/utils/hooks/use-move-list";
 import PokeAPIService from "~/utils/pokeapi-service";
 import { scoreTeamMovesVsTarget } from "~/utils/scoring-helpers";
-import { properCase } from "~/utils/text-utils";
 import MoveSelectWrapper from "./move-select-wrapper";
+import VersusLabel from "./versus-label";
 
 const VersusWrapper = ({
   pokemon,
@@ -22,7 +22,7 @@ const VersusWrapper = ({
   const { team, versionGroup } = useContext(PokemonContext);
 
   const [versusValues, setVersusValues] = useState<
-    { pokemon: IPokeSkeleton; scores: { [key: string]: any } }[]
+    { pokemon: IPokeSkeleton; scores: { [key: string]: any }[] }[]
   >([]);
   const [skeleton, setSkeleton] = useState<IPokeSkeleton>({
     id: -1,
@@ -97,16 +97,11 @@ const VersusWrapper = ({
             existingMoves={skeleton.moves}
             merge={mergeMove}
           />
-          {versusValues.slice(0, 2).map(({ pokemon, scores }, i) =>
-            scores.length ? (
-              <div key={pokemon.name} data-cy={`score-${i}`}>
-                Use {properCase(pokemon.name)} with {properCase(scores[0].name)}{" "}
-                ({scores[0].score} pts)
-              </div>
-            ) : (
-              ""
-            )
-          )}
+          {versusValues
+            .slice(0, 2)
+            .map((score, i) =>
+              score?.scores.length ? <VersusLabel key={i} score={score} /> : ""
+            )}
         </>
       )}
     </div>
