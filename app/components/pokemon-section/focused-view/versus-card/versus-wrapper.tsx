@@ -53,7 +53,6 @@ const VersusWrapper = ({
         ),
         time: now,
       };
-      // setFullMoves(makeLookup(results, "name"));
       if (results.time === timeStamp) {
         setFullMoves(makeLookup(results.data, "name"));
       }
