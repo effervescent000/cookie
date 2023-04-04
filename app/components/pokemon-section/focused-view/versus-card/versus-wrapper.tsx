@@ -32,6 +32,7 @@ const VersusWrapper = ({
   const [fullMoves, setFullMoves] = useState<{ [key: string]: IMoveResponse }>(
     {}
   );
+  const [timeStamp, setTimeStamp] = useState(0);
 
   const moveList = useMoveList({
     fullPokemon: pokemon,
@@ -41,16 +42,25 @@ const VersusWrapper = ({
 
   useEffect(() => {
     const P = new PokeAPIService();
+    const now = Date.now();
+    setTimeStamp(now);
     const getFullMoves = async () => {
-      const results = await Promise.all(
-        Object.values(skeleton.moves)
-          .filter((move) => !!move)
-          .map(async (move) => await P.getMove(move))
-      );
-      setFullMoves(makeLookup(results, "name"));
+      const results = {
+        data: await Promise.all(
+          Object.values(skeleton.moves)
+            .filter((move) => !!move)
+            .map(async (move) => await P.getMove(move))
+        ),
+        time: now,
+      };
+      // setFullMoves(makeLookup(results, "name"));
+      if (results.time === timeStamp) {
+        setFullMoves(makeLookup(results.data, "name"));
+      }
     };
 
     getFullMoves();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skeleton.moves]);
 
   useEffect(() => {
@@ -100,7 +110,11 @@ const VersusWrapper = ({
           {versusValues
             .slice(0, 2)
             .map((score, i) =>
-              score?.scores.length ? <VersusLabel key={i} score={score} /> : ""
+              score?.scores.length ? (
+                <VersusLabel dataCy={`score-${i}`} key={i} score={score} />
+              ) : (
+                ""
+              )
             )}
         </>
       )}
