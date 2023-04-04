@@ -6,12 +6,16 @@ const TextInputWithOptions = ({
   placeholder,
   options,
   value,
+  classes,
+  dataCy,
 }: {
   label?: string;
   callback: (value: string) => void;
   placeholder?: string;
   options: string[];
   value?: string;
+  classes?: string;
+  dataCy?: string;
 }) => {
   return (
     <div>
@@ -20,7 +24,8 @@ const TextInputWithOptions = ({
         type="text"
         placeholder={placeholder}
         onChange={(e) => callback(e.target.value)}
-        className="m-1 w-48 rounded-md border border-light-blue bg-gray p-1"
+        className={`m-1 w-48 rounded-md border border-light-blue bg-gray p-1 ${classes}`}
+        data-cy={dataCy}
       />
       {value && value.trim().length > 0 && (
         <ul>
@@ -29,7 +34,11 @@ const TextInputWithOptions = ({
               opt.replace("-", " ").includes(value.toLowerCase())
             )
             .map((opt) => (
-              <li key={opt} onClick={() => callback(opt)}>
+              <li
+                key={opt}
+                onClick={() => callback(opt)}
+                data-cy={`custom-move-${opt}`}
+              >
                 {properCase(opt)}
               </li>
             ))}

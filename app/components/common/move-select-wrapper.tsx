@@ -1,5 +1,9 @@
 import _ from "lodash";
-import Select from "~/components/common/select";
+import { useContext } from "react";
+
+import { PokemonContext } from "~/pokemon-context";
+
+import SingleMove from "./single-move";
 
 const MoveSelectWrapper = ({
   moveList,
@@ -11,18 +15,23 @@ const MoveSelectWrapper = ({
   existingMoves: { [slot: number]: string };
   merge: (move: string, i: number) => void;
   classes?: string;
-}) => (
-  <div className={`grid ${classes}`}>
-    {_.range(4).map((i) => (
-      <Select
-        key={i}
-        options={moveList}
-        callback={(value) => merge(value, i)}
-        selection={existingMoves[i]}
-        dataCy={`move-${i}`}
-      />
-    ))}
-  </div>
-);
+}) => {
+  const { allMoves } = useContext(PokemonContext);
+
+  return (
+    <div className={`grid ${classes}`}>
+      {_.range(4).map((i) => (
+        <SingleMove
+          key={i}
+          thisMove={existingMoves[i]}
+          slot={i}
+          moveList={moveList}
+          allMoves={allMoves}
+          merge={merge}
+        />
+      ))}
+    </div>
+  );
+};
 
 export default MoveSelectWrapper;

@@ -49,7 +49,7 @@ const VersusWrapper = ({
         data: await Promise.all(
           Object.values(skeleton.moves)
             .filter((move) => !!move)
-            .map(async (move) => await P.getMove(move))
+            .map(async (move) => await P.getMove(move.replace("_other", "")))
         ),
         time: now,
       };
