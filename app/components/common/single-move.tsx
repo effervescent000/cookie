@@ -1,5 +1,3 @@
-import type { IMoveResponse, IResourceListItem } from "~/interfaces";
-
 import Select from "./select";
 import TextInputWithOptions from "./text-input-with-options";
 
@@ -29,12 +27,12 @@ const SingleMove = ({
         key={slot}
         options={moveList}
         callback={(value) => merge(value, slot)}
-        selection={isCustomMove ? "other" : thisMove}
+        selection={isCustomMove ? "_other" : thisMove}
         dataCy={`move-${slot}`}
       />
       {isCustomMove ? (
         <TextInputWithOptions
-          classes="ml-2"
+          classes="ml-4 w-[10.25rem]"
           value={moveName}
           placeholder="Other move"
           callback={(value) => merge(`${CUSTOM_MOVE_KEY}:${value}`, slot)}

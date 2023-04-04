@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { properCase } from "~/utils/text-utils";
 
 const TextInputWithOptions = ({
@@ -13,30 +15,45 @@ const TextInputWithOptions = ({
   callback: (value: string) => void;
   placeholder?: string;
   options: string[];
-  value?: string;
+  value: string;
   classes?: string;
   dataCy?: string;
 }) => {
+  const [inputValue, setInputValue] = useState(value);
+  const [showOptions, setShowOptions] = useState(false);
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+    setShowOptions(event.target.value.length > 1);
+  };
+
+  const onClick = (opt: string) => {
+    setInputValue(opt);
+    callback(opt);
+    setShowOptions(false);
+  };
+
   return (
     <div className="relative">
       <span>{label}</span>
       <input
         type="text"
         placeholder={placeholder}
-        onChange={(e) => callback(e.target.value)}
-        className={`m-1 w-48 rounded-md border border-light-blue bg-gray p-1 ${classes}`}
+        onChange={onChange}
+        className={`m-1 rounded-md border border-light-blue bg-gray p-1 ${classes}`}
         data-cy={dataCy}
+        value={inputValue}
       />
-      {value && value.trim().length > 0 && (
-        <ul className="absolute text-sm">
+      {showOptions && (
+        <ul className="absolute rounded-sm border border-gray bg-light-blue text-sm">
           {options
             .filter((opt) =>
-              opt.replace("-", " ").includes(value.toLowerCase())
+              opt.replace("-", " ").includes(inputValue.toLowerCase())
             )
             .map((opt) => (
               <li
                 key={opt}
-                onClick={() => callback(opt)}
+                onClick={() => onClick(opt)}
                 data-cy={`custom-move-${opt}`}
               >
                 {properCase(opt)}
