@@ -182,7 +182,7 @@ export default function App() {
     getMoveScores();
     getStatScores();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [team, bench, versionGroup]);
+  }, [team, bench, versionGroup, gen, allMoves]);
 
   useEffect(() => {
     const P = new PokeAPIService();
