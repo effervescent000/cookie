@@ -54,7 +54,6 @@ export const scoreMoves = async ({
   gen,
   target,
   onlyKnown,
-  allMoves,
 }: {
   pokemon: IPokeSkeleton;
   fullPokemon: IPokemonFull;
@@ -68,30 +67,33 @@ export const scoreMoves = async ({
   const scores: { [key: string]: { dmg: number; score: number } } = {};
 
   const thisPokeMoves = _.uniq(
-    Object.values(pokemon.moves).filter(
-      (move) => !!move && allMoves.includes(move)
-    )
+    Object.values(pokemon.moves)
+      .map((move) => getMoveName(move))
+      .filter((move) => !!move)
   );
 
-  let movesToScore: IMove[] = [];
+  let movesToScore: (IMove | { move: { name: string } })[] = [];
   if (onlyKnown) {
-    const knownMoves = Object.values(pokemon.moves);
-    movesToScore = fullPokemon.moves.filter((move) =>
-      knownMoves.includes(move.move.name)
-    );
+    movesToScore = thisPokeMoves.map((move) => ({ move: { name: move } }));
   } else {
-    movesToScore = fullPokemon.moves
-      .map((move) => ({
-        ...move,
-        version_group_details: move.version_group_details.filter(
-          (detail) => detail.version_group.name === versionGroup
-        ),
-      }))
-      .filter(
-        (move) =>
-          move.version_group_details[0] &&
-          move.version_group_details[0].move_learn_method.name !== "machine"
-      );
+    movesToScore = _.uniqBy(
+      [
+        ...fullPokemon.moves
+          .map((move) => ({
+            ...move,
+            version_group_details: move.version_group_details.filter(
+              (detail) => detail.version_group.name === versionGroup
+            ),
+          }))
+          .filter(
+            (move) =>
+              move.version_group_details[0] &&
+              move.version_group_details[0].move_learn_method.name !== "machine"
+          ),
+        ...thisPokeMoves.map((move) => ({ move: { name: move } })),
+      ],
+      "move.name"
+    );
   }
 
   const scoredMoves = await Promise.all(
