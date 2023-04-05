@@ -23,7 +23,7 @@ const VersusWrapper = ({
   const { team, versionGroup } = useContext(PokemonContext);
 
   const [versusValues, setVersusValues] = useState<
-    { pokemon: IPokeSkeleton; scores: { [key: string]: any }[] }[]
+    { pokemon: IPokeSkeleton; move: string; score: number }[]
   >([]);
   const [skeleton, setSkeleton] = useState<IPokeSkeleton>({
     id: -1,
@@ -109,9 +109,9 @@ const VersusWrapper = ({
             merge={mergeMove}
           />
           {versusValues
-            .slice(0, 2)
+            .slice(0, Math.round(versusValues.length * (1 / 3)))
             .map((score, i) =>
-              score?.scores.length ? (
+              score && Object.keys(score).length ? (
                 <VersusLabel dataCy={`score-${i}`} key={i} score={score} />
               ) : (
                 ""

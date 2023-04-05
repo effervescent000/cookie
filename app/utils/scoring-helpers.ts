@@ -457,7 +457,7 @@ export const scoreTeamMovesVsTarget = async ({
           ),
         })
       );
-      sortArray(arrayedResult, { by: "score", order: "desc" });
+      // sortArray(arrayedResult, { by: "score", order: "desc" });
 
       return {
         pokemon: attacker,
@@ -465,12 +465,25 @@ export const scoreTeamMovesVsTarget = async ({
       };
     })
   );
-  sortArray(allMovesScored, {
+
+  console.log(allMovesScored);
+  const flattenedScoredMoves = allMovesScored.reduce(
+    (acc, cur) => [
+      ...acc,
+      ...cur.scores.map((score) => ({
+        pokemon: cur.pokemon,
+        move: score.name,
+        score: score.score,
+      })),
+    ],
+    [] as { pokemon: IPokeSkeleton; move: string; score: number }[]
+  );
+  sortArray(flattenedScoredMoves, {
     by: "score",
     computed: {
-      score: (pokemon) => pokemon.scores[0].score,
+      score: (move) => move.score,
     },
     order: "desc",
   });
-  return allMovesScored;
+  return flattenedScoredMoves;
 };
