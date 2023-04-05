@@ -9,6 +9,7 @@ export default defineConfig({
         baseUrl: `http://localhost:${port}`,
         video: false,
         screenshotOnRunFailure: false,
+        defaultCommandTimeout: 10000,
       };
 
       // To use this:
