@@ -49,12 +49,10 @@ const VersusWrapper = ({
           .filter((move) => !!move)
           .map(async (move) => await P.getMove(getMoveName(move)))
       );
-
       if (mounted) setFullMoves(makeLookup(results, "name"));
     };
 
     getFullMoves();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     return () => {
       mounted = false;
     };
@@ -69,6 +67,7 @@ const VersusWrapper = ({
   }, [pokemon.name]);
 
   useEffect(() => {
+    let mounted = true;
     const getVersusValues = async () => {
       const P = new PokeAPIService();
       if (pokemon && team.length) {
@@ -80,11 +79,16 @@ const VersusWrapper = ({
           gen,
           versionGroup,
         });
-        setVersusValues(result);
+        if (mounted) {
+          setVersusValues(result);
+        }
       }
     };
 
     getVersusValues();
+    return () => {
+      mounted = false;
+    };
   }, [fullMoves, gen, pokemon, team, versionGroup]);
 
   const mergeMove = (move: string, i: number) => {
