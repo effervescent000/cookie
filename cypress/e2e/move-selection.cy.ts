@@ -11,6 +11,8 @@ import { makeDataCy, makeIntercepts } from "support/utils";
 describe("tests re: working with moves", () => {
   before(() => {
     cy.visitAndCheck("/");
+  });
+  beforeEach(() => {
     makeIntercepts();
   });
 

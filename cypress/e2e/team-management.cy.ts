@@ -1,8 +1,10 @@
 import { makeDataCy, makeIntercepts } from "support/utils";
 
 describe("roster management tests", () => {
-  beforeEach(() => {
+  before(() => {
     cy.visitAndCheck("/");
+  });
+  beforeEach(() => {
     makeIntercepts();
   });
 
