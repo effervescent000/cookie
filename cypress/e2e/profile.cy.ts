@@ -7,6 +7,7 @@ describe("Profile functionality", () => {
   beforeEach(() => {
     cy.visitAndCheck("/");
   });
+
   it("can create and persist a profile", () => {
     cy.get(makeDataCy("new-profile")).click();
     cy.get(makeDataCy("profile-1")).should("exist.and.be.visible");
