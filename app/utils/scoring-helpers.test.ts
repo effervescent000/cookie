@@ -347,7 +347,6 @@ describe("test scoreTeamMovesVsTarget", () => {
         P,
         gen: 7,
         versionGroup: "sword-shield",
-        allMoves: ["confusion"],
       })
     ).toEqual([
       {
@@ -379,7 +378,6 @@ describe("test scoreTeamMovesVsTarget", () => {
         P,
         gen: 7,
         versionGroup: "sword-shield",
-        allMoves: ["vine-whip"],
       })
     ).toEqual([
       {
@@ -412,7 +410,6 @@ describe("test scoreTeamMovesVsTarget", () => {
         P,
         gen: 7,
         versionGroup: "sword-shield",
-        allMoves: ["confusion", "astonish"],
       })
     ).toEqual([
       {
@@ -444,7 +441,6 @@ describe("test scoreTeamMovesVsTarget", () => {
       P,
       gen: 7,
       versionGroup: "sword-shield",
-      allMoves: ["confusion", "astonish", "agility"],
     });
     const resultWithNonDamagingMove = await scoreTeamMovesVsTarget({
       team: [fakeAbraSkeleton],
@@ -453,7 +449,6 @@ describe("test scoreTeamMovesVsTarget", () => {
       P,
       gen: 7,
       versionGroup: "sword-shield",
-      allMoves: ["confusion", "astonish", "agility"],
     });
     expect(resultWithNoMoves[0].scores[0].score).toBeLessThan(
       resultWithNonDamagingMove[0].scores[0].score
