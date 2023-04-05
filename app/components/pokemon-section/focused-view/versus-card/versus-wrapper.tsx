@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 
-import type { IMoveResponse, IPokemonFull, IPokeSkeleton } from "~/interfaces";
+import type { IPokemonFull, IPokeSkeleton } from "~/interfaces";
 
 import { PokemonContext } from "~/pokemon-context";
 import { makeLookup } from "~/utils/general-utils";
@@ -20,7 +20,7 @@ const VersusWrapper = ({
   gen: number;
   show?: boolean;
 }) => {
-  const { team, versionGroup, allMoves } = useContext(PokemonContext);
+  const { team, versionGroup } = useContext(PokemonContext);
 
   const [versusValues, setVersusValues] = useState<
     { pokemon: IPokeSkeleton; scores: { [key: string]: any }[] }[]
@@ -30,38 +30,12 @@ const VersusWrapper = ({
     name: pokemon.name,
     moves: { 0: "", 1: "", 2: "", 3: "" },
   });
-  const [fullMoves, setFullMoves] = useState<{ [key: string]: IMoveResponse }>(
-    {}
-  );
-  const [timeStamp, setTimeStamp] = useState(0);
 
   const moveList = useMoveList({
     fullPokemon: pokemon,
     versionGroup,
     targetPoke: skeleton,
   });
-
-  useEffect(() => {
-    const P = new PokeAPIService();
-    const now = Date.now();
-    setTimeStamp(now);
-    const getFullMoves = async () => {
-      const results = {
-        data: await Promise.all(
-          Object.values(skeleton.moves)
-            .filter((move) => !!move && allMoves.includes(getMoveName(move)))
-            .map(async (move) => await P.getMove(getMoveName(move)))
-        ),
-        time: now,
-      };
-      if (results.time === timeStamp) {
-        setFullMoves(makeLookup(results.data, "name"));
-      }
-    };
-
-    getFullMoves();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [skeleton.moves]);
 
   useEffect(() => {
     setSkeleton({
@@ -78,18 +52,24 @@ const VersusWrapper = ({
         const result = await scoreTeamMovesVsTarget({
           team,
           targetFull: pokemon,
-          targetMoves: fullMoves,
+          targetMoves: makeLookup(
+            await Promise.all(
+              Object.values(skeleton.moves)
+                .filter((move) => !!move)
+                .map(async (move) => await P.getMove(getMoveName(move)))
+            ),
+            "name"
+          ),
           P,
           gen,
           versionGroup,
-          allMoves,
         });
         setVersusValues(result);
       }
     };
 
     getVersusValues();
-  }, [allMoves, fullMoves, gen, pokemon, team, versionGroup]);
+  }, [gen, pokemon, skeleton.moves, team, versionGroup]);
 
   const mergeMove = (move: string, i: number) => {
     setSkeleton({ ...skeleton, moves: { ...skeleton.moves, [i]: move } });

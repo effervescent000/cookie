@@ -61,7 +61,6 @@ export const scoreMoves = async ({
   gen: number;
   target?: IPokemonFull;
   onlyKnown?: boolean;
-  allMoves: string[];
 }) => {
   const P = new PokeAPIService();
   const scores: { [key: string]: { dmg: number; score: number } } = {};
@@ -391,7 +390,6 @@ export const scoreTeamMovesVsTarget = async ({
   P,
   gen,
   versionGroup,
-  allMoves,
 }: {
   team: IPokeSkeleton[];
   targetFull: IPokemonFull;
@@ -399,7 +397,6 @@ export const scoreTeamMovesVsTarget = async ({
   P: PokeAPIService;
   gen: number;
   versionGroup: string;
-  allMoves: string[];
 }) => {
   const teamFullPokemon = makeLookup(
     await P.getPokemonByName(team.map(({ name }) => name)),
@@ -415,7 +412,6 @@ export const scoreTeamMovesVsTarget = async ({
         gen,
         target: targetFull,
         onlyKnown: true,
-        allMoves,
       });
       const attackerDefenses = await makeDefensiveValues({
         pokemon: teamFullPokemon[attacker.name],

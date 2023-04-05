@@ -1,11 +1,10 @@
-import { makeDataCy, makeIntercepts } from "support/utils";
+import { makeDataCy } from "support/utils";
 
 const abraCard = "poke-card-abra";
 
 describe("Tests for move functionality", () => {
   beforeEach(() => {
     cy.visitAndCheck("/");
-    makeIntercepts();
   });
 
   it("initializes move score properly", () => {

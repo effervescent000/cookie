@@ -58,8 +58,18 @@ describe("tests re: working with moves", () => {
     cy.get("@moveSelect").should("have.value", "_other");
   });
 
+  it("move selection works with guidance", () => {
+    cy.addLocalStorage("two-pokemon-in-team-with-basic-moves-s-s");
+    cy.get(getMiniCard("abra")).find(EXPAND).click();
+    cy.get(FOCUS_FRAME).find(SHOW_GUIDANCE).click();
+    cy.get(makeDataCy("score-0")).then((score) => {
+      cy.get(FOCUS_FRAME).find(getMoveSlot(0)).select("confusion");
+      cy.get(makeDataCy("score-0")).should("not.have.text", score.text());
+    });
+  });
+
   it("can use custom moves with guidance on", () => {
-    cy.addLocalStorage("two-pokemon-in-team-with-moves-s-s");
+    cy.addLocalStorage("two-pokemon-in-team-with-custom-moves-s-s");
     cy.get(getMiniCard("abra")).find(EXPAND).click();
     cy.get(FOCUS_FRAME).find(SHOW_GUIDANCE).click();
   });
