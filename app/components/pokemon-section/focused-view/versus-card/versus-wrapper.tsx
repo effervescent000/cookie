@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 
-import type { IPokemonFull, IPokeSkeleton } from "~/interfaces";
+import type { IMoveResponse, IPokemonFull, IPokeSkeleton } from "~/interfaces";
 
 import { PokemonContext } from "~/pokemon-context";
 import { makeLookup } from "~/utils/general-utils";
@@ -30,12 +30,35 @@ const VersusWrapper = ({
     name: pokemon.name,
     moves: { 0: "", 1: "", 2: "", 3: "" },
   });
+  const [fullMoves, setFullMoves] = useState<{ [key: string]: IMoveResponse }>(
+    {}
+  );
 
   const moveList = useMoveList({
     fullPokemon: pokemon,
     versionGroup,
     targetPoke: skeleton,
   });
+
+  useEffect(() => {
+    const P = new PokeAPIService();
+    let mounted = true;
+    const getFullMoves = async () => {
+      const results = await Promise.all(
+        Object.values(skeleton.moves)
+          .filter((move) => !!move)
+          .map(async (move) => await P.getMove(getMoveName(move)))
+      );
+
+      if (mounted) setFullMoves(makeLookup(results, "name"));
+    };
+
+    getFullMoves();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      mounted = false;
+    };
+  }, [skeleton.moves]);
 
   useEffect(() => {
     setSkeleton({
@@ -52,14 +75,7 @@ const VersusWrapper = ({
         const result = await scoreTeamMovesVsTarget({
           team,
           targetFull: pokemon,
-          targetMoves: makeLookup(
-            await Promise.all(
-              Object.values(skeleton.moves)
-                .filter((move) => !!move)
-                .map(async (move) => await P.getMove(getMoveName(move)))
-            ),
-            "name"
-          ),
+          targetMoves: fullMoves,
           P,
           gen,
           versionGroup,
@@ -69,7 +85,7 @@ const VersusWrapper = ({
     };
 
     getVersusValues();
-  }, [gen, pokemon, skeleton.moves, team, versionGroup]);
+  }, [fullMoves, gen, pokemon, team, versionGroup]);
 
   const mergeMove = (move: string, i: number) => {
     setSkeleton({ ...skeleton, moves: { ...skeleton.moves, [i]: move } });
