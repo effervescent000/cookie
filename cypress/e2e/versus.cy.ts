@@ -10,8 +10,11 @@ import {
 import { makeIntercepts } from "support/utils";
 
 describe("tests re: versus card and its functionality", () => {
-  beforeEach(() => {
+  before(() => {
     cy.visitAndCheck("/");
+  });
+
+  beforeEach(() => {
     makeIntercepts();
   });
 
