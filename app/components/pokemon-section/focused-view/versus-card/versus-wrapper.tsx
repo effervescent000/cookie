@@ -20,7 +20,7 @@ const VersusWrapper = ({
   gen: number;
   show?: boolean;
 }) => {
-  const { team, versionGroup, allMoves } = useContext(PokemonContext);
+  const { team, versionGroup } = useContext(PokemonContext);
 
   const [versusValues, setVersusValues] = useState<
     { pokemon: IPokeSkeleton; scores: { [key: string]: any }[] }[]
@@ -33,7 +33,6 @@ const VersusWrapper = ({
   const [fullMoves, setFullMoves] = useState<{ [key: string]: IMoveResponse }>(
     {}
   );
-  const [timeStamp, setTimeStamp] = useState(0);
 
   const moveList = useMoveList({
     fullPokemon: pokemon,
@@ -43,24 +42,22 @@ const VersusWrapper = ({
 
   useEffect(() => {
     const P = new PokeAPIService();
-    const now = Date.now();
-    setTimeStamp(now);
+    let mounted = true;
     const getFullMoves = async () => {
-      const results = {
-        data: await Promise.all(
-          Object.values(skeleton.moves)
-            .filter((move) => !!move && allMoves.includes(getMoveName(move)))
-            .map(async (move) => await P.getMove(getMoveName(move)))
-        ),
-        time: now,
-      };
-      if (results.time === timeStamp) {
-        setFullMoves(makeLookup(results.data, "name"));
-      }
+      const results = await Promise.all(
+        Object.values(skeleton.moves)
+          .filter((move) => !!move)
+          .map(async (move) => await P.getMove(getMoveName(move)))
+      );
+
+      if (mounted) setFullMoves(makeLookup(results, "name"));
     };
 
     getFullMoves();
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      mounted = false;
+    };
   }, [skeleton.moves]);
 
   useEffect(() => {
@@ -82,14 +79,13 @@ const VersusWrapper = ({
           P,
           gen,
           versionGroup,
-          allMoves,
         });
         setVersusValues(result);
       }
     };
 
     getVersusValues();
-  }, [allMoves, fullMoves, gen, pokemon, team, versionGroup]);
+  }, [fullMoves, gen, pokemon, team, versionGroup]);
 
   const mergeMove = (move: string, i: number) => {
     setSkeleton({ ...skeleton, moves: { ...skeleton.moves, [i]: move } });
