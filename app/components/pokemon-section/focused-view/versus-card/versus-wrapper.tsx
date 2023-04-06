@@ -109,7 +109,7 @@ const VersusWrapper = ({
             merge={mergeMove}
           />
           {versusValues
-            .slice(0, Math.round(versusValues.length * (1 / 3)))
+            .slice(0, Math.max(Math.round(versusValues.length * (1 / 3)), 1))
             .map((score, i) =>
               score && Object.keys(score).length ? (
                 <VersusLabel dataCy={`score-${i}`} key={i} score={score} />
