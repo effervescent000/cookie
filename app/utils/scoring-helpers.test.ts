@@ -351,7 +351,8 @@ describe("test scoreTeamMovesVsTarget", () => {
     ).toEqual([
       {
         pokemon: fakeAbraSkeleton,
-        scores: [{ name: "confusion", score: 5.6 }],
+        move: "confusion",
+        score: 5.6,
       },
     ]);
   });
@@ -382,7 +383,8 @@ describe("test scoreTeamMovesVsTarget", () => {
     ).toEqual([
       {
         pokemon: fakePansage,
-        scores: [{ name: "vine-whip", score: 24.0 }],
+        move: "vine-whip",
+        score: 24,
       },
     ]);
   });
@@ -414,7 +416,8 @@ describe("test scoreTeamMovesVsTarget", () => {
     ).toEqual([
       {
         pokemon: fakeAbraSkeleton,
-        scores: [{ name: "confusion", score: 1.5 }],
+        move: "confusion",
+        score: 1.5,
       },
     ]);
   });
@@ -450,8 +453,8 @@ describe("test scoreTeamMovesVsTarget", () => {
       gen: 7,
       versionGroup: "sword-shield",
     });
-    expect(resultWithNoMoves[0].scores[0].score).toBeLessThan(
-      resultWithNonDamagingMove[0].scores[0].score
+    expect(resultWithNoMoves[0].score).toBeLessThan(
+      resultWithNonDamagingMove[0].score
     );
   });
 });
