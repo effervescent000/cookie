@@ -14,6 +14,7 @@ import {
   calcDamage,
   diminishReturns,
   roundToPrecision,
+  scoreTotalStats,
 } from "./helpers";
 import PokeAPIService from "./pokeapi-service";
 
@@ -101,4 +102,10 @@ test("calcCritRate works", () => {
   expect(calcCritRate({ critStage: 1, gen: 3 })).toBe(1 / 8);
   expect(calcCritRate({ critStage: 1, gen: 7 })).toBe(1 / 8);
   expect(calcCritRate({ critStage: 0, gen: 7 })).toBe(1 / 24);
+});
+
+describe("test scoreTotalStats", () => {
+  it("works!", () => {
+    expect(scoreTotalStats(fakeGothita)).toBe(-0.3);
+  });
 });
