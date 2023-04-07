@@ -9,9 +9,7 @@ export const makeTotalsStats = (pokemon: IPokemonFull) =>
 
 export const scoreTotalStats = (pokemon: IPokemonFull) => {
   const stats = makeTotalsStats(pokemon);
-  // for now just clean it up and return.
-  // in the future we will make extra adjustments.
-  return Math.round(stats / 5) / 10;
+  return roundToPrecision((stats - 300) / 30, 1);
 };
 
 export const diminishReturns = (num: number): number => {
