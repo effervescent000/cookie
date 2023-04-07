@@ -460,14 +460,36 @@ describe("test scoreTeamMovesVsTarget", () => {
 });
 
 describe("scoreValues scores values", () => {
-  it("does the thing in a basic case", () => {
+  it("bumps low values up", () => {
     const values = { bug: 0.5, psychic: 0.5, water: 2 };
     const scores = DEF_SCORING_VALUES;
     expect(scoreValues({ values, scores })).toEqual({
       bug: 1,
       psychic: 1,
       water: -1,
-      final: 1,
+      final: 4,
+    });
+  });
+  it("does not bump high values", () => {
+    const values = {
+      bug: 0.25,
+      psychic: 0.25,
+      water: 0.25,
+      ice: 0.25,
+      dragon: 0.25,
+      fighting: 0.25,
+      normal: 0.25,
+    };
+    const scores = DEF_SCORING_VALUES;
+    expect(scoreValues({ values, scores })).toEqual({
+      bug: 1.5,
+      psychic: 1.5,
+      water: 1.5,
+      ice: 1.5,
+      dragon: 1.5,
+      fighting: 1.5,
+      normal: 1.5,
+      final: 10.5,
     });
   });
 });
