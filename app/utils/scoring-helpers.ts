@@ -319,7 +319,10 @@ export const scoreValues = ({
     { final: 0 }
   );
 
-  scoredValues.final = Object.values(scoredValues).reduce((x, y) => x + y, 0);
+  const SCORE_CURVE_CAP = 10;
+  const finalValue = Object.values(scoredValues).reduce((x, y) => x + y, 0);
+  scoredValues.final =
+    finalValue + (SCORE_CURVE_CAP - Math.min(SCORE_CURVE_CAP, finalValue)) / 3;
 
   return scoredValues;
 };
