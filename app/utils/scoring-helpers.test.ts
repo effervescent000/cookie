@@ -69,6 +69,14 @@ test("makeDelta works", () => {
     },
     processed: {},
   };
+  const fakeTeamOffValues: ITeamTypeScores = {
+    final: 4,
+    raw: {
+      abra: { values: { psychic: 1, water: 1, ground: -1 } },
+      kadabra: { values: { psychic: 1, flying: 1, rock: 1 } },
+    },
+    processed: {},
+  };
   const fakeMoveScores: IMoveScores = {
     0: {
       final: 3,
@@ -99,17 +107,23 @@ test("makeDelta works", () => {
     name: "alakazam",
     values: { psychic: 1, ground: 1, grass: 1 },
   };
+  const fakeScoringOffValues = {
+    name: "alakazam",
+    values: { psychic: 1, ground: 1, grass: 1 },
+  };
 
   expect(
     makeDelta({
       teamDefScores: fakeTeamDefValues,
       scoringPokeDefValues: fakeScoringDefValues,
+      teamOffScores: fakeTeamOffValues,
+      scoringPokeOffValues: fakeScoringOffValues,
       teamPokemon: fakeAbraSkeleton,
       scoringPokemon: fakeAlakazamSkeleton,
       moveScores: fakeMoveScores,
       statScores: fakeStatScores,
     })
-  ).toBe(8);
+  ).toBe(10);
 });
 
 describe("test scoreSingleMove", () => {
@@ -246,7 +260,6 @@ describe("makeOffensiveValues works", () => {
         pokemon: fakeMisdreavusSkeleton,
         P,
         gen: selectedGen,
-        allMoves: ["astonish"],
       })
     ).toStrictEqual(
       fillOutValues(
@@ -275,7 +288,6 @@ describe("makeOffensiveValues works", () => {
         pokemon: fakeMisdreavusSkeleton,
         P,
         gen: selectedGen,
-        allMoves: ["astonish"],
       })
     ).toStrictEqual(
       fillOutValues(
@@ -303,7 +315,6 @@ describe("makeOffensiveValues works", () => {
         pokemon: fakeRegisteelSkeleton,
         P,
         gen: selectedGen,
-        allMoves: ["iron-head"],
       })
     ).toStrictEqual(
       fillOutValues(

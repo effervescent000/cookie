@@ -10,9 +10,13 @@ import { PokemonContext } from "~/pokemon-context";
 import {
   makeDefensiveValues,
   makeDelta,
+  makeOffensiveValues,
   scoreValues,
 } from "~/utils/scoring-helpers";
-import { DEF_SCORING_VALUES } from "~/constants/scoring-constants";
+import {
+  DEF_SCORING_VALUES,
+  OFF_SCORING_VALUES,
+} from "~/constants/scoring-constants";
 import PokeAPIService from "~/utils/pokeapi-service";
 import { useMoveList } from "~/utils/hooks/use-move-list";
 
@@ -73,12 +77,21 @@ const PokemonCard = ({
             scores: DEF_SCORING_VALUES,
           }),
         };
+        const thisPokeOffValues = {
+          name: targetPoke.name,
+          values: scoreValues({
+            values: await makeOffensiveValues({ pokemon: targetPoke, P, gen }),
+            scores: OFF_SCORING_VALUES,
+          }),
+        };
         const result = team.map((teamPoke) => {
           return {
             id: teamPoke.id,
             delta: makeDelta({
               teamDefScores,
               scoringPokeDefValues: thisPokeDefValues,
+              teamOffScores,
+              scoringPokeOffValues: thisPokeOffValues,
               teamPokemon: teamPoke,
               scoringPokemon: targetPoke,
               moveScores,

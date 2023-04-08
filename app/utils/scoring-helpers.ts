@@ -208,17 +208,15 @@ export const makeOffensiveValues = async ({
   pokemon,
   P,
   gen,
-  allMoves,
 }: {
   pokemon: IPokeSkeleton;
   P: PokeAPIService;
   gen: number;
-  allMoves: string[];
 }) => {
   const thisPokeValues: { [key: string]: number } = {};
   const selectedMoves = await Promise.all(
     Object.values(pokemon.moves)
-      .filter((move) => !!move && allMoves.includes(getMoveName(move)))
+      .filter((move) => !!move)
       .map(async (move) => {
         return await P.getMove(getMoveName(move));
       })
@@ -266,12 +264,10 @@ export const makeTeamOffensiveValues = async ({
   pokemon,
   P,
   gen,
-  allMoves,
 }: {
   pokemon: IPokeSkeleton[];
   P: PokeAPIService;
   gen: number;
-  allMoves: string[];
 }) => {
   const finalValues: { final: number; raw: IValues } = { raw: {}, final: 0 };
   const pokeValues: {
@@ -281,7 +277,7 @@ export const makeTeamOffensiveValues = async ({
   }[] = await Promise.all(
     pokemon.map(async (poke) => {
       const thisPokeValues = scoreValues({
-        values: await makeOffensiveValues({ pokemon: poke, P, gen, allMoves }),
+        values: await makeOffensiveValues({ pokemon: poke, P, gen }),
         scores: OFF_SCORING_VALUES,
       });
       return { name: poke.name, values: thisPokeValues, id: poke.id };
@@ -352,6 +348,8 @@ export const sumCompiledTeamValues = (values: { [key: string]: number }) =>
 export const makeDelta = ({
   teamDefScores,
   scoringPokeDefValues,
+  teamOffScores,
+  scoringPokeOffValues,
   teamPokemon,
   scoringPokemon,
   moveScores,
@@ -359,6 +357,8 @@ export const makeDelta = ({
 }: {
   teamDefScores: ITeamTypeScores;
   scoringPokeDefValues: { name: string; values: { [key: string]: number } };
+  teamOffScores: ITeamTypeScores;
+  scoringPokeOffValues: { name: string; values: { [key: string]: number } };
   teamPokemon: IPokeSkeleton;
   scoringPokemon: IPokeSkeleton;
   moveScores: IMoveScores;
@@ -367,13 +367,18 @@ export const makeDelta = ({
   const modifiedTeamDefScores = filterKey(teamDefScores.raw, teamPokemon.name);
   modifiedTeamDefScores[scoringPokemon.name] = scoringPokeDefValues;
 
+  const modifiedTeamOffScores = filterKey(teamOffScores.raw, teamPokemon.name);
+  modifiedTeamOffScores[scoringPokemon.name] = scoringPokeOffValues;
+
   const modifiedTotalScore =
     sumCompiledTeamValues(compileTeamValues(modifiedTeamDefScores)) +
+    sumCompiledTeamValues(compileTeamValues(modifiedTeamOffScores)) +
     (_.get(moveScores, `[${scoringPokemon.id}].final`) || 0) +
     (statScores[scoringPokemon.id] || 0);
 
   const originalTotalScore =
     teamDefScores.final +
+    teamOffScores.final +
     (_.get(moveScores, `[${teamPokemon.id}].final`) || 0) +
     (statScores[teamPokemon.id] || 0);
 
