@@ -20,12 +20,16 @@ export const makeIntercepts = () => {
     req.reply({ fixture: `moves/${targetMove}.json` });
   }).as("getMove");
 
+  cy.intercept("**/v2/move", (req) => {
+    req.reply({ fixture: `moves/_all_moves.json` });
+  }).as("getMove");
+
   cy.intercept("**/v2/type/*", (req) => {
     const targetType = extractSearchFromUrl(req.url);
     req.reply({ fixture: `types/${targetType}.json` });
   }).as("getType");
 
   cy.intercept("**/v2/pokemon", (req) => {
-    req.reply();
+    req.reply({ fixture: "pokemon/_all_pokemon.json" });
   });
 };

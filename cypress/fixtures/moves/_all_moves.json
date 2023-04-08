@@ -1,0 +1,15 @@
+{
+  "count": 918,
+  "next": "https://pokeapi.co/api/v2/move?offset=20&limit=20",
+  "previous": null,
+  "results": [
+    {
+      "name": "blizzard",
+      "url": "https://pokeapi.co/api/v2/move/59/"
+    },
+    {
+      "name": "petal-blizzard",
+      "url": "https://pokeapi.co/api/v2/move/572/"
+    }
+  ]
+}
