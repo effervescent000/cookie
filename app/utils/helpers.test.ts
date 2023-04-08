@@ -1,5 +1,6 @@
 import {
   fakeConfusion,
+  fakeDive,
   fakeGhostType,
   fakeGothita,
   fakeGrassType,
@@ -8,6 +9,7 @@ import {
   fakePound,
   fakePsychicType,
   fakeVineWhip,
+  fakeWaterType,
 } from "~/testing/world";
 import {
   calcCritRate,
@@ -85,6 +87,21 @@ describe("calcDamage tests", () => {
         1
       )
     ).toBe(7.5);
+  });
+
+  it("handles multi-turn moves", async () => {
+    fetchMock.mockResponse(JSON.stringify(fakeWaterType));
+    expect(
+      roundToPrecision(
+        await calcDamage({
+          pokemon: fakePansageFull,
+          move: fakeDive,
+          gen: 7,
+          P,
+        }),
+        1
+      )
+    ).toBe(3.6);
   });
 });
 

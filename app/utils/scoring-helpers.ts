@@ -463,7 +463,6 @@ export const scoreTeamMovesVsTarget = async ({
           ),
         })
       );
-      // sortArray(arrayedResult, { by: "score", order: "desc" });
 
       return {
         pokemon: attacker,
@@ -472,7 +471,6 @@ export const scoreTeamMovesVsTarget = async ({
     })
   );
 
-  console.log(allMovesScored);
   const flattenedScoredMoves = allMovesScored.reduce(
     (acc, cur) => [
       ...acc,

@@ -1,8 +1,11 @@
+import _ from "lodash";
+
 import type { IMove, IMoveResponse, IPokemonFull } from "~/interfaces";
 import type PokeAPIService from "./pokeapi-service";
 
 import { makeDefensiveValues } from "./scoring-helpers";
 import { getPokemonTypes } from "./type-helpers";
+import { MOVE_CONSTANTS } from "~/constants/move-constants";
 
 export const makeTotalsStats = (pokemon: IPokemonFull) =>
   pokemon.stats.reduce((total, acc) => total + acc.base_stat, 0);
@@ -87,7 +90,10 @@ export const calcDamage = async ({
         ? 1.5
         : 1) *
       defensiveMultiplier;
-    return damageWithModifiers;
+    return (
+      damageWithModifiers /
+      (_.get(MOVE_CONSTANTS, `${move.name}.num_turns`, 1) as number)
+    );
   } catch (error) {
     console.log(`move ${move.name} is malformed, error: ${error}`);
     return 0;

@@ -1877,6 +1877,68 @@ export const fakeAgility = {
   },
 };
 
+export const fakeDive = {
+  accuracy: 100,
+  damage_class: {
+    name: "physical",
+    url: "https://pokeapi.co/api/v2/move-damage-class/2/",
+  },
+  effect_chance: null,
+  effect_changes: [],
+  generation: {
+    name: "generation-iii",
+    url: "https://pokeapi.co/api/v2/generation/3/",
+  },
+  id: 291,
+  meta: {
+    ailment: {
+      name: "none",
+      url: "https://pokeapi.co/api/v2/move-ailment/0/",
+    },
+    ailment_chance: 0,
+    category: {
+      name: "damage",
+      url: "https://pokeapi.co/api/v2/move-category/0/",
+    },
+    crit_rate: 0,
+    drain: 0,
+    flinch_chance: 0,
+    healing: 0,
+    max_hits: null,
+    max_turns: null,
+    min_hits: null,
+    min_turns: null,
+    stat_chance: 0,
+  },
+  name: "dive",
+  past_values: [
+    {
+      accuracy: null,
+      effect_chance: null,
+      effect_entries: [],
+      power: 60,
+      pp: null,
+      type: null,
+      version_group: {
+        name: "diamond-pearl",
+        url: "https://pokeapi.co/api/v2/version-group/8/",
+      },
+    },
+  ],
+  power: 80,
+  pp: 10,
+  priority: 0,
+  stat_changes: [],
+  target: {
+    name: "selected-pokemon",
+    url: "https://pokeapi.co/api/v2/move-target/10/",
+  },
+  type: {
+    name: "water",
+    url: "https://pokeapi.co/api/v2/type/11/",
+  },
+};
+
 // *******************************
 // TYPES
 // *******************************
