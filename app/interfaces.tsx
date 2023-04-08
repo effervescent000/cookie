@@ -167,3 +167,7 @@ export interface IMoveScores {
     };
   };
 }
+
+export interface IMoveConstant {
+  num_turns?: number;
+}
