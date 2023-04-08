@@ -214,13 +214,11 @@ export const makeOffensiveValues = async ({
   gen: number;
 }) => {
   const thisPokeValues: { [key: string]: number } = {};
-  console.log(pokemon.moves);
   const selectedMoves = await Promise.all(
     Object.values(pokemon.moves)
       .filter((move) => !!move && !!getMoveName(move))
       .map(async (move) => await P.getMove(getMoveName(move)))
   );
-  console.log("selectedMoves", selectedMoves);
   const moveTypes = await Promise.all(
     selectedMoves.map(async (move) => await P.getType(move.type.name))
   );
