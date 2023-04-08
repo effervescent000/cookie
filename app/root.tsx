@@ -97,7 +97,6 @@ export default function App() {
         pokemon: team,
         P,
         gen,
-        allMoves,
       });
       setTeamOffScores({
         raw: currentScores.raw,
